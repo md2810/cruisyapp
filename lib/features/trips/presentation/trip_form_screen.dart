@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/providers/ship_provider.dart';
 import '../../../core/providers/trip_provider.dart';
 import '../../../core/services/port_search_service.dart';
+import '../../../shared/models/cruise_ship.dart';
 import '../../../shared/models/cruise_trip.dart';
 import '../../../shared/models/port_stop.dart';
 
@@ -31,6 +33,9 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
   bool _isLoading = false;
   bool _isInitialized = false;
 
+  // Ship selection
+  CruiseShip? _selectedShip;
+
   @override
   void dispose() {
     _shipNameController.dispose();
@@ -47,6 +52,16 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     _startDate = trip.departureDate;
     _endDate = trip.arrivalDate;
     _stops = List.from(trip.stops);
+
+    // Try to find matching ship if trip has MMSI
+    if (trip.mmsi != null) {
+      final ships = ref.read(shipsProvider);
+      try {
+        _selectedShip = ships.firstWhere((s) => s.mmsi == trip.mmsi);
+      } catch (_) {
+        // Ship not found, user will need to reselect
+      }
+    }
   }
 
   Future<void> _selectDateRange() async {
@@ -178,6 +193,17 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
   Future<void> _saveTrip() async {
     if (!_formKey.currentState!.validate()) return;
 
+    // Validate ship selection
+    if (_selectedShip == null && _shipNameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select or enter a ship'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     if (_startDate == null || _endDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -214,7 +240,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
 
       final trip = CruiseTrip(
         id: widget.tripId ?? '',
-        shipName: _shipNameController.text.trim(),
+        shipName: _selectedShip?.name ?? _shipNameController.text.trim(),
         tripName: _tripNameController.text.trim().isNotEmpty
             ? _tripNameController.text.trim()
             : 'Cruise Adventure',
@@ -225,6 +251,8 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
         stops: _stops,
         imageUrl:
             'https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=1000&auto=format&fit=crop',
+        mmsi: _selectedShip?.mmsi,
+        company: _selectedShip?.company,
       );
 
       if (widget.isEditing) {
@@ -304,6 +332,194 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     return null;
   }
 
+  void _showShipSelectionSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (context) => _ShipSelectionSheet(
+        selectedShip: _selectedShip,
+        onSelectShip: (ship) {
+          setState(() {
+            _selectedShip = ship;
+            if (ship != null) {
+              _shipNameController.text = ship.name;
+            }
+          });
+        },
+        onManualEntry: () {
+          setState(() {
+            _selectedShip = null;
+          });
+          // Focus the manual entry field
+          Navigator.pop(context);
+          _showManualShipEntry();
+        },
+      ),
+    );
+  }
+
+  void _showManualShipEntry() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (context) => Padding(
+        padding: EdgeInsets.fromLTRB(
+          24,
+          24,
+          24,
+          MediaQuery.of(context).viewInsets.bottom + 24,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Enter Ship Name',
+              style: GoogleFonts.outfit(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Ship not in database? Enter it manually.',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 24),
+            TextField(
+              controller: _shipNameController,
+              textCapitalization: TextCapitalization.words,
+              autofocus: true,
+              decoration: InputDecoration(
+                labelText: 'Ship Name',
+                hintText: 'e.g., AIDAcosma',
+                prefixIcon: const Icon(Icons.directions_boat_rounded),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Live tracking will not be available for ships not in our database.',
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: FilledButton(
+                onPressed: () {
+                  if (_shipNameController.text.trim().isNotEmpty) {
+                    setState(() {
+                      _selectedShip = null;
+                    });
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('Confirm'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShipSelector(ColorScheme colorScheme, TextTheme textTheme) {
+    final hasShip = _selectedShip != null || _shipNameController.text.trim().isNotEmpty;
+
+    return InkWell(
+      onTap: _showShipSelectionSheet,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: colorScheme.outline.withOpacity(0.5),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.directions_boat_rounded,
+              color: hasShip ? colorScheme.primary : colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: hasShip
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _selectedShip?.name ?? _shipNameController.text.trim(),
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        if (_selectedShip != null) ...[
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.live_tv_rounded,
+                                size: 14,
+                                color: colorScheme.primary,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${_selectedShip!.company} • Live tracking',
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ] else ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            'Manual entry • No live tracking',
+                            style: textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ],
+                    )
+                  : Text(
+                      'Select or enter ship',
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+            ),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -377,27 +593,15 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
               ),
               const SizedBox(height: 32),
 
-              // Ship Name
-              TextFormField(
-                controller: _shipNameController,
-                textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(
-                  labelText: 'Ship Name',
-                  hintText: 'e.g., AIDAcosma',
-                  prefixIcon: const Icon(Icons.directions_boat_rounded),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  filled: true,
-                  fillColor: colorScheme.surfaceContainerHighest,
+              // Ship Selection
+              Text(
+                'Ship',
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter the ship name';
-                  }
-                  return null;
-                },
               ),
+              const SizedBox(height: 12),
+              _buildShipSelector(colorScheme, textTheme),
               const SizedBox(height: 20),
 
               // Trip Name
@@ -923,52 +1127,83 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
       return;
     }
 
-    DateTime? arrivalDateTime;
-    DateTime? departureDateTime;
-
-    if (_isMultiDay) {
-      // Multi-day: use separate dates with times (only if time was selected)
-      if (_arrivalTime != null) {
-        arrivalDateTime = DateTime(
-          _arrivalDate!.year,
-          _arrivalDate!.month,
-          _arrivalDate!.day,
-          _arrivalTime!.hour,
-          _arrivalTime!.minute,
+    // Require arrival and departure times for port stops (not sea days)
+    if (!_isSeaDay) {
+      if (_arrivalTime == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select an arrival time'),
+            behavior: SnackBarBehavior.floating,
+          ),
         );
+        return;
       }
+
+      if (_departureTime == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select a departure time'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        return;
+      }
+    }
+
+    DateTime arrivalDateTime;
+    DateTime departureDateTime;
+
+    if (_isSeaDay) {
+      // Sea days: use date only with midnight times
+      arrivalDateTime = DateTime(
+        _arrivalDate!.year,
+        _arrivalDate!.month,
+        _arrivalDate!.day,
+        0,
+        0,
+      );
+      departureDateTime = DateTime(
+        _arrivalDate!.year,
+        _arrivalDate!.month,
+        _arrivalDate!.day,
+        23,
+        59,
+      );
+    } else if (_isMultiDay) {
+      // Multi-day: use separate dates with times
+      arrivalDateTime = DateTime(
+        _arrivalDate!.year,
+        _arrivalDate!.month,
+        _arrivalDate!.day,
+        _arrivalTime!.hour,
+        _arrivalTime!.minute,
+      );
 
       final depDate = _departureDate ?? _arrivalDate!;
-      if (_departureTime != null) {
-        departureDateTime = DateTime(
-          depDate.year,
-          depDate.month,
-          depDate.day,
-          _departureTime!.hour,
-          _departureTime!.minute,
-        );
-      }
+      departureDateTime = DateTime(
+        depDate.year,
+        depDate.month,
+        depDate.day,
+        _departureTime!.hour,
+        _departureTime!.minute,
+      );
     } else {
-      // Single day: same date for both (only if time was selected)
-      if (_arrivalTime != null) {
-        arrivalDateTime = DateTime(
-          _arrivalDate!.year,
-          _arrivalDate!.month,
-          _arrivalDate!.day,
-          _arrivalTime!.hour,
-          _arrivalTime!.minute,
-        );
-      }
+      // Single day: same date for both
+      arrivalDateTime = DateTime(
+        _arrivalDate!.year,
+        _arrivalDate!.month,
+        _arrivalDate!.day,
+        _arrivalTime!.hour,
+        _arrivalTime!.minute,
+      );
 
-      if (_departureTime != null) {
-        departureDateTime = DateTime(
-          _arrivalDate!.year,
-          _arrivalDate!.month,
-          _arrivalDate!.day,
-          _departureTime!.hour,
-          _departureTime!.minute,
-        );
-      }
+      departureDateTime = DateTime(
+        _arrivalDate!.year,
+        _arrivalDate!.month,
+        _arrivalDate!.day,
+        _departureTime!.hour,
+        _departureTime!.minute,
+      );
     }
 
     final stop = PortStop(
@@ -1228,7 +1463,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
             if (!_isSeaDay) ...[
               const SizedBox(height: 16),
               Text(
-                'Times (Optional)',
+                'Arrival & Departure Times *',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurfaceVariant,
@@ -1321,6 +1556,300 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
           ],
         ),
       ),
+    );
+  }
+}
+
+// Ship Selection Sheet
+class _ShipSelectionSheet extends ConsumerStatefulWidget {
+  final CruiseShip? selectedShip;
+  final Function(CruiseShip?) onSelectShip;
+  final VoidCallback onManualEntry;
+
+  const _ShipSelectionSheet({
+    required this.selectedShip,
+    required this.onSelectShip,
+    required this.onManualEntry,
+  });
+
+  @override
+  ConsumerState<_ShipSelectionSheet> createState() => _ShipSelectionSheetState();
+}
+
+class _ShipSelectionSheetState extends ConsumerState<_ShipSelectionSheet> {
+  final _searchController = TextEditingController();
+  String _searchQuery = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final shipsAsync = ref.watch(shipsStreamProvider);
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      expand: false,
+      builder: (context, scrollController) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Select Ship',
+                style: GoogleFonts.outfit(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Choose a ship for live tracking or enter manually',
+                style: TextStyle(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Search field
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search ships...',
+                  prefixIcon: const Icon(Icons.search_rounded),
+                  suffixIcon: _searchQuery.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear_rounded),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() => _searchQuery = '');
+                          },
+                        )
+                      : null,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  filled: true,
+                  fillColor: colorScheme.surfaceContainerHighest,
+                ),
+                onChanged: (value) {
+                  setState(() => _searchQuery = value.toLowerCase());
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Manual entry option
+              Card(
+                color: colorScheme.surfaceContainerHigh,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.edit_rounded,
+                    color: colorScheme.primary,
+                  ),
+                  title: const Text('Enter ship manually'),
+                  subtitle: const Text('Ship not in database'),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: widget.onManualEntry,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Divider
+              Row(
+                children: [
+                  Expanded(child: Divider(color: colorScheme.outline.withOpacity(0.3))),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'OR SELECT FROM DATABASE',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurfaceVariant,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Divider(color: colorScheme.outline.withOpacity(0.3))),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Ship list
+              Expanded(
+                child: shipsAsync.when(
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  error: (error, _) => Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.error_outline_rounded,
+                          size: 48,
+                          color: colorScheme.error,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Failed to load ships',
+                          style: TextStyle(color: colorScheme.error),
+                        ),
+                        const SizedBox(height: 8),
+                        FilledButton.tonal(
+                          onPressed: () => ref.refresh(shipsStreamProvider),
+                          child: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  data: (ships) {
+                    // Filter ships based on search
+                    final filteredShips = _searchQuery.isEmpty
+                        ? ships
+                        : ships.where((ship) {
+                            return ship.name.toLowerCase().contains(_searchQuery) ||
+                                ship.company.toLowerCase().contains(_searchQuery);
+                          }).toList();
+
+                    // Group ships by company
+                    final shipsByCompany = <String, List<CruiseShip>>{};
+                    for (final ship in filteredShips) {
+                      shipsByCompany.putIfAbsent(ship.company, () => []).add(ship);
+                    }
+
+                    if (filteredShips.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.search_off_rounded,
+                              size: 48,
+                              color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              _searchQuery.isEmpty
+                                  ? 'No ships in database yet'
+                                  : 'No ships found',
+                              style: TextStyle(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                            if (_searchQuery.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                'Try entering manually',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: colorScheme.onSurfaceVariant.withOpacity(0.7),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      controller: scrollController,
+                      itemCount: shipsByCompany.length,
+                      itemBuilder: (context, index) {
+                        final company = shipsByCompany.keys.elementAt(index);
+                        final companyShips = shipsByCompany[company]!;
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text(
+                                company,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.primary,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                            ...companyShips.map((ship) {
+                              final isSelected = widget.selectedShip?.mmsi == ship.mmsi;
+                              return Card(
+                                color: isSelected
+                                    ? colorScheme.primaryContainer
+                                    : colorScheme.surfaceContainerHigh,
+                                margin: const EdgeInsets.only(bottom: 8),
+                                child: ListTile(
+                                  leading: Icon(
+                                    Icons.directions_boat_rounded,
+                                    color: isSelected
+                                        ? colorScheme.onPrimaryContainer
+                                        : colorScheme.onSurfaceVariant,
+                                  ),
+                                  title: Text(
+                                    ship.name,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: isSelected
+                                          ? colorScheme.onPrimaryContainer
+                                          : null,
+                                    ),
+                                  ),
+                                  subtitle: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.live_tv_rounded,
+                                        size: 12,
+                                        color: isSelected
+                                            ? colorScheme.onPrimaryContainer.withOpacity(0.7)
+                                            : colorScheme.primary,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        'Live tracking available',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: isSelected
+                                              ? colorScheme.onPrimaryContainer.withOpacity(0.7)
+                                              : colorScheme.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: isSelected
+                                      ? Icon(
+                                          Icons.check_circle_rounded,
+                                          color: colorScheme.onPrimaryContainer,
+                                        )
+                                      : null,
+                                  onTap: () {
+                                    widget.onSelectShip(ship);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              );
+                            }),
+                            const SizedBox(height: 8),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

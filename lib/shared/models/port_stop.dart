@@ -63,10 +63,31 @@ class PortStop {
     };
   }
 
+  /// Convert to JSON-serializable map (for sharing)
+  Map<String, dynamic> toShareableMap() {
+    return {
+      'id': id,
+      'name': name,
+      'arrivalTime': arrivalTime?.toIso8601String(),
+      'departureTime': departureTime?.toIso8601String(),
+      'isSeaDay': isSeaDay,
+      'countryCode': countryCode,
+      'latitude': latitude,
+      'longitude': longitude,
+    };
+  }
+
   static DateTime? _parseTimestamp(dynamic value) {
     if (value == null) return null;
     if (value is Timestamp) return value.toDate();
     if (value is DateTime) return value;
+    if (value is String) {
+      try {
+        return DateTime.parse(value);
+      } catch (_) {
+        return null;
+      }
+    }
     return null;
   }
 

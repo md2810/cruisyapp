@@ -12,6 +12,8 @@ class CruiseTrip {
   final String endPort;
   final List<PortStop> stops;
   final String? imageUrl;
+  final int? mmsi; // Maritime Mobile Service Identity for live tracking
+  final String? company; // Cruise line company name
 
   const CruiseTrip({
     required this.id,
@@ -23,6 +25,8 @@ class CruiseTrip {
     required this.endPort,
     required this.stops,
     this.imageUrl,
+    this.mmsi,
+    this.company,
   });
 
   factory CruiseTrip.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
@@ -36,6 +40,27 @@ class CruiseTrip {
       startPort: data['startPort'] as String? ?? '',
       endPort: data['endPort'] as String? ?? '',
       imageUrl: data['imageUrl'] as String?,
+      mmsi: data['mmsi'] as int?,
+      company: data['company'] as String?,
+      stops: (data['stops'] as List<dynamic>?)
+              ?.map((stop) => PortStop.fromMap(stop as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+  }
+
+  factory CruiseTrip.fromMap(Map<String, dynamic> data, {String id = ''}) {
+    return CruiseTrip(
+      id: id,
+      shipName: data['shipName'] as String? ?? '',
+      tripName: data['tripName'] as String? ?? '',
+      departureDate: _parseTimestamp(data['departureDate']) ?? DateTime.now(),
+      arrivalDate: _parseTimestamp(data['arrivalDate']) ?? DateTime.now(),
+      startPort: data['startPort'] as String? ?? '',
+      endPort: data['endPort'] as String? ?? '',
+      imageUrl: data['imageUrl'] as String?,
+      mmsi: data['mmsi'] as int?,
+      company: data['company'] as String?,
       stops: (data['stops'] as List<dynamic>?)
               ?.map((stop) => PortStop.fromMap(stop as Map<String, dynamic>))
               .toList() ??
@@ -52,7 +77,25 @@ class CruiseTrip {
       'startPort': startPort,
       'endPort': endPort,
       'imageUrl': imageUrl,
+      'mmsi': mmsi,
+      'company': company,
       'stops': stops.map((stop) => stop.toMap()).toList(),
+    };
+  }
+
+  /// Convert to JSON-serializable map (for sharing)
+  Map<String, dynamic> toShareableMap() {
+    return {
+      'shipName': shipName,
+      'tripName': tripName,
+      'departureDate': departureDate.toIso8601String(),
+      'arrivalDate': arrivalDate.toIso8601String(),
+      'startPort': startPort,
+      'endPort': endPort,
+      'imageUrl': imageUrl,
+      'mmsi': mmsi,
+      'company': company,
+      'stops': stops.map((stop) => stop.toShareableMap()).toList(),
     };
   }
 
@@ -60,6 +103,13 @@ class CruiseTrip {
     if (value == null) return null;
     if (value is Timestamp) return value.toDate();
     if (value is DateTime) return value;
+    if (value is String) {
+      try {
+        return DateTime.parse(value);
+      } catch (_) {
+        return null;
+      }
+    }
     return null;
   }
 
@@ -141,6 +191,8 @@ class CruiseTrip {
     String? endPort,
     List<PortStop>? stops,
     String? imageUrl,
+    int? mmsi,
+    String? company,
   }) {
     return CruiseTrip(
       id: id ?? this.id,
@@ -152,6 +204,8 @@ class CruiseTrip {
       endPort: endPort ?? this.endPort,
       stops: stops ?? this.stops,
       imageUrl: imageUrl ?? this.imageUrl,
+      mmsi: mmsi ?? this.mmsi,
+      company: company ?? this.company,
     );
   }
 }

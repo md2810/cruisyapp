@@ -862,5 +862,85 @@
   "countryQA": "Qatar",
   "countryBH": "Bahrain",
   "countryKW": "Kuwait",
-  "countrySA": "Saudi Arabia"
+  "countrySA": "Saudi Arabia",
+
+  "notAuthenticated": "Please sign in to share trips",
+  "failedToShare": "Failed to share: {error}",
+  "@failedToShare": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "tripShared": "Trip shared successfully!",
+
+  "friends": "Friends",
+  "friendsTrips": "Friends' Trips",
+  "noSharedTrips": "No shared trips yet",
+  "noSharedTripsSubtitle": "When friends share their trips with you, they'll appear here",
+  "sharedBy": "Shared by {name}",
+  "@sharedBy": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "importedOn": "Imported {date}",
+  "@importedOn": {
+    "placeholders": {
+      "date": {"type": "String"}
+    }
+  },
+  "removeSharedTrip": "Remove",
+  "removeSharedTripConfirmation": "Remove this shared trip from your list?",
+  "duplicateToMyTrips": "Duplicate to My Trips",
+  "tripDuplicated": "Trip duplicated to your trips!",
+  "readOnly": "Read-only",
+  "sharedTrip": "Shared Trip",
+
+  "importTrip": "Import Trip",
+  "importTripQuestion": "Would you like to import this trip from {owner}?",
+  "@importTripQuestion": {
+    "placeholders": {
+      "owner": {"type": "String"}
+    }
+  },
+  "import": "Import",
+  "tripImported": "Trip imported successfully!",
+  "invalidShareLink": "Invalid share link",
+  "failedToImport": "Failed to import trip: {error}",
+  "@failedToImport": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
+  "liveTracking": "Live Tracking",
+  "livePosition": "Live",
+  "recentPosition": "{time} ago",
+  "@recentPosition": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "estimatedPosition": "Estimated",
+
+  "departureIn": "Departure in",
+  "liveVoyage": "Live Voyage",
+  "atSea": "At Sea",
+  "currentlyAt": "Currently at",
+  "nextStop": "Next Stop",
+  "voyageComplete": "Voyage Complete",
+  "portsVisitedCount": "{count} ports visited",
+  "@portsVisitedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "daysAtSeaCount": "{count} days at sea",
+  "@daysAtSeaCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "seaDays": "sea",
+  "journeyProgress": "Journey Progress"
 }

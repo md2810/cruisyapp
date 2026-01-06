@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/providers/auth_provider.dart';
 import '../../features/auth/presentation/login_screen.dart';
+import '../../features/friends/presentation/friends_screen.dart';
+import '../../features/friends/presentation/import_trip_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/trip_detail/presentation/trip_detail_screen.dart';
@@ -132,6 +134,49 @@ final routerProvider = Provider<GoRouter>((ref) {
           return CustomTransitionPage(
             key: state.pageKey,
             child: TripFormScreen(tripId: tripId),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 1),
+                  end: Offset.zero,
+                ).animate(CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeOutCubic,
+                )),
+                child: child,
+              );
+            },
+          );
+        },
+      ),
+      GoRoute(
+        path: '/friends',
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const FriendsScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(1, 0),
+                end: Offset.zero,
+              ).animate(CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOutCubic,
+              )),
+              child: child,
+            );
+          },
+        ),
+      ),
+      GoRoute(
+        path: '/import-trip',
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) {
+          final data = state.uri.queryParameters['data'] ?? '';
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: ImportTripScreen(encodedData: data),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               return SlideTransition(
                 position: Tween<Offset>(

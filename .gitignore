@@ -44,6 +44,14 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Cruisy Specific
+# Claude Code Specific
 CLAUDE.md
 CLAUDE.local.md
+
+# Backend testing
+/backend/ais_scraper.log
+/backend/firebase-service-account.json
+
+# Temp/junk files
+nul
+*.csv

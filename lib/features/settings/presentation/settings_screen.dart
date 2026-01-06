@@ -379,6 +379,12 @@ class _ProfileHeader extends StatelessWidget {
           Row(
             children: [
               _ActionChip(
+                icon: Icons.group_rounded,
+                label: l10n.friends,
+                onTap: () => context.push('/friends'),
+              ),
+              const SizedBox(width: 8),
+              _ActionChip(
                 icon: Icons.settings_rounded,
                 label: l10n.settings,
                 onTap: () => _showSettingsSheet(context, ref),

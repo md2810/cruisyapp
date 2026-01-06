@@ -445,5 +445,45 @@
   "countryQA": "Katar",
   "countryBH": "Bahrain",
   "countryKW": "Kuwait",
-  "countrySA": "Saudi-Arabien"
+  "countrySA": "Saudi-Arabien",
+
+  "notAuthenticated": "Bitte melde dich an um Reisen zu teilen",
+  "failedToShare": "Teilen fehlgeschlagen: {error}",
+  "tripShared": "Reise erfolgreich geteilt!",
+
+  "friends": "Freunde",
+  "friendsTrips": "Reisen von Freunden",
+  "noSharedTrips": "Noch keine geteilten Reisen",
+  "noSharedTripsSubtitle": "Wenn Freunde ihre Reisen mit dir teilen, erscheinen sie hier",
+  "sharedBy": "Geteilt von {name}",
+  "importedOn": "Importiert am {date}",
+  "removeSharedTrip": "Entfernen",
+  "removeSharedTripConfirmation": "Diese geteilte Reise aus deiner Liste entfernen?",
+  "duplicateToMyTrips": "Zu meinen Reisen kopieren",
+  "tripDuplicated": "Reise zu deinen Reisen kopiert!",
+  "readOnly": "Nur lesen",
+  "sharedTrip": "Geteilte Reise",
+
+  "importTrip": "Reise importieren",
+  "importTripQuestion": "Moechtest du diese Reise von {owner} importieren?",
+  "import": "Importieren",
+  "tripImported": "Reise erfolgreich importiert!",
+  "invalidShareLink": "Ungültiger Teilen-Link",
+  "failedToImport": "Import fehlgeschlagen: {error}",
+
+  "liveTracking": "Live-Tracking",
+  "livePosition": "Live",
+  "recentPosition": "Vor {time}",
+  "estimatedPosition": "Geschätzt",
+
+  "departureIn": "Abfahrt in",
+  "liveVoyage": "Live-Reise",
+  "atSea": "Auf See",
+  "currentlyAt": "Aktuell in",
+  "nextStop": "Nächster Halt",
+  "voyageComplete": "Reise abgeschlossen",
+  "portsVisitedCount": "{count} Häfen besucht",
+  "daysAtSeaCount": "{count} Tage auf See",
+  "seaDays": "See",
+  "journeyProgress": "Reisefortschritt"
 }
