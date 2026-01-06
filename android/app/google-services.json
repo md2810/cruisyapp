@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "9720785304",
+    "project_id": "cruisyapp-cd1da",
+    "storage_bucket": "cruisyapp-cd1da.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:9720785304:android:91cd4515af3a5ab20da3ed",
+        "android_client_info": {
+          "package_name": "com.md28.cruisyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "9720785304-l4ndhe4mbhg9o35r19lopj4aalbg90ji.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.md28.cruisyapp",
+            "certificate_hash": "40d6eefa744f1b3d317b32d783328daa6f62860c"
+          }
+        },
+        {
+          "client_id": "9720785304-vsif5qagv0m8nd2kmvr08kp4amhidmgj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK4YSuXY3NnSPmaiMc0wV75yGxK8meyno"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "9720785304-vsif5qagv0m8nd2kmvr08kp4amhidmgj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "9720785304-cqme6gabqlga568mukojm735hesp25iq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.md28.cruisyapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,449 @@
+{
+  "@@locale": "de",
+
+  "appTitle": "Cruisy",
+
+  "today": "Heute",
+
+  "futureCruises": "Zukuenftige Reisen",
+
+  "pastCruises": "Vergangene Reisen",
+
+  "noPastCruises": "Keine vergangenen Kreuzfahrten",
+
+  "noUpcomingCruises": "Keine geplanten Kreuzfahrten",
+
+  "noCruiseToday": "Heute keine Kreuzfahrt",
+
+  "completedCruisesAppearHere": "Abgeschlossene Reisen erscheinen hier",
+
+  "tapPlusToAddCruise": "Tippe auf + um deine erste Kreuzfahrt hinzuzufügen",
+
+  "noOngoingCruises": "Du hast keine laufende Kreuzfahrt",
+
+  "day": "TAG",
+
+  "days": "TAGE",
+
+  "done": "FERTIG",
+
+  "todayPort": "Heute: {portName}",
+
+  "nextPort": "Nächster Halt: {portName}",
+
+  "addCruise": "Kreuzfahrt hinzufügen",
+
+  "editCruise": "Kreuzfahrt bearbeiten",
+
+  "shipName": "Schiffsname",
+
+  "shipNameHint": "z.B. AIDAprima",
+
+  "tripName": "Reisename",
+
+  "tripNameHint": "z.B. Karibik",
+
+  "startDate": "Startdatum",
+
+  "endDate": "Enddatum",
+
+  "selectDate": "Datum wählen",
+
+  "itinerary": "Reiseverlauf",
+
+  "dayNumber": "Tag {number}",
+
+  "seaDay": "Seetag",
+
+  "addStop": "Hafen hinzufügen",
+
+  "continuedFromPreviousDay": "Fortsetzung vom Vortag",
+
+  "addPort": "Hafen hinzufügen",
+
+  "editPort": "Hafen bearbeiten",
+
+  "searchPorts": "Häfen suchen...",
+
+  "isSeaDay": "Seetag",
+
+  "noPortThisDay": "Kein Hafen an diesem Tag",
+
+  "multiDayStay": "Mehrtägiger Aufenthalt",
+
+  "portVisitSpanningDays": "Hafenbesuch über mehrere Tage",
+
+  "arrival": "Ankunft",
+
+  "departure": "Abfahrt",
+
+  "date": "Datum",
+
+  "time": "Uhrzeit",
+
+  "setTime": "Zeit festlegen",
+
+  "save": "Speichern",
+
+  "cancel": "Abbrechen",
+
+  "delete": "Löschen",
+
+  "pleaseEnterShipName": "Bitte gib einen Schiffsnamen ein",
+
+  "pleaseSelectDates": "Bitte wähle Start- und Enddatum",
+
+  "pleaseEnterOrSelectPort": "Bitte gib einen Hafen ein oder wähle einen aus",
+
+  "pleaseSelectDate": "Bitte wähle ein Datum",
+
+  "needAtLeastTwoPorts": "Du musst mindestens zwei Häfen hinzufügen",
+
+  "firstStopCannotBeSeaDay": "Der erste Stopp kann kein Seetag sein",
+
+  "lastStopCannotBeSeaDay": "Der letzte Stopp kann kein Seetag sein",
+
+  "deleteCruise": "Kreuzfahrt löschen",
+
+  "deleteCruiseConfirmation": "Bist du sicher, dass du diese Kreuzfahrt löschen moechtest? Diese Aktion kann nicht rückgaengig gemacht werden.",
+
+  "cruiseDeleted": "Kreuzfahrt gelöscht",
+
+  "settings": "Einstellungen",
+
+  "account": "Konto",
+
+  "signOut": "Abmelden",
+
+  "signOutConfirmation": "Bist du sicher, dass du dich abmelden möchtest?",
+
+  "login": "Anmelden",
+
+  "signUp": "Registrieren",
+
+  "createAccount": "Konto erstellen",
+
+  "welcomeBack": "Willkommen zurück, Kreuzfahrer",
+
+  "createYourAccount": "Erstelle dein Konto",
+
+  "name": "Name",
+
+  "yourName": "Dein Name",
+
+  "email": "E-Mail",
+
+  "emailHint": "deine@email.de",
+
+  "password": "Passwort",
+
+  "yourPassword": "Dein Passwort",
+
+  "pleaseEnterName": "Bitte gib deinen Namen ein",
+
+  "pleaseEnterEmail": "Bitte gib deine E-Mail-Adresse ein",
+
+  "pleaseEnterValidEmail": "Bitte gib eine gültige E-Mail-Adresse ein",
+
+  "pleaseEnterPassword": "Bitte gib dein Passwort ein",
+
+  "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen lang sein",
+
+  "or": "ODER",
+
+  "continueWithGoogle": "Mit Google fortfahren",
+
+  "alreadyHaveAccount": "Bereits ein Konto?",
+
+  "dontHaveAccount": "Noch kein Konto?",
+
+  "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten.",
+
+  "googleSignInFailed": "Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
+
+  "hoursInPort": "{hours}h im Hafen",
+
+  "now": "JETZT",
+
+  "overview": "Übersicht",
+
+  "totalDays": "{count} Tage",
+
+  "ports": "Häfen",
+
+  "portCount": "{count} Häfen",
+
+  "progress": "Fortschritt",
+
+  "progressPercent": "{percent}%",
+
+  "cruiseNotStarted": "Noch nicht gestartet",
+
+  "cruiseCompleted": "Abgeschlossen",
+
+  "map": "Karte",
+
+  "viewFullMap": "Vollständige Karte anzeigen",
+
+  "language": "Sprache",
+
+  "english": "Englisch",
+
+  "german": "Deutsch",
+
+  "appInfo": "App-Info",
+
+  "version": "Version",
+
+  "myCruises": "Meine Kreuzfahrten",
+
+  "allCruises": "Alle Kreuzfahrten",
+
+  "voyages": "Reisen",
+  "accountSettings": "Kontoeinstellungen",
+  "manageProfilePreferences": "Profil und Einstellungen verwalten",
+  "notifications": "Benachrichtigungen",
+  "manageNotifications": "Benachrichtigungseinstellungen verwalten",
+  "support": "Support",
+  "helpSupport": "Hilfe & Support",
+  "getHelp": "Hilfe zur Nutzung von Cruisy",
+  "about": "Ueber",
+  "appVersionLegal": "App-Version und rechtliche Infos",
+  "editProfile": "Profil bearbeiten",
+  "changeDisplayName": "Anzeigenamen ändern",
+  "changePassword": "Passwort ändern",
+  "updatePassword": "Passwort aktualisieren",
+  "deleteAccountTitle": "Konto löschen",
+  "permanentlyDeleteAccount": "Konto dauerhaft löschen",
+  "tripReminders": "Reiseerinnerungen",
+  "getNotifiedBeforeCruise": "Benachrichtigung vor der Kreuzfahrt",
+  "portAlerts": "Hafenbenachrichtigungen",
+  "notificationsAtPorts": "Benachrichtigungen bei Ankunft im Hafen",
+  "countdownUpdates": "Countdown-Updates",
+  "dailyCountdown": "Tägliche Countdown-Benachrichtigungen",
+  "appDescription": "Deine persönliche Kreuzfahrt-Begleiter-App. Verfolge deine Reisen, plane Ausflüge und verpasse keinen Moment deines Kreuzfahrtabenteuers.",
+
+  "newVoyage": "Neue Reise",
+  "editVoyage": "Reise bearbeiten",
+  "addCruiseTracking": "Füge deine Kreuzfahrt hinzu um sie zu verfolgen",
+  "updateCruiseDetails": "Aktualisiere deine Kreuzfahrtdetails",
+  "tripNameOptional": "Reisename (Optional)",
+  "travelDates": "Reisedaten",
+  "selectDepartureDates": "Wähle Abfahrts- und Rückkehrdatum",
+  "add": "Hinzufügen",
+  "selectTravelDatesFirst": "Wähle zuerst die Reisedaten",
+  "addPortsSeaDays": "Dann füge Häfen und Seetage hinzu",
+  "noActivityPlanned": "Keine Aktivität geplant",
+  "continued": "{name} (Fortsetzung)",
+  "arrivesTime": "Ankunft {time}",
+  "addStopTitle": "Halt hinzufügen",
+  "editStopTitle": "Halt bearbeiten",
+  "dayAtSeaNoPort": "Tag auf See ohne Hafen",
+  "portNameLabel": "Hafenname",
+  "searchPort": "Nach Hafen suchen...",
+  "coordinatesSaved": "Koordinaten für Karte gespeichert",
+  "arrivalDate": "Ankunftsdatum",
+  "departureDate": "Abfahrtsdatum",
+  "timesOptional": "Zeiten (Optional)",
+  "updateStop": "Halt aktualisieren",
+  "pleaseSelectTripDatesFirst": "Bitte wähle zuerst die Reisedaten",
+
+  "tripNotFound": "Reise nicht gefunden",
+  "voyageMayBeDeleted": "Diese Reise wurde moeglicherweise geloescht",
+  "goBack": "Zurück",
+  "editTripMenu": "Reise bearbeiten",
+  "shareMenu": "Teilen",
+  "shareComingSoon": "Teilen-Funktion kommt bald!",
+  "deleteTripMenu": "Reise loeschen",
+  "deleteTripConfirmation": "Bist du sicher, dass du \"{name}\" loeschen moechtest?\n\nDiese Aktion kann nicht rueckgaengig gemacht werden.",
+  "tripDeleted": "{name} geloescht",
+  "failedToDelete": "Loeschen fehlgeschlagen: {error}",
+  "voyageInProgress": "REISE LAEUFT",
+  "daysUntil": "TAGE BIS",
+  "dayLabel": "Tag {number}",
+  "daysLabel": "Tage",
+  "departs": "ABFAHRT",
+  "nextLabel": "NAECHSTER",
+  "inProgressStatus": "Laeuft",
+  "upcomingStatus": "Bevorstehend",
+  "noItineraryYet": "Noch kein Reiseverlauf hinzugefuegt",
+  "editTripToAddStops": "Bearbeite diese Reise um Hafenstopps hinzuzufuegen",
+  "addStops": "Stopps hinzufuegen",
+  "daysCount": "{count} Tage",
+  "todayLabel": "HEUTE",
+
+  "tripUpdated": "{name} aktualisiert!",
+  "tripAdded": "{name} Reise hinzugefuegt!",
+  "failedToSaveTrip": "Speichern fehlgeschlagen: {error}",
+  "addTrip": "Reise hinzufuegen",
+  "editTrip": "Reise bearbeiten",
+  "savingTrip": "Speichern...",
+  "updateTripButton": "Reise aktualisieren",
+  "saveTripButton": "Reise speichern",
+
+  "goodMorning": "Guten Morgen",
+  "goodAfternoon": "Guten Tag",
+  "goodEvening": "Guten Abend",
+  "failedToLoadTrips": "Reisen konnten nicht geladen werden",
+  "noUpcomingTrips": "Keine bevorstehenden Reisen",
+  "startPlanningCruise": "Plane jetzt dein nächstes Kreuzfahrtabenteuer",
+  "addFirstTrip": "Erste Reise hinzufügen",
+  "nextTrip": "NÄCHSTE REISE",
+  "daysLowercase": "Tage",
+  "hoursRemaining": "{hours}h verbleibend",
+  "packingList": "Packliste",
+  "documents": "Dokumente",
+  "excursions": "Ausflüge",
+  "dining": "Restaurant",
+  "upcoming": "Bevorstehend",
+
+  "myVoyages": "Meine Reisen",
+  "checkConnection": "Bitte überprüfe deine Verbindung",
+  "noVoyagesYet": "Noch keine Reisen",
+  "startTrackingCruises": "Beginne deine Kreuzfahrtabenteuer zu verfolgen\nindem du deine erste Reise hinzufügst",
+  "pastTrips": "Vergangene Reisen",
+  "deleteTrip": "Reise löschen",
+  "viewDetails": "Details anzeigen",
+
+  "mapFailedToLoad": "Karte konnte nicht geladen werden",
+  "checkMapboxConfig": "Überprüfe deine Mapbox-Konfiguration",
+  "retry": "Erneut versuchen",
+  "explore": "Entdecken",
+  "yourCruiseDestinations": "Deine Kreuzfahrtziele",
+
+  "home": "Start",
+  "trips": "Reisen",
+
+  "allTimeCruisePassport": "KREUZFAHRT-PASS GESAMT",
+  "yearCruisePassport": "{year} KREUZFAHRT-PASS",
+  "passport": "PASS",
+  "distance": "DISTANZ",
+  "ships": "SCHIFFE",
+  "allCruiseStats": "Alle Kreuzfahrt-Statistiken",
+  "longestCruise": "Längste Kreuzfahrt",
+  "daysOnShip": "Tage auf {shipName}",
+  "favoriteShip": "Lieblingsschiff",
+  "cruiseCount": "{count, plural, =1{1 Kreuzfahrt} other{{count} Kreuzfahrten}}",
+  "viewAllShips": "Alle Schiffe anzeigen",
+  "allShips": "Alle Schiffe",
+
+  "aroundWorld": "{times}x um die Welt",
+  "halfAroundWorld": "Halbe Weltumrundung",
+
+  "noItineraryYet": "Noch kein Reiseverlauf hinzugefuegt",
+  "editToAddPorts": "Bearbeite diese Reise um Haefen hinzuzufuegen",
+  "addStopsButton": "Stopps hinzufuegen",
+  "todayBadge": "HEUTE",
+  "continuedPort": "(Fortsetzung)",
+  "arrivesAt": "Ankunft {time}",
+  "noActivityPlanned": "Keine Aktivitaet geplant",
+  "daysCount": "{count} Tage",
+
+  "countryUS": "Vereinigte Staaten",
+  "countryDE": "Deutschland",
+  "countryES": "Spanien",
+  "countryFR": "Frankreich",
+  "countryIT": "Italien",
+  "countryGR": "Griechenland",
+  "countryHR": "Kroatien",
+  "countryME": "Montenegro",
+  "countryPT": "Portugal",
+  "countryGB": "Vereinigtes Koenigreich",
+  "countryNL": "Niederlande",
+  "countryBE": "Belgien",
+  "countryNO": "Norwegen",
+  "countrySE": "Schweden",
+  "countryDK": "Daenemark",
+  "countryFI": "Finnland",
+  "countryIS": "Island",
+  "countryMT": "Malta",
+  "countryCY": "Zypern",
+  "countryTR": "Tuerkei",
+  "countryAE": "Vereinigte Arabische Emirate",
+  "countryBS": "Bahamas",
+  "countryJM": "Jamaika",
+  "countryMX": "Mexiko",
+  "countryBZ": "Belize",
+  "countryHN": "Honduras",
+  "countryPA": "Panama",
+  "countryAW": "Aruba",
+  "countryCW": "Curacao",
+  "countrySX": "Sint Maarten",
+  "countryVG": "Britische Jungferninseln",
+  "countryVI": "Amerikanische Jungferninseln",
+  "countryPR": "Puerto Rico",
+  "countryDO": "Dominikanische Republik",
+  "countryHT": "Haiti",
+  "countryAG": "Antigua und Barbuda",
+  "countryBB": "Barbados",
+  "countryLC": "Saint Lucia",
+  "countryGD": "Grenada",
+  "countryVC": "St. Vincent und die Grenadinen",
+  "countryKY": "Kaimaninseln",
+  "countryTC": "Turks- und Caicosinseln",
+  "countryTT": "Trinidad und Tobago",
+  "countryCA": "Kanada",
+  "countryAU": "Australien",
+  "countryNZ": "Neuseeland",
+  "countryJP": "Japan",
+  "countryCN": "China",
+  "countryTH": "Thailand",
+  "countryVN": "Vietnam",
+  "countrySG": "Singapur",
+  "countryMY": "Malaysia",
+  "countryID": "Indonesien",
+  "countryPH": "Philippinen",
+  "countryIN": "Indien",
+  "countryEG": "Aegypten",
+  "countryMA": "Marokko",
+  "countryTN": "Tunesien",
+  "countryZA": "Suedafrika",
+  "countryMU": "Mauritius",
+  "countrySC": "Seychellen",
+  "countryMV": "Malediven",
+  "countryCL": "Chile",
+  "countryAR": "Argentinien",
+  "countryBR": "Brasilien",
+  "countryPE": "Peru",
+  "countryEC": "Ecuador",
+  "countryCO": "Kolumbien",
+  "countryCR": "Costa Rica",
+  "countryFO": "Faeroeer",
+  "countryGL": "Groenland",
+  "countrySJ": "Spitzbergen",
+  "countryAQ": "Antarktis",
+  "countryPF": "Franzoesisch-Polynesien",
+  "countryFJ": "Fidschi",
+  "countryTO": "Tonga",
+  "countryWS": "Samoa",
+  "countryNC": "Neukaledonien",
+  "countryVU": "Vanuatu",
+  "countryPG": "Papua-Neuguinea",
+  "countrySB": "Salomonen",
+  "countryGI": "Gibraltar",
+  "countryMC": "Monaco",
+  "countryAD": "Andorra",
+  "countrySI": "Slowenien",
+  "countryAL": "Albanien",
+  "countryBA": "Bosnien und Herzegowina",
+  "countryRS": "Serbien",
+  "countryRO": "Rumaenien",
+  "countryBG": "Bulgarien",
+  "countryUA": "Ukraine",
+  "countryRU": "Russland",
+  "countryEE": "Estland",
+  "countryLV": "Lettland",
+  "countryLT": "Litauen",
+  "countryPL": "Polen",
+  "countryCZ": "Tschechien",
+  "countryAT": "Oesterreich",
+  "countryCH": "Schweiz",
+  "countryIE": "Irland",
+  "countryIL": "Israel",
+  "countryJO": "Jordanien",
+  "countryOM": "Oman",
+  "countryQA": "Katar",
+  "countryBH": "Bahrain",
+  "countryKW": "Kuwait",
+  "countrySA": "Saudi-Arabien"
+}

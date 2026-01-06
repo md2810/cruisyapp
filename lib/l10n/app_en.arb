@@ -1,0 +1,866 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Cruisy",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+
+  "today": "Today",
+  "@today": {
+    "description": "Today tab label"
+  },
+
+  "futureCruises": "Future Cruises",
+  "@futureCruises": {
+    "description": "Future cruises tab label"
+  },
+
+  "pastCruises": "Past Cruises",
+  "@pastCruises": {
+    "description": "Past cruises tab label"
+  },
+
+  "noPastCruises": "No past cruises",
+  "@noPastCruises": {
+    "description": "Empty state for past cruises"
+  },
+
+  "noUpcomingCruises": "No upcoming cruises",
+  "@noUpcomingCruises": {
+    "description": "Empty state for upcoming cruises"
+  },
+
+  "noCruiseToday": "No cruise today",
+  "@noCruiseToday": {
+    "description": "Empty state for today"
+  },
+
+  "completedCruisesAppearHere": "Your completed cruises will appear here",
+  "@completedCruisesAppearHere": {
+    "description": "Subtitle for empty past cruises"
+  },
+
+  "tapPlusToAddCruise": "Tap the + button above to add your first cruise",
+  "@tapPlusToAddCruise": {
+    "description": "Subtitle for empty upcoming cruises"
+  },
+
+  "noOngoingCruises": "You don't have any ongoing cruises",
+  "@noOngoingCruises": {
+    "description": "Subtitle for no cruise today"
+  },
+
+  "day": "DAY",
+  "@day": {
+    "description": "Day label singular"
+  },
+
+  "days": "DAYS",
+  "@days": {
+    "description": "Days label plural"
+  },
+
+  "done": "DONE",
+  "@done": {
+    "description": "Completed cruise label"
+  },
+
+  "todayPort": "Today: {portName}",
+  "@todayPort": {
+    "description": "Current port label",
+    "placeholders": {
+      "portName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "nextPort": "Next: {portName}",
+  "@nextPort": {
+    "description": "Next port label",
+    "placeholders": {
+      "portName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "addCruise": "Add Cruise",
+  "@addCruise": {
+    "description": "Add cruise screen title"
+  },
+
+  "editCruise": "Edit Cruise",
+  "@editCruise": {
+    "description": "Edit cruise screen title"
+  },
+
+  "shipName": "Ship Name",
+  "@shipName": {
+    "description": "Ship name field label"
+  },
+
+  "shipNameHint": "e.g. Symphony of the Seas",
+  "@shipNameHint": {
+    "description": "Ship name field hint"
+  },
+
+  "tripName": "Trip Name",
+  "@tripName": {
+    "description": "Trip name field label"
+  },
+
+  "tripNameHint": "e.g. Caribbean Adventure",
+  "@tripNameHint": {
+    "description": "Trip name field hint"
+  },
+
+  "startDate": "Start Date",
+  "@startDate": {
+    "description": "Start date field label"
+  },
+
+  "endDate": "End Date",
+  "@endDate": {
+    "description": "End date field label"
+  },
+
+  "selectDate": "Select date",
+  "@selectDate": {
+    "description": "Date picker placeholder"
+  },
+
+  "itinerary": "Itinerary",
+  "@itinerary": {
+    "description": "Itinerary section header"
+  },
+
+  "dayNumber": "Day {number}",
+  "@dayNumber": {
+    "description": "Day number label",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+
+  "seaDay": "Sea Day",
+  "@seaDay": {
+    "description": "Sea day label"
+  },
+
+  "addStop": "Add stop",
+  "@addStop": {
+    "description": "Add stop button tooltip"
+  },
+
+  "continuedFromPreviousDay": "Continued from previous day",
+  "@continuedFromPreviousDay": {
+    "description": "Multi-day stay continuation label"
+  },
+
+  "addPort": "Add Port",
+  "@addPort": {
+    "description": "Add port sheet title"
+  },
+
+  "editPort": "Edit Port",
+  "@editPort": {
+    "description": "Edit port sheet title"
+  },
+
+  "searchPorts": "Search ports...",
+  "@searchPorts": {
+    "description": "Port search field hint"
+  },
+
+  "isSeaDay": "Sea Day",
+  "@isSeaDay": {
+    "description": "Sea day toggle label"
+  },
+
+  "noPortThisDay": "No port this day",
+  "@noPortThisDay": {
+    "description": "Sea day toggle subtitle"
+  },
+
+  "multiDayStay": "Multi-day stay",
+  "@multiDayStay": {
+    "description": "Multi-day stay toggle label"
+  },
+
+  "portVisitSpanningDays": "Port visit spanning multiple days",
+  "@portVisitSpanningDays": {
+    "description": "Multi-day stay toggle subtitle"
+  },
+
+  "arrival": "Arrival",
+  "@arrival": {
+    "description": "Arrival label"
+  },
+
+  "departure": "Departure",
+  "@departure": {
+    "description": "Departure label"
+  },
+
+  "date": "Date",
+  "@date": {
+    "description": "Date label"
+  },
+
+  "time": "Time",
+  "@time": {
+    "description": "Time label"
+  },
+
+  "setTime": "Set time",
+  "@setTime": {
+    "description": "Time picker placeholder"
+  },
+
+  "save": "Save",
+  "@save": {
+    "description": "Save button label"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button label"
+  },
+
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button label"
+  },
+
+  "pleaseEnterShipName": "Please enter a ship name",
+  "@pleaseEnterShipName": {
+    "description": "Ship name validation error"
+  },
+
+  "pleaseSelectDates": "Please select start and end dates",
+  "@pleaseSelectDates": {
+    "description": "Date validation error"
+  },
+
+  "pleaseEnterOrSelectPort": "Please enter or select a port",
+  "@pleaseEnterOrSelectPort": {
+    "description": "Port validation error"
+  },
+
+  "pleaseSelectDate": "Please select a date",
+  "@pleaseSelectDate": {
+    "description": "Date validation error for port"
+  },
+
+  "needAtLeastTwoPorts": "You need at least two port stops",
+  "@needAtLeastTwoPorts": {
+    "description": "Validation error for minimum ports"
+  },
+
+  "firstStopCannotBeSeaDay": "First stop cannot be a sea day",
+  "@firstStopCannotBeSeaDay": {
+    "description": "Validation error for first stop"
+  },
+
+  "lastStopCannotBeSeaDay": "Last stop cannot be a sea day",
+  "@lastStopCannotBeSeaDay": {
+    "description": "Validation error for last stop"
+  },
+
+  "deleteCruise": "Delete Cruise",
+  "@deleteCruise": {
+    "description": "Delete cruise dialog title"
+  },
+
+  "deleteCruiseConfirmation": "Are you sure you want to delete this cruise? This action cannot be undone.",
+  "@deleteCruiseConfirmation": {
+    "description": "Delete cruise confirmation message"
+  },
+
+  "cruiseDeleted": "Cruise deleted",
+  "@cruiseDeleted": {
+    "description": "Cruise deleted snackbar message"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings screen title"
+  },
+
+  "account": "Account",
+  "@account": {
+    "description": "Account section header"
+  },
+
+  "signOut": "Sign Out",
+  "@signOut": {
+    "description": "Sign out button label"
+  },
+
+  "signOutConfirmation": "Are you sure you want to sign out?",
+  "@signOutConfirmation": {
+    "description": "Sign out confirmation message"
+  },
+
+  "login": "Sign In",
+  "@login": {
+    "description": "Sign in button label"
+  },
+
+  "signUp": "Sign Up",
+  "@signUp": {
+    "description": "Sign up button label"
+  },
+
+  "createAccount": "Create Account",
+  "@createAccount": {
+    "description": "Create account button label"
+  },
+
+  "welcomeBack": "Welcome back, cruiser",
+  "@welcomeBack": {
+    "description": "Login screen subtitle"
+  },
+
+  "createYourAccount": "Create your account",
+  "@createYourAccount": {
+    "description": "Sign up screen subtitle"
+  },
+
+  "name": "Name",
+  "@name": {
+    "description": "Name field label"
+  },
+
+  "yourName": "Your name",
+  "@yourName": {
+    "description": "Name field hint"
+  },
+
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+
+  "emailHint": "your@email.com",
+  "@emailHint": {
+    "description": "Email field hint"
+  },
+
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+
+  "yourPassword": "Your password",
+  "@yourPassword": {
+    "description": "Password field hint"
+  },
+
+  "pleaseEnterName": "Please enter your name",
+  "@pleaseEnterName": {
+    "description": "Name validation error"
+  },
+
+  "pleaseEnterEmail": "Please enter your email",
+  "@pleaseEnterEmail": {
+    "description": "Email validation error"
+  },
+
+  "pleaseEnterValidEmail": "Please enter a valid email",
+  "@pleaseEnterValidEmail": {
+    "description": "Email format validation error"
+  },
+
+  "pleaseEnterPassword": "Please enter your password",
+  "@pleaseEnterPassword": {
+    "description": "Password validation error"
+  },
+
+  "passwordTooShort": "Password must be at least 6 characters",
+  "@passwordTooShort": {
+    "description": "Password length validation error"
+  },
+
+  "or": "OR",
+  "@or": {
+    "description": "Divider text between login methods"
+  },
+
+  "continueWithGoogle": "Continue with Google",
+  "@continueWithGoogle": {
+    "description": "Google sign in button label"
+  },
+
+  "alreadyHaveAccount": "Already have an account?",
+  "@alreadyHaveAccount": {
+    "description": "Link to sign in"
+  },
+
+  "dontHaveAccount": "Don't have an account?",
+  "@dontHaveAccount": {
+    "description": "Link to sign up"
+  },
+
+  "unexpectedError": "An unexpected error occurred.",
+  "@unexpectedError": {
+    "description": "Generic error message"
+  },
+
+  "googleSignInFailed": "Google sign-in failed. Please try again.",
+  "@googleSignInFailed": {
+    "description": "Google sign in error"
+  },
+
+  "hoursInPort": "{hours}h in port",
+  "@hoursInPort": {
+    "description": "Duration in port",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+
+  "now": "NOW",
+  "@now": {
+    "description": "Current stop indicator"
+  },
+
+  "overview": "Overview",
+  "@overview": {
+    "description": "Overview section header"
+  },
+
+  "totalDays": "{count} days",
+  "@totalDays": {
+    "description": "Total days count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "ports": "Ports",
+  "@ports": {
+    "description": "Ports label"
+  },
+
+  "portCount": "{count} ports",
+  "@portCount": {
+    "description": "Port count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "progress": "Progress",
+  "@progress": {
+    "description": "Progress label"
+  },
+
+  "progressPercent": "{percent}%",
+  "@progressPercent": {
+    "description": "Progress percentage",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+
+  "cruiseNotStarted": "Not started",
+  "@cruiseNotStarted": {
+    "description": "Cruise not started status"
+  },
+
+  "cruiseCompleted": "Completed",
+  "@cruiseCompleted": {
+    "description": "Cruise completed status"
+  },
+
+  "map": "Map",
+  "@map": {
+    "description": "Map section header"
+  },
+
+  "viewFullMap": "View full map",
+  "@viewFullMap": {
+    "description": "View full map button"
+  },
+
+  "language": "Language",
+  "@language": {
+    "description": "Language setting label"
+  },
+
+  "english": "English",
+  "@english": {
+    "description": "English language name"
+  },
+
+  "german": "German",
+  "@german": {
+    "description": "German language name"
+  },
+
+  "appInfo": "App Info",
+  "@appInfo": {
+    "description": "App info section header"
+  },
+
+  "version": "Version",
+  "@version": {
+    "description": "Version label"
+  },
+
+  "myCruises": "My Cruises",
+  "@myCruises": {
+    "description": "My cruises screen title"
+  },
+
+  "allCruises": "All Cruises",
+  "@allCruises": {
+    "description": "All cruises filter option"
+  },
+
+  "voyages": "Voyages",
+  "accountSettings": "Account Settings",
+  "manageProfilePreferences": "Manage your profile and preferences",
+  "notifications": "Notifications",
+  "manageNotifications": "Manage notification preferences",
+  "support": "Support",
+  "helpSupport": "Help & Support",
+  "getHelp": "Get help with using Cruisy",
+  "about": "About",
+  "appVersionLegal": "App version and legal info",
+  "editProfile": "Edit Profile",
+  "changeDisplayName": "Change your display name",
+  "changePassword": "Change Password",
+  "updatePassword": "Update your password",
+  "deleteAccountTitle": "Delete Account",
+  "permanentlyDeleteAccount": "Permanently delete your account",
+  "tripReminders": "Trip Reminders",
+  "getNotifiedBeforeCruise": "Get notified before your cruise",
+  "portAlerts": "Port Alerts",
+  "notificationsAtPorts": "Notifications when arriving at ports",
+  "countdownUpdates": "Countdown Updates",
+  "dailyCountdown": "Daily countdown notifications",
+  "appDescription": "Your personal cruise companion app. Track your voyages, plan excursions, and never miss a moment of your cruise adventure.",
+
+  "newVoyage": "New Voyage",
+  "editVoyage": "Edit Voyage",
+  "addCruiseTracking": "Add your upcoming cruise to start tracking",
+  "updateCruiseDetails": "Update your cruise details",
+  "tripNameOptional": "Trip Name (Optional)",
+  "travelDates": "Travel Dates",
+  "selectDepartureDates": "Select departure and return dates",
+  "add": "Add",
+  "selectTravelDatesFirst": "Select travel dates first",
+  "addPortsSeaDays": "Then add your ports and sea days",
+  "noActivityPlanned": "No activity planned",
+  "continued": "{name} (continued)",
+  "@continued": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "arrivesTime": "Arrives {time}",
+  "@arrivesTime": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "addStopTitle": "Add Stop",
+  "editStopTitle": "Edit Stop",
+  "dayAtSeaNoPort": "Day at sea with no port",
+  "portNameLabel": "Port Name",
+  "searchPort": "Search for a port...",
+  "coordinatesSaved": "Coordinates saved for map",
+  "arrivalDate": "Arrival Date",
+  "departureDate": "Departure Date",
+  "timesOptional": "Times (Optional)",
+  "updateStop": "Update Stop",
+  "pleaseSelectTripDatesFirst": "Please select trip dates first",
+
+  "tripNotFound": "Trip not found",
+  "voyageMayBeDeleted": "This voyage may have been deleted",
+  "goBack": "Go Back",
+  "editTripMenu": "Edit Trip",
+  "shareMenu": "Share",
+  "shareComingSoon": "Share feature coming soon!",
+  "deleteTripMenu": "Delete Trip",
+  "deleteTripConfirmation": "Are you sure you want to delete \"{name}\"?\n\nThis action cannot be undone.",
+  "@deleteTripConfirmation": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "tripDeleted": "{name} deleted",
+  "@tripDeleted": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "failedToDelete": "Failed to delete: {error}",
+  "@failedToDelete": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "voyageInProgress": "VOYAGE IN PROGRESS",
+  "daysUntil": "DAYS UNTIL",
+  "dayLabel": "Day {number}",
+  "@dayLabel": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "daysLabel": "days",
+  "departs": "DEPARTS",
+  "nextLabel": "NEXT",
+  "inProgressStatus": "In Progress",
+  "upcomingStatus": "Upcoming",
+  "noItineraryYet": "No itinerary added yet",
+  "editTripToAddStops": "Edit this trip to add port stops",
+  "addStops": "Add Stops",
+  "daysCount": "{count} days",
+  "@daysCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "todayLabel": "TODAY",
+
+  "tripUpdated": "{name} updated!",
+  "@tripUpdated": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "tripAdded": "{name} trip added!",
+  "@tripAdded": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "failedToSaveTrip": "Failed to save trip: {error}",
+  "@failedToSaveTrip": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "addTrip": "Add Trip",
+  "editTrip": "Edit Trip",
+  "savingTrip": "Saving...",
+  "updateTripButton": "Update Trip",
+  "saveTripButton": "Save Trip",
+
+  "goodMorning": "Good Morning",
+  "goodAfternoon": "Good Afternoon",
+  "goodEvening": "Good Evening",
+  "failedToLoadTrips": "Failed to load trips",
+  "noUpcomingTrips": "No upcoming trips",
+  "startPlanningCruise": "Start planning your next cruise adventure",
+  "addFirstTrip": "Add Your First Trip",
+  "nextTrip": "NEXT TRIP",
+  "daysLowercase": "days",
+  "hoursRemaining": "{hours}h remaining",
+  "@hoursRemaining": {
+    "placeholders": {
+      "hours": {"type": "int"}
+    }
+  },
+  "packingList": "Packing List",
+  "documents": "Documents",
+  "excursions": "Excursions",
+  "dining": "Dining",
+  "upcoming": "Upcoming",
+
+  "myVoyages": "My Voyages",
+  "checkConnection": "Please check your connection",
+  "noVoyagesYet": "No voyages yet",
+  "startTrackingCruises": "Start tracking your cruise adventures\nby adding your first trip",
+  "pastTrips": "Past Trips",
+  "deleteTrip": "Delete Trip",
+  "viewDetails": "View Details",
+
+  "mapFailedToLoad": "Map failed to load",
+  "checkMapboxConfig": "Check your Mapbox configuration",
+  "retry": "Retry",
+  "explore": "Explore",
+  "yourCruiseDestinations": "Your cruise destinations",
+
+  "home": "Home",
+  "trips": "Trips",
+
+  "allTimeCruisePassport": "ALL-TIME CRUISE PASSPORT",
+  "yearCruisePassport": "{year} CRUISE PASSPORT",
+  "@yearCruisePassport": {
+    "placeholders": {
+      "year": {"type": "int"}
+    }
+  },
+  "passport": "PASSPORT",
+  "distance": "DISTANCE",
+  "ships": "SHIPS",
+  "allCruiseStats": "All Cruise Stats",
+  "longestCruise": "Longest Cruise",
+  "daysOnShip": "days on {shipName}",
+  "@daysOnShip": {
+    "placeholders": {
+      "shipName": {"type": "String"}
+    }
+  },
+  "favoriteShip": "Favorite Ship",
+  "cruiseCount": "{count, plural, =1{1 cruise} other{{count} cruises}}",
+  "@cruiseCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "viewAllShips": "View all ships",
+  "allShips": "All Ships",
+
+  "aroundWorld": "{times}x around the world",
+  "@aroundWorld": {
+    "placeholders": {
+      "times": {"type": "String"}
+    }
+  },
+  "halfAroundWorld": "Half way around the world",
+
+  "noItineraryYet": "No itinerary added yet",
+  "editToAddPorts": "Edit this trip to add port stops",
+  "addStopsButton": "Add Stops",
+  "todayBadge": "TODAY",
+  "continuedPort": "(continued)",
+  "arrivesAt": "Arrives {time}",
+  "@arrivesAt": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "noActivityPlanned": "No activity planned",
+  "daysCount": "{count} days",
+  "@daysCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+
+  "countryUS": "United States",
+  "countryDE": "Germany",
+  "countryES": "Spain",
+  "countryFR": "France",
+  "countryIT": "Italy",
+  "countryGR": "Greece",
+  "countryHR": "Croatia",
+  "countryME": "Montenegro",
+  "countryPT": "Portugal",
+  "countryGB": "United Kingdom",
+  "countryNL": "Netherlands",
+  "countryBE": "Belgium",
+  "countryNO": "Norway",
+  "countrySE": "Sweden",
+  "countryDK": "Denmark",
+  "countryFI": "Finland",
+  "countryIS": "Iceland",
+  "countryMT": "Malta",
+  "countryCY": "Cyprus",
+  "countryTR": "Turkey",
+  "countryAE": "United Arab Emirates",
+  "countryBS": "Bahamas",
+  "countryJM": "Jamaica",
+  "countryMX": "Mexico",
+  "countryBZ": "Belize",
+  "countryHN": "Honduras",
+  "countryPA": "Panama",
+  "countryAW": "Aruba",
+  "countryCW": "Curacao",
+  "countrySX": "Sint Maarten",
+  "countryVG": "British Virgin Islands",
+  "countryVI": "US Virgin Islands",
+  "countryPR": "Puerto Rico",
+  "countryDO": "Dominican Republic",
+  "countryHT": "Haiti",
+  "countryAG": "Antigua and Barbuda",
+  "countryBB": "Barbados",
+  "countryLC": "Saint Lucia",
+  "countryGD": "Grenada",
+  "countryVC": "Saint Vincent and the Grenadines",
+  "countryKY": "Cayman Islands",
+  "countryTC": "Turks and Caicos",
+  "countryTT": "Trinidad and Tobago",
+  "countryCA": "Canada",
+  "countryAU": "Australia",
+  "countryNZ": "New Zealand",
+  "countryJP": "Japan",
+  "countryCN": "China",
+  "countryTH": "Thailand",
+  "countryVN": "Vietnam",
+  "countrySG": "Singapore",
+  "countryMY": "Malaysia",
+  "countryID": "Indonesia",
+  "countryPH": "Philippines",
+  "countryIN": "India",
+  "countryEG": "Egypt",
+  "countryMA": "Morocco",
+  "countryTN": "Tunisia",
+  "countryZA": "South Africa",
+  "countryMU": "Mauritius",
+  "countrySC": "Seychelles",
+  "countryMV": "Maldives",
+  "countryCL": "Chile",
+  "countryAR": "Argentina",
+  "countryBR": "Brazil",
+  "countryPE": "Peru",
+  "countryEC": "Ecuador",
+  "countryCO": "Colombia",
+  "countryCR": "Costa Rica",
+  "countryFO": "Faroe Islands",
+  "countryGL": "Greenland",
+  "countrySJ": "Svalbard",
+  "countryAQ": "Antarctica",
+  "countryPF": "French Polynesia",
+  "countryFJ": "Fiji",
+  "countryTO": "Tonga",
+  "countryWS": "Samoa",
+  "countryNC": "New Caledonia",
+  "countryVU": "Vanuatu",
+  "countryPG": "Papua New Guinea",
+  "countrySB": "Solomon Islands",
+  "countryGI": "Gibraltar",
+  "countryMC": "Monaco",
+  "countryAD": "Andorra",
+  "countrySI": "Slovenia",
+  "countryAL": "Albania",
+  "countryBA": "Bosnia and Herzegovina",
+  "countryRS": "Serbia",
+  "countryRO": "Romania",
+  "countryBG": "Bulgaria",
+  "countryUA": "Ukraine",
+  "countryRU": "Russia",
+  "countryEE": "Estonia",
+  "countryLV": "Latvia",
+  "countryLT": "Lithuania",
+  "countryPL": "Poland",
+  "countryCZ": "Czech Republic",
+  "countryAT": "Austria",
+  "countryCH": "Switzerland",
+  "countryIE": "Ireland",
+  "countryIL": "Israel",
+  "countryJO": "Jordan",
+  "countryOM": "Oman",
+  "countryQA": "Qatar",
+  "countryBH": "Bahrain",
+  "countryKW": "Kuwait",
+  "countrySA": "Saudi Arabia"
+}

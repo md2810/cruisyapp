@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>MBXAccessToken</key>
+    <string>pk.eyJ1IjoidGhlbWRjcmFmdCIsImEiOiJjbDZ1cGMwMHgwMGdxM2psZ2FvajEyODQyIn0.ssGAGhYamFXfcF0TQOQa5Q</string>
 </dict>
 </plist>
