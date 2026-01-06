@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:cruisyapp/l10n/generated/app_localizations.dart';
 
 import 'firebase_options.dart';
 import 'shared/navigation/router.dart';
@@ -83,7 +83,7 @@ class CruisyApp extends ConsumerWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(28),
