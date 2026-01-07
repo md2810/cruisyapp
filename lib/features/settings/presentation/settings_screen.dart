@@ -468,19 +468,27 @@ class _ProfileHeader extends StatelessWidget {
                 onTap: () => _showAboutDialog(context),
               ),
               const SizedBox(height: 24),
-              // Sign out button
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: () => _confirmSignOut(context, ref),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: colorScheme.errorContainer,
-                    foregroundColor: colorScheme.error,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  icon: const Icon(Icons.logout_rounded),
-                  label: Text(l10n.signOut),
-                ),
+              // Sign out button (only show if Firebase is available)
+              Consumer(
+                builder: (context, ref, _) {
+                  final authService = ref.watch(authServiceProvider);
+                  if (authService == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: () => _confirmSignOut(context, ref),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: colorScheme.errorContainer,
+                        foregroundColor: colorScheme.error,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      icon: const Icon(Icons.logout_rounded),
+                      label: Text(l10n.signOut),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 16),
             ],
@@ -517,6 +525,14 @@ class _ProfileHeader extends StatelessWidget {
 
   Future<void> _confirmSignOut(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context)!;
+    final authService = ref.read(authServiceProvider);
+
+    // If auth service is not available, don't show sign out option
+    if (authService == null) {
+      Navigator.of(context).pop();
+      return;
+    }
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -536,7 +552,7 @@ class _ProfileHeader extends StatelessWidget {
     );
 
     if (confirmed == true && context.mounted) {
-      await ref.read(authServiceProvider).signOut();
+      await authService.signOut();
       if (context.mounted) {
         Navigator.of(context).pop(); // Close settings sheet
       }

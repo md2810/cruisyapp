@@ -44,6 +44,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       final authService = ref.read(authServiceProvider);
 
+      if (authService == null) {
+        setState(() {
+          _errorMessage = 'Authentication services are not available. Please try again later.';
+        });
+        return;
+      }
+
       if (_isSignUp) {
         await authService.signUp(
           email: _emailController.text,
@@ -84,6 +91,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     try {
       final authService = ref.read(authServiceProvider);
+
+      if (authService == null) {
+        setState(() {
+          _errorMessage = 'Google Sign-In is not available. Please try again later.';
+        });
+        return;
+      }
+
       await authService.signInWithGoogle();
     } on AuthException catch (e) {
       setState(() {

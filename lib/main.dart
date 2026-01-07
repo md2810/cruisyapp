@@ -12,12 +12,24 @@ import 'shared/navigation/router.dart';
 // Locale provider for language switching
 final localeProvider = StateProvider<Locale?>((ref) => null);
 
+// Firebase availability provider
+final firebaseAvailableProvider = StateProvider<bool>((ref) => false);
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // Try to initialize Firebase, but don't crash if it fails
+  // (e.g., on Huawei devices without Google Play Services)
+  bool firebaseInitialized = false;
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    firebaseInitialized = true;
+  } catch (e) {
+    debugPrint('Firebase initialization failed: $e');
+    debugPrint('App will continue without Firebase services.');
+  }
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -31,8 +43,11 @@ void main() async {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   runApp(
-    const ProviderScope(
-      child: CruisyApp(),
+    ProviderScope(
+      overrides: [
+        firebaseAvailableProvider.overrideWith((ref) => firebaseInitialized),
+      ],
+      child: const CruisyApp(),
     ),
   );
 }

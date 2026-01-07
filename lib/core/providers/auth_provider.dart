@@ -1,14 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../main.dart';
 import '../services/auth_service.dart';
 
-final authServiceProvider = Provider<AuthService>((ref) {
+final authServiceProvider = Provider<AuthService?>((ref) {
+  final firebaseAvailable = ref.watch(firebaseAvailableProvider);
+  if (!firebaseAvailable) return null;
   return AuthService();
 });
 
 final authStateProvider = StreamProvider<User?>((ref) {
   final authService = ref.watch(authServiceProvider);
+  if (authService == null) {
+    // Firebase not available, return empty stream
+    return Stream.value(null);
+  }
   return authService.authStateChanges;
 });
 
@@ -22,6 +29,7 @@ final currentUserIdProvider = Provider<String?>((ref) {
 
 final userDisplayNameProvider = Provider<String>((ref) {
   final authService = ref.watch(authServiceProvider);
+  if (authService == null) return 'Guest';
   return authService.currentUserDisplayName;
 });
 

@@ -10,16 +10,27 @@ import '../../features/home/presentation/home_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/trip_detail/presentation/trip_detail_screen.dart';
 import '../../features/trips/presentation/trip_form_screen.dart';
+import '../../main.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
+  final firebaseAvailable = ref.watch(firebaseAvailableProvider);
 
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/',
     redirect: (context, state) {
+      // If Firebase isn't available, allow guest access (skip login)
+      if (!firebaseAvailable) {
+        // If trying to access login when Firebase is unavailable, redirect home
+        if (state.matchedLocation == '/login') {
+          return '/';
+        }
+        return null;
+      }
+
       final isLoggedIn = authState.valueOrNull != null;
       final isLoggingIn = state.matchedLocation == '/login';
 
