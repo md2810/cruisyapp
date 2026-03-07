@@ -39,7 +39,7 @@ class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserv
     }
   }
 
-  void _onMapCreated(MapboxMap mapboxMap) {
+  void _onMapCreated(dynamic mapboxMap) {
     debugPrint('Mapbox: Map created successfully');
     _mapboxMap = mapboxMap;
 

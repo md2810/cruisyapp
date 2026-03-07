@@ -67,7 +67,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     super.dispose();
   }
 
-  void _onMapCreated(MapboxMap mapboxMap) async {
+  void _onMapCreated(dynamic mapboxMap) async {
     // Configure Mapbox ornaments for compact display
     mapboxMap.scaleBar.updateSettings(ScaleBarSettings(enabled: false));
     mapboxMap.logo.updateSettings(LogoSettings(
