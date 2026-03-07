@@ -1,7 +1,9 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 /// Stub MapWidget for web platform since Mapbox doesn't support web
-class MapWidget extends StatelessWidget {
+class MapWidget extends StatefulWidget {
   final Function(dynamic)? onMapCreated;
   final String? styleUri;
   final dynamic cameraOptions;
@@ -12,6 +14,20 @@ class MapWidget extends StatelessWidget {
     this.styleUri,
     this.cameraOptions,
   });
+
+  @override
+  State<MapWidget> createState() => _MapWidgetState();
+}
+
+class _MapWidgetState extends State<MapWidget> {
+  @override
+  void initState() {
+    super.initState();
+    // Call onMapCreated with a stub map instance
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onMapCreated?.call(MapboxMap());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +69,39 @@ class MapWidget extends StatelessWidget {
 // Stub classes for web
 class MapboxMap {
   void setCamera(dynamic options) {}
-  dynamic get style => null;
-  dynamic get scaleBar => null;
-  dynamic get logo => null;
-  dynamic get attribution => null;
+  dynamic get style => _StyleStub();
+  dynamic get scaleBar => _ScaleBarStub();
+  dynamic get logo => _LogoStub();
+  dynamic get attribution => _AttributionStub();
+  dynamic get annotations => _AnnotationsStub();
+}
+
+class _StyleStub {
+  void setProjection(dynamic projection) {}
+}
+
+class _ScaleBarStub {
+  void updateSettings(dynamic settings) {}
+}
+
+class _LogoStub {
+  void updateSettings(dynamic settings) {}
+}
+
+class _AttributionStub {
+  void updateSettings(dynamic settings) {}
+}
+
+class _AnnotationsStub {
+  Future<PolylineAnnotationManager> createPolylineAnnotationManager() async {
+    return PolylineAnnotationManager();
+  }
+  Future<CircleAnnotationManager> createCircleAnnotationManager() async {
+    return CircleAnnotationManager();
+  }
 }
 
 class MapboxStyles {
-  // ignore: constant_identifier_names
   static const String DARK = 'mapbox://styles/mapbox/dark-v11';
 }
 
@@ -152,5 +193,5 @@ class LineString {
 }
 
 class OrnamentPosition {
-  static const topLeft = 'top-left';
+  static const TOP_LEFT = 'top-left';
 }
