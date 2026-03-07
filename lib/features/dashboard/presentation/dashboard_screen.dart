@@ -160,7 +160,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             Icon(
               Icons.sailing_rounded,
               size: 80,
-              color: colorScheme.primary.withOpacity(0.5),
+              color: colorScheme.primary.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 24),
             Text(
@@ -222,7 +222,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   child: Icon(
                     Icons.sailing_rounded,
                     size: 64,
-                    color: colorScheme.primary.withOpacity(0.5),
+                    color: colorScheme.primary.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -233,8 +233,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withOpacity(0.3),
-                      Colors.black.withOpacity(0.8),
+                      Colors.black.withValues(alpha: 0.3),
+                      Colors.black.withValues(alpha: 0.8),
                     ],
                     stops: const [0.0, 0.5, 1.0],
                   ),
@@ -255,7 +255,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Row(
@@ -293,7 +293,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             Text(
                               l10n.daysLowercase,
                               style: textTheme.titleMedium?.copyWith(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -301,7 +301,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               Text(
                                 l10n.hoursRemaining(hoursRemaining),
                                 style: textTheme.bodySmall?.copyWith(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.white.withValues(alpha: 0.7),
                                 ),
                               ),
                           ],
@@ -312,7 +312,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     Text(
                       trip.tripName,
                       style: textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -336,7 +336,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         Icon(
                           Icons.arrow_forward_rounded,
                           size: 16,
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withValues(alpha: 0.6),
                         ),
                         const SizedBox(width: 8),
                         _buildHeroInfoChip(
@@ -362,7 +362,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.15),
+          color: Colors.white.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -371,7 +371,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             Icon(
               icon,
               size: 14,
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
             ),
             const SizedBox(width: 6),
             Flexible(
@@ -500,14 +500,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       color: colorScheme.surfaceContainerHighest,
                       child: Icon(
                         Icons.sailing_rounded,
-                        color: colorScheme.primary.withOpacity(0.5),
+                        color: colorScheme.primary.withValues(alpha: 0.5),
                       ),
                     ),
                     errorWidget: (context, url, error) => Container(
                       color: colorScheme.surfaceContainerHighest,
                       child: Icon(
                         Icons.sailing_rounded,
-                        color: colorScheme.primary.withOpacity(0.5),
+                        color: colorScheme.primary.withValues(alpha: 0.5),
                       ),
                     ),
                   ),

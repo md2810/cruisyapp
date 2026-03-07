@@ -23,7 +23,7 @@ class ProfileButton extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           color: isTransparentStyle
-              ? Colors.white.withOpacity(0.2)
+              ? Colors.white.withValues(alpha: 0.2)
               : colorScheme.primaryContainer,
           shape: BoxShape.circle,
         ),

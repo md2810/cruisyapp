@@ -913,18 +913,8 @@
     }
   },
 
-  "liveTracking": "Live Tracking",
-  "livePosition": "Live",
-  "recentPosition": "{time} ago",
-  "@recentPosition": {
-    "placeholders": {
-      "time": {"type": "String"}
-    }
-  },
-  "estimatedPosition": "Estimated",
-
   "departureIn": "Departure in",
-  "liveVoyage": "Live Voyage",
+  "activeVoyage": "Active Voyage",
   "atSea": "At Sea",
   "currentlyAt": "Currently at",
   "nextStop": "Next Stop",

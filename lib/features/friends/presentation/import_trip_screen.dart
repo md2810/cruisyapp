@@ -135,7 +135,7 @@ class _ImportTripScreenState extends ConsumerState<ImportTripScreen> {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: colorScheme.errorContainer.withOpacity(0.3),
+                    color: colorScheme.errorContainer.withValues(alpha: 0.3),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -209,7 +209,7 @@ class _ImportTripScreenState extends ConsumerState<ImportTripScreen> {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer.withOpacity(0.3),
+                  color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -332,7 +332,7 @@ class _ImportTripScreenState extends ConsumerState<ImportTripScreen> {
 
             // Owner info
             Card(
-              color: colorScheme.secondaryContainer.withOpacity(0.3),
+              color: colorScheme.secondaryContainer.withValues(alpha: 0.3),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(

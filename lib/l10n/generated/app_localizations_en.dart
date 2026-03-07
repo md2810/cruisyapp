@@ -1,5 +1,5 @@
+// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -30,10 +30,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noCruiseToday => 'No cruise today';
 
   @override
-  String get completedCruisesAppearHere => 'Your completed cruises will appear here';
+  String get completedCruisesAppearHere =>
+      'Your completed cruises will appear here';
 
   @override
-  String get tapPlusToAddCruise => 'Tap the + button above to add your first cruise';
+  String get tapPlusToAddCruise =>
+      'Tap the + button above to add your first cruise';
 
   @override
   String get noOngoingCruises => 'You don\'t have any ongoing cruises';
@@ -171,7 +173,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteCruise => 'Delete Cruise';
 
   @override
-  String get deleteCruiseConfirmation => 'Are you sure you want to delete this cruise? This action cannot be undone.';
+  String get deleteCruiseConfirmation =>
+      'Are you sure you want to delete this cruise? This action cannot be undone.';
 
   @override
   String get cruiseDeleted => 'Cruise deleted';
@@ -386,7 +389,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dailyCountdown => 'Daily countdown notifications';
 
   @override
-  String get appDescription => 'Your personal cruise companion app. Track your voyages, plan excursions, and never miss a moment of your cruise adventure.';
+  String get appDescription =>
+      'Your personal cruise companion app. Track your voyages, plan excursions, and never miss a moment of your cruise adventure.';
 
   @override
   String get newVoyage => 'New Voyage';
@@ -630,7 +634,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noVoyagesYet => 'No voyages yet';
 
   @override
-  String get startTrackingCruises => 'Start tracking your cruise adventures\nby adding your first trip';
+  String get startTrackingCruises =>
+      'Start tracking your cruise adventures\nby adding your first trip';
 
   @override
   String get pastTrips => 'Past Trips';
@@ -1077,7 +1082,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noSharedTrips => 'No shared trips yet';
 
   @override
-  String get noSharedTripsSubtitle => 'When friends share their trips with you, they\'ll appear here';
+  String get noSharedTripsSubtitle =>
+      'When friends share their trips with you, they\'ll appear here';
 
   @override
   String sharedBy(String name) {
@@ -1093,7 +1099,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get removeSharedTrip => 'Remove';
 
   @override
-  String get removeSharedTripConfirmation => 'Remove this shared trip from your list?';
+  String get removeSharedTripConfirmation =>
+      'Remove this shared trip from your list?';
 
   @override
   String get duplicateToMyTrips => 'Duplicate to My Trips';
@@ -1130,24 +1137,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get liveTracking => 'Live Tracking';
-
-  @override
-  String get livePosition => 'Live';
-
-  @override
-  String recentPosition(String time) {
-    return '$time ago';
-  }
-
-  @override
-  String get estimatedPosition => 'Estimated';
-
-  @override
   String get departureIn => 'Departure in';
 
   @override
-  String get liveVoyage => 'Live Voyage';
+  String get activeVoyage => 'Active Voyage';
 
   @override
   String get atSea => 'At Sea';

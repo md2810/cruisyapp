@@ -1,5 +1,5 @@
+// ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -30,10 +30,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noCruiseToday => 'Heute keine Kreuzfahrt';
 
   @override
-  String get completedCruisesAppearHere => 'Abgeschlossene Reisen erscheinen hier';
+  String get completedCruisesAppearHere =>
+      'Abgeschlossene Reisen erscheinen hier';
 
   @override
-  String get tapPlusToAddCruise => 'Tippe auf + um deine erste Kreuzfahrt hinzuzufügen';
+  String get tapPlusToAddCruise =>
+      'Tippe auf + um deine erste Kreuzfahrt hinzuzufügen';
 
   @override
   String get noOngoingCruises => 'Du hast keine laufende Kreuzfahrt';
@@ -153,7 +155,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get pleaseSelectDates => 'Bitte wähle Start- und Enddatum';
 
   @override
-  String get pleaseEnterOrSelectPort => 'Bitte gib einen Hafen ein oder wähle einen aus';
+  String get pleaseEnterOrSelectPort =>
+      'Bitte gib einen Hafen ein oder wähle einen aus';
 
   @override
   String get pleaseSelectDate => 'Bitte wähle ein Datum';
@@ -171,7 +174,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get deleteCruise => 'Kreuzfahrt löschen';
 
   @override
-  String get deleteCruiseConfirmation => 'Bist du sicher, dass du diese Kreuzfahrt löschen moechtest? Diese Aktion kann nicht rückgaengig gemacht werden.';
+  String get deleteCruiseConfirmation =>
+      'Bist du sicher, dass du diese Kreuzfahrt löschen moechtest? Diese Aktion kann nicht rückgaengig gemacht werden.';
 
   @override
   String get cruiseDeleted => 'Kreuzfahrt gelöscht';
@@ -186,7 +190,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get signOut => 'Abmelden';
 
   @override
-  String get signOutConfirmation => 'Bist du sicher, dass du dich abmelden möchtest?';
+  String get signOutConfirmation =>
+      'Bist du sicher, dass du dich abmelden möchtest?';
 
   @override
   String get login => 'Anmelden';
@@ -228,13 +233,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get pleaseEnterEmail => 'Bitte gib deine E-Mail-Adresse ein';
 
   @override
-  String get pleaseEnterValidEmail => 'Bitte gib eine gültige E-Mail-Adresse ein';
+  String get pleaseEnterValidEmail =>
+      'Bitte gib eine gültige E-Mail-Adresse ein';
 
   @override
   String get pleaseEnterPassword => 'Bitte gib dein Passwort ein';
 
   @override
-  String get passwordTooShort => 'Das Passwort muss mindestens 6 Zeichen lang sein';
+  String get passwordTooShort =>
+      'Das Passwort muss mindestens 6 Zeichen lang sein';
 
   @override
   String get or => 'ODER';
@@ -252,7 +259,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get unexpectedError => 'Ein unerwarteter Fehler ist aufgetreten.';
 
   @override
-  String get googleSignInFailed => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.';
+  String get googleSignInFailed =>
+      'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.';
 
   @override
   String hoursInPort(int hours) {
@@ -386,7 +394,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dailyCountdown => 'Tägliche Countdown-Benachrichtigungen';
 
   @override
-  String get appDescription => 'Deine persönliche Kreuzfahrt-Begleiter-App. Verfolge deine Reisen, plane Ausflüge und verpasse keinen Moment deines Kreuzfahrtabenteuers.';
+  String get appDescription =>
+      'Deine persönliche Kreuzfahrt-Begleiter-App. Verfolge deine Reisen, plane Ausflüge und verpasse keinen Moment deines Kreuzfahrtabenteuers.';
 
   @override
   String get newVoyage => 'Neue Reise';
@@ -395,7 +404,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get editVoyage => 'Reise bearbeiten';
 
   @override
-  String get addCruiseTracking => 'Füge deine Kreuzfahrt hinzu um sie zu verfolgen';
+  String get addCruiseTracking =>
+      'Füge deine Kreuzfahrt hinzu um sie zu verfolgen';
 
   @override
   String get updateCruiseDetails => 'Aktualisiere deine Kreuzfahrtdetails';
@@ -468,7 +478,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tripNotFound => 'Reise nicht gefunden';
 
   @override
-  String get voyageMayBeDeleted => 'Diese Reise wurde moeglicherweise geloescht';
+  String get voyageMayBeDeleted =>
+      'Diese Reise wurde moeglicherweise geloescht';
 
   @override
   String get goBack => 'Zurück';
@@ -530,7 +541,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noItineraryYet => 'Noch kein Reiseverlauf hinzugefuegt';
 
   @override
-  String get editTripToAddStops => 'Bearbeite diese Reise um Hafenstopps hinzuzufuegen';
+  String get editTripToAddStops =>
+      'Bearbeite diese Reise um Hafenstopps hinzuzufuegen';
 
   @override
   String get addStops => 'Stopps hinzufuegen';
@@ -589,7 +601,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noUpcomingTrips => 'Keine bevorstehenden Reisen';
 
   @override
-  String get startPlanningCruise => 'Plane jetzt dein nächstes Kreuzfahrtabenteuer';
+  String get startPlanningCruise =>
+      'Plane jetzt dein nächstes Kreuzfahrtabenteuer';
 
   @override
   String get addFirstTrip => 'Erste Reise hinzufügen';
@@ -630,7 +643,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noVoyagesYet => 'Noch keine Reisen';
 
   @override
-  String get startTrackingCruises => 'Beginne deine Kreuzfahrtabenteuer zu verfolgen\nindem du deine erste Reise hinzufügst';
+  String get startTrackingCruises =>
+      'Beginne deine Kreuzfahrtabenteuer zu verfolgen\nindem du deine erste Reise hinzufügst';
 
   @override
   String get pastTrips => 'Vergangene Reisen';
@@ -1077,7 +1091,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noSharedTrips => 'Noch keine geteilten Reisen';
 
   @override
-  String get noSharedTripsSubtitle => 'Wenn Freunde ihre Reisen mit dir teilen, erscheinen sie hier';
+  String get noSharedTripsSubtitle =>
+      'Wenn Freunde ihre Reisen mit dir teilen, erscheinen sie hier';
 
   @override
   String sharedBy(String name) {
@@ -1093,7 +1108,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get removeSharedTrip => 'Entfernen';
 
   @override
-  String get removeSharedTripConfirmation => 'Diese geteilte Reise aus deiner Liste entfernen?';
+  String get removeSharedTripConfirmation =>
+      'Diese geteilte Reise aus deiner Liste entfernen?';
 
   @override
   String get duplicateToMyTrips => 'Zu meinen Reisen kopieren';
@@ -1130,24 +1146,10 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get liveTracking => 'Live-Tracking';
-
-  @override
-  String get livePosition => 'Live';
-
-  @override
-  String recentPosition(String time) {
-    return 'Vor $time';
-  }
-
-  @override
-  String get estimatedPosition => 'Geschätzt';
-
-  @override
   String get departureIn => 'Abfahrt in';
 
   @override
-  String get liveVoyage => 'Live-Reise';
+  String get activeVoyage => 'Aktive Reise';
 
   @override
   String get atSea => 'Auf See';

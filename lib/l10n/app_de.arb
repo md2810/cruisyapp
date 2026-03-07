@@ -471,13 +471,8 @@
   "invalidShareLink": "Ungültiger Teilen-Link",
   "failedToImport": "Import fehlgeschlagen: {error}",
 
-  "liveTracking": "Live-Tracking",
-  "livePosition": "Live",
-  "recentPosition": "Vor {time}",
-  "estimatedPosition": "Geschätzt",
-
   "departureIn": "Abfahrt in",
-  "liveVoyage": "Live-Reise",
+  "activeVoyage": "Aktive Reise",
   "atSea": "Auf See",
   "currentlyAt": "Aktuell in",
   "nextStop": "Nächster Halt",

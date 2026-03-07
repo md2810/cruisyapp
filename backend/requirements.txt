@@ -1,6 +1,0 @@
-# Cruisy AIS Scraper Dependencies
-websockets>=12.0
-# firebase-admin>=6.0.0  # Temporarily disabled
-python-dotenv>=1.0.0
-aiohttp>=3.9.0
-flask>=3.0.0

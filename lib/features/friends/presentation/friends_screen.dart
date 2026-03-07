@@ -68,7 +68,7 @@ class FriendsScreen extends ConsumerWidget {
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: colorScheme.primaryContainer.withOpacity(0.3),
+                        color: colorScheme.primaryContainer.withValues(alpha: 0.3),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -414,7 +414,7 @@ class _SharedTripCard extends ConsumerWidget {
                   return Card(
                     margin: const EdgeInsets.only(bottom: 8),
                     color: stop.isSeaDay
-                        ? colorScheme.secondaryContainer.withOpacity(0.5)
+                        ? colorScheme.secondaryContainer.withValues(alpha: 0.5)
                         : colorScheme.surfaceContainerHigh,
                     child: Padding(
                       padding: const EdgeInsets.all(12),

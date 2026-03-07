@@ -445,7 +445,7 @@ class TripDetailScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        l10n.liveVoyage,
+                        l10n.activeVoyage,
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
