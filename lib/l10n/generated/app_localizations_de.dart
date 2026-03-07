@@ -15,7 +15,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get today => 'Heute';
 
   @override
-  String get futureCruises => 'Zukuenftige Reisen';
+  String get futureCruises => 'Zukünftige Reisen';
 
   @override
   String get pastCruises => 'Vergangene Reisen';
@@ -175,7 +175,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get deleteCruiseConfirmation =>
-      'Bist du sicher, dass du diese Kreuzfahrt löschen moechtest? Diese Aktion kann nicht rückgaengig gemacht werden.';
+      'Bist du sicher, dass du diese Kreuzfahrt löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.';
 
   @override
   String get cruiseDeleted => 'Kreuzfahrt gelöscht';
@@ -352,7 +352,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get getHelp => 'Hilfe zur Nutzung von Cruisy';
 
   @override
-  String get about => 'Ueber';
+  String get about => 'Über';
 
   @override
   String get appVersionLegal => 'App-Version und rechtliche Infos';
@@ -429,7 +429,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get addPortsSeaDays => 'Dann füge Häfen und Seetage hinzu';
 
   @override
-  String get noActivityPlanned => 'Keine Aktivitaet geplant';
+  String get noActivityPlanned => 'Keine Aktivität geplant';
 
   @override
   String continued(String name) {
@@ -478,8 +478,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tripNotFound => 'Reise nicht gefunden';
 
   @override
-  String get voyageMayBeDeleted =>
-      'Diese Reise wurde moeglicherweise geloescht';
+  String get voyageMayBeDeleted => 'Diese Reise wurde möglicherweise gelöscht';
 
   @override
   String get goBack => 'Zurück';
@@ -494,25 +493,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get shareComingSoon => 'Teilen-Funktion kommt bald!';
 
   @override
-  String get deleteTripMenu => 'Reise loeschen';
+  String get deleteTripMenu => 'Reise löschen';
 
   @override
   String deleteTripConfirmation(String name) {
-    return 'Bist du sicher, dass du \"$name\" loeschen moechtest?\n\nDiese Aktion kann nicht rueckgaengig gemacht werden.';
+    return 'Bist du sicher, dass du \"$name\" löschen möchtest?\n\nDiese Aktion kann nicht rückgängig gemacht werden.';
   }
 
   @override
   String tripDeleted(String name) {
-    return '$name geloescht';
+    return '$name gelöscht';
   }
 
   @override
   String failedToDelete(String error) {
-    return 'Loeschen fehlgeschlagen: $error';
+    return 'Löschen fehlgeschlagen: $error';
   }
 
   @override
-  String get voyageInProgress => 'REISE LAEUFT';
+  String get voyageInProgress => 'REISE LÄUFT';
 
   @override
   String get daysUntil => 'TAGE BIS';
@@ -529,23 +528,23 @@ class AppLocalizationsDe extends AppLocalizations {
   String get departs => 'ABFAHRT';
 
   @override
-  String get nextLabel => 'NAECHSTER';
+  String get nextLabel => 'NÄCHSTER';
 
   @override
-  String get inProgressStatus => 'Laeuft';
+  String get inProgressStatus => 'Läuft';
 
   @override
   String get upcomingStatus => 'Bevorstehend';
 
   @override
-  String get noItineraryYet => 'Noch kein Reiseverlauf hinzugefuegt';
+  String get noItineraryYet => 'Noch kein Reiseverlauf hinzugefügt';
 
   @override
   String get editTripToAddStops =>
-      'Bearbeite diese Reise um Hafenstopps hinzuzufuegen';
+      'Bearbeite diese Reise um Hafenstopps hinzuzufügen';
 
   @override
-  String get addStops => 'Stopps hinzufuegen';
+  String get addStops => 'Stopps hinzufügen';
 
   @override
   String daysCount(int count) {
@@ -562,7 +561,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String tripAdded(String name) {
-    return '$name Reise hinzugefuegt!';
+    return '$name Reise hinzugefügt!';
   }
 
   @override
@@ -571,7 +570,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get addTrip => 'Reise hinzufuegen';
+  String get addTrip => 'Reise hinzufügen';
 
   @override
   String get editTrip => 'Reise bearbeiten';
@@ -733,10 +732,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get halfAroundWorld => 'Halbe Weltumrundung';
 
   @override
-  String get editToAddPorts => 'Bearbeite diese Reise um Haefen hinzuzufuegen';
+  String get editToAddPorts => 'Bearbeite diese Reise um Häfen hinzuzufügen';
 
   @override
-  String get addStopsButton => 'Stopps hinzufuegen';
+  String get addStopsButton => 'Stopps hinzufügen';
 
   @override
   String get todayBadge => 'HEUTE';
@@ -777,7 +776,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get countryPT => 'Portugal';
 
   @override
-  String get countryGB => 'Vereinigtes Koenigreich';
+  String get countryGB => 'Vereinigtes Königreich';
 
   @override
   String get countryNL => 'Niederlande';
@@ -792,7 +791,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get countrySE => 'Schweden';
 
   @override
-  String get countryDK => 'Daenemark';
+  String get countryDK => 'Dänemark';
 
   @override
   String get countryFI => 'Finnland';
@@ -807,7 +806,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get countryCY => 'Zypern';
 
   @override
-  String get countryTR => 'Tuerkei';
+  String get countryTR => 'Türkei';
 
   @override
   String get countryAE => 'Vereinigte Arabische Emirate';
@@ -834,7 +833,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get countryAW => 'Aruba';
 
   @override
-  String get countryCW => 'Curacao';
+  String get countryCW => 'Curaçao';
 
   @override
   String get countrySX => 'Sint Maarten';
@@ -915,7 +914,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get countryIN => 'Indien';
 
   @override
-  String get countryEG => 'Aegypten';
+  String get countryEG => 'Ägypten';
 
   @override
   String get countryMA => 'Marokko';
@@ -924,7 +923,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get countryTN => 'Tunesien';
 
   @override
-  String get countryZA => 'Suedafrika';
+  String get countryZA => 'Südafrika';
 
   @override
   String get countryMU => 'Mauritius';
@@ -957,10 +956,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get countryCR => 'Costa Rica';
 
   @override
-  String get countryFO => 'Faeroeer';
+  String get countryFO => 'Färöer';
 
   @override
-  String get countryGL => 'Groenland';
+  String get countryGL => 'Grönland';
 
   @override
   String get countrySJ => 'Spitzbergen';
@@ -969,7 +968,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get countryAQ => 'Antarktis';
 
   @override
-  String get countryPF => 'Franzoesisch-Polynesien';
+  String get countryPF => 'Französisch-Polynesien';
 
   @override
   String get countryFJ => 'Fidschi';
@@ -1014,7 +1013,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get countryRS => 'Serbien';
 
   @override
-  String get countryRO => 'Rumaenien';
+  String get countryRO => 'Rumänien';
 
   @override
   String get countryBG => 'Bulgarien';
@@ -1041,7 +1040,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get countryCZ => 'Tschechien';
 
   @override
-  String get countryAT => 'Oesterreich';
+  String get countryAT => 'Österreich';
 
   @override
   String get countryCH => 'Schweiz';
@@ -1128,7 +1127,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String importTripQuestion(String owner) {
-    return 'Moechtest du diese Reise von $owner importieren?';
+    return 'Möchtest du diese Reise von $owner importieren?';
   }
 
   @override
@@ -1178,4 +1177,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get journeyProgress => 'Reisefortschritt';
+
+  @override
+  String get ok => 'OK';
 }

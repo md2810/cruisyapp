@@ -5,9 +5,11 @@ import 'package:cruisyapp/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/trip_provider.dart';
+
 import '../../../main.dart';
 import '../../../shared/models/cruise_trip.dart';
 import '../../../shared/models/port_stop.dart';
@@ -443,13 +445,7 @@ class _ProfileHeader extends StatelessWidget {
                 icon: Icons.person_outline_rounded,
                 title: l10n.accountSettings,
                 subtitle: l10n.manageProfilePreferences,
-                onTap: () {},
-              ),
-              _SettingsItem(
-                icon: Icons.notifications_outlined,
-                title: l10n.notifications,
-                subtitle: l10n.manageNotifications,
-                onTap: () {},
+                onTap: () => _showAccountSettings(context, ref),
               ),
               _LanguageSettingsItem(ref: ref),
               const SizedBox(height: 16),
@@ -459,7 +455,7 @@ class _ProfileHeader extends StatelessWidget {
                 icon: Icons.help_outline_rounded,
                 title: l10n.helpSupport,
                 subtitle: l10n.getHelp,
-                onTap: () {},
+                onTap: () => _showHelpDialog(context),
               ),
               _SettingsItem(
                 icon: Icons.info_outline_rounded,
@@ -498,29 +494,149 @@ class _ProfileHeader extends StatelessWidget {
     );
   }
 
-  void _showAboutDialog(BuildContext context) {
+  void _showAccountSettings(BuildContext context, WidgetRef ref) {
+    final colorScheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
-    showAboutDialog(
+    final authService = ref.read(authServiceProvider);
+    
+    if (authService == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Nicht angemeldet')),
+      );
+      return;
+    }
+
+    final nameController = TextEditingController(text: authService.currentUserDisplayName);
+
+    showModalBottomSheet(
       context: context,
-      applicationName: l10n.appTitle,
-      applicationVersion: '1.0.0',
-      applicationIcon: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Icon(
-          Icons.sailing_rounded,
-          size: 32,
-          color: Theme.of(context).colorScheme.primary,
+      backgroundColor: colorScheme.surface,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (context) => Padding(
+        padding: EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(context).viewInsets.bottom + 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.accountSettings,
+              style: GoogleFonts.outfit(
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              l10n.changeDisplayName,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: nameController,
+              decoration: InputDecoration(
+                labelText: l10n.name,
+                prefixIcon: const Icon(Icons.person_rounded),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                filled: true,
+                fillColor: colorScheme.surfaceContainerHighest,
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () async {
+                  final newName = nameController.text.trim();
+                  if (newName.isNotEmpty) {
+                    await authService.updateDisplayName(newName);
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Name aktualisiert')),
+                      );
+                    }
+                  }
+                },
+                child: Text(l10n.save),
+              ),
+            ),
+          ],
         ),
       ),
-      children: [
-        Text(l10n.appDescription),
-      ],
     );
+  }
+
+  void _showHelpDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.helpSupport),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Willkommen bei Cruisy!', style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 12),
+            Text('• Füge deine Kreuzfahrten hinzu und verwalte sie'),
+            Text('• Erstelle einen detaillierten Reiseverlauf mit Häfen'),
+            Text('• Teile deine Reisen mit Freunden'),
+            Text('• Verfolge deine Kreuzfahrt-Statistiken'),
+            SizedBox(height: 16),
+            Text('Bei Fragen oder Problemen:', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('support@cruisy.app'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.ok),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAboutDialog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final packageInfo = await PackageInfo.fromPlatform();
+    
+    if (context.mounted) {
+      showAboutDialog(
+        context: context,
+        applicationName: l10n.appTitle,
+        applicationVersion: packageInfo.version,
+        applicationIcon: Container(
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Icon(
+            Icons.sailing_rounded,
+            size: 32,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        children: [
+          Text(l10n.appDescription),
+          SizedBox(height: 16),
+          Text('Version: ${packageInfo.version}'),
+          Text('Build: ${packageInfo.buildNumber}'),
+        ],
+      );
+    }
   }
 
   Future<void> _confirmSignOut(BuildContext context, WidgetRef ref) async {
@@ -746,14 +862,6 @@ class _CruisePassportCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                IconButton(
-                  onPressed: () {}, // TODO: Share functionality
-                  icon: Icon(
-                    Icons.ios_share_rounded,
-                    color: Colors.white.withValues(alpha: 0.7),
-                    size: 22,
-                  ),
-                ),
               ],
             ),
             const SizedBox(height: 24),
@@ -808,42 +916,6 @@ class _CruisePassportCard extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 20),
-            // All stats button
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {}, // TODO: All stats screen
-                  borderRadius: BorderRadius.circular(12),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          l10n.allCruiseStats,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Icon(
-                          Icons.chevron_right_rounded,
-                          color: Colors.white.withValues(alpha: 0.7),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
             ),
           ],
         ),
@@ -968,16 +1040,6 @@ class _LongestCruiseCard extends StatelessWidget {
                     color: Colors.white.withValues(alpha: 0.8),
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.ios_share_rounded,
-                    color: Colors.white.withValues(alpha: 0.7),
-                    size: 20,
-                  ),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
               ],
             ),
             const SizedBox(height: 8),
@@ -1064,7 +1126,7 @@ class _FavoriteShipCard extends StatelessWidget {
                       ),
                     ),
                     Icon(
-                      Icons.ios_share_rounded,
+                      Icons.chevron_right_rounded,
                       color: colorScheme.onSurfaceVariant,
                       size: 20,
                     ),

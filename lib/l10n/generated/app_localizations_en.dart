@@ -1169,4 +1169,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get journeyProgress => 'Journey Progress';
+
+  @override
+  String get ok => 'OK';
 }

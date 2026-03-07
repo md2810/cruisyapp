@@ -932,5 +932,6 @@
     }
   },
   "seaDays": "sea",
-  "journeyProgress": "Journey Progress"
+  "journeyProgress": "Journey Progress",
+  "ok": "OK"
 }
