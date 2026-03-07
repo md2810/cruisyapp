@@ -5,7 +5,7 @@ import 'package:cruisyapp/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import '../../../shared/ui/map_widget_conditional.dart';
 
 import '../../../core/providers/trip_provider.dart';
 import '../../../shared/models/cruise_trip.dart';
