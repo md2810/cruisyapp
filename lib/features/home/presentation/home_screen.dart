@@ -104,11 +104,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // Start timer to update ship position every minute
     _shipPositionTimer = Timer.periodic(const Duration(minutes: 1), (_) {
-      _updateShipPosition();
+      if (mounted) _updateShipPosition();
     });
   }
 
   void _updateMapAnnotations() {
+    if (!mounted) return;
     final filter = ref.read(cruiseFilterProvider);
     final allTrips = ref.read(tripsProvider);
 
@@ -223,6 +224,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void _updateShipPosition() {
+    if (!mounted) return;
     if (_shipAnnotationManager == null) return;
 
     final ongoingCruise = ref.read(ongoingCruiseProvider);
