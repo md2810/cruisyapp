@@ -128,10 +128,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
@@ -397,6 +399,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 }

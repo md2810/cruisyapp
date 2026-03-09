@@ -517,10 +517,12 @@ class _ProfileHeader extends StatelessWidget {
       ),
       builder: (context) => Padding(
         padding: EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(context).viewInsets.bottom + 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Text(
               l10n.accountSettings,
               style: GoogleFonts.outfit(
@@ -572,6 +574,7 @@ class _ProfileHeader extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 
@@ -1378,7 +1381,8 @@ class _LanguageSettingsItem extends ConsumerWidget {
                   ? Icon(Icons.check_rounded, color: colorScheme.primary)
                   : null,
               onTap: () {
-                ref.read(localeProvider.notifier).state = const Locale('en');
+                final userId = ref.read(currentUserIdProvider);
+                ref.read(localeProvider.notifier).setLocale(const Locale('en'), userId);
                 Navigator.pop(context);
               },
             ),
@@ -1405,7 +1409,8 @@ class _LanguageSettingsItem extends ConsumerWidget {
                   ? Icon(Icons.check_rounded, color: colorScheme.primary)
                   : null,
               onTap: () {
-                ref.read(localeProvider.notifier).state = const Locale('de');
+                final userId = ref.read(currentUserIdProvider);
+                ref.read(localeProvider.notifier).setLocale(const Locale('de'), userId);
                 Navigator.pop(context);
               },
             ),

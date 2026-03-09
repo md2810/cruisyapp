@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../main.dart';
 import '../services/auth_service.dart';
 
+// Re-export currentUserIdProvider from main.dart for convenience
+export '../../../main.dart' show currentUserIdProvider;
+
 final authServiceProvider = Provider<AuthService?>((ref) {
   final firebaseAvailable = ref.watch(firebaseAvailableProvider);
   if (!firebaseAvailable) return null;
@@ -23,8 +26,18 @@ final currentUserProvider = Provider<User?>((ref) {
   return ref.watch(authStateProvider).valueOrNull;
 });
 
-final currentUserIdProvider = Provider<String?>((ref) {
-  return ref.watch(currentUserProvider)?.uid;
+// Initialize locale when auth state changes
+final authStateListenerProvider = Provider<void>((ref) {
+  final user = ref.watch(currentUserProvider);
+  final userId = user?.uid;
+  
+  // Update the currentUserIdProvider
+  ref.read(currentUserIdProvider.notifier).state = userId;
+  
+  // Initialize locale from Firebase
+  if (userId != null) {
+    ref.read(localeProvider.notifier).initialize(userId);
+  }
 });
 
 final userDisplayNameProvider = Provider<String>((ref) {

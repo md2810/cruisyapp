@@ -373,6 +373,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 return _CruiseSheet(
                   scrollController: scrollController,
                   sheetController: _sheetController,
+                  minExtent: _minExtent,
+                  midExtent: _midExtent,
+                  maxExtent: _maxExtent,
                 );
               },
             ),
@@ -387,10 +390,16 @@ class _CruiseSheet extends ConsumerWidget {
   const _CruiseSheet({
     required this.scrollController,
     required this.sheetController,
+    required this.minExtent,
+    required this.midExtent,
+    required this.maxExtent,
   });
 
   final ScrollController scrollController;
   final DraggableScrollableController sheetController;
+  final double minExtent;
+  final double midExtent;
+  final double maxExtent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -429,15 +438,43 @@ class _CruiseSheet extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          // Drag handle
-          Center(
-            child: Container(
-              margin: const EdgeInsets.only(top: 12),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(2),
+          // Drag handle - now draggable
+          GestureDetector(
+            onVerticalDragUpdate: (details) {
+              // Calculate new size based on drag delta
+              final delta = -details.delta.dy / MediaQuery.of(context).size.height;
+              final newSize = (sheetController.size + delta).clamp(minExtent, maxExtent);
+              sheetController.jumpTo(newSize);
+            },
+            onVerticalDragEnd: (details) {
+              // Snap to nearest position
+              final currentSize = sheetController.size;
+              double targetSize;
+              
+              if (currentSize < (minExtent + midExtent) / 2) {
+                targetSize = minExtent;
+              } else if (currentSize < (midExtent + maxExtent) / 2) {
+                targetSize = midExtent;
+              } else {
+                targetSize = maxExtent;
+              }
+              
+              sheetController.animateTo(
+                targetSize,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOut,
+              );
+            },
+            behavior: HitTestBehavior.translucent,
+            child: Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 12, bottom: 8),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
             ),
           ),

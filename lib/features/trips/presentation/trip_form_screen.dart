@@ -53,8 +53,8 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     final now = DateTime.now();
     final picked = await showDateRangePicker(
       context: context,
-      firstDate: now.subtract(const Duration(days: 365)),
-      lastDate: now.add(const Duration(days: 365 * 3)),
+      firstDate: DateTime(1950), // Allow cruises from 1950 onwards
+      lastDate: now.add(const Duration(days: 365 * 5)), // 5 years in the future
       initialDateRange: _startDate != null && _endDate != null
           ? DateTimeRange(start: _startDate!, end: _endDate!)
           : DateTimeRange(
@@ -331,9 +331,13 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     final tripDays = _getTripDays();
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => context.pop(),
+          onPressed: () {
+            FocusScope.of(context).unfocus();
+            context.pop();
+          },
           icon: const Icon(Icons.close_rounded),
         ),
         title: Text(widget.isEditing ? 'Edit Trip' : 'Add Trip'),
@@ -356,9 +360,11 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Form(
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -391,6 +397,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
               TextFormField(
                 controller: _shipNameController,
                 textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
                   labelText: 'Ship Name',
                   hintText: 'e.g., Symphony of the Seas',
@@ -414,6 +421,8 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
               TextFormField(
                 controller: _tripNameController,
                 textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.done,
+                onEditingComplete: () => FocusScope.of(context).unfocus(),
                 decoration: InputDecoration(
                   labelText: 'Trip Name (Optional)',
                   hintText: 'e.g., Mediterranean Adventure',
@@ -555,6 +564,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 

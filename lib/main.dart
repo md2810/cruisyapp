@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,11 +7,68 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cruisyapp/l10n/generated/app_localizations.dart';
 
+import 'core/providers/auth_provider.dart';
 import 'firebase_options.dart';
 import 'shared/navigation/router.dart';
 
-// Locale provider for language switching
-final localeProvider = StateProvider<Locale?>((ref) => null);
+// Locale provider for language switching - syncs with Firebase
+final localeProvider = StateNotifierProvider<LocaleNotifier, Locale?>((ref) {
+  return LocaleNotifier();
+});
+
+// User ID provider for language sync
+final currentUserIdProvider = StateProvider<String?>((ref) => null);
+
+class LocaleNotifier extends StateNotifier<Locale?> {
+  bool _isInitialized = false;
+  String? _currentUserId;
+
+  LocaleNotifier() : super(null);
+
+  Future<void> initialize(String? userId) async {
+    if (_isInitialized && _currentUserId == userId) return;
+    _isInitialized = true;
+    _currentUserId = userId;
+
+    if (userId == null) {
+      state = null;
+      return;
+    }
+
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (doc.exists && doc.data()?['language'] != null) {
+        final langCode = doc.data()!['language'] as String;
+        state = Locale(langCode);
+      }
+    } catch (e) {
+      debugPrint('Failed to load language preference: $e');
+    }
+  }
+
+  Future<void> setLocale(Locale? locale, String? userId) async {
+    state = locale;
+    _currentUserId = userId;
+
+    if (userId == null) return;
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .set({
+        'language': locale?.languageCode,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      debugPrint('Failed to save language preference: $e');
+    }
+  }
+}
 
 // Firebase availability provider
 final firebaseAvailableProvider = StateProvider<bool>((ref) => false);
@@ -61,6 +119,9 @@ class CruisyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     final locale = ref.watch(localeProvider);
+    
+    // Initialize auth state listener (including locale sync)
+    ref.watch(authStateListenerProvider);
 
     final textTheme = GoogleFonts.outfitTextTheme(
       ThemeData.dark().textTheme,
