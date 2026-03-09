@@ -1172,4 +1172,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get deletePort => 'Delete Port';
+
+  @override
+  String get deletePortConfirmation =>
+      'Are you sure you want to delete this port?';
 }

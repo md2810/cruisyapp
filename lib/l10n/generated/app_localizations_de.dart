@@ -1180,4 +1180,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get deletePort => 'Hafen löschen';
+
+  @override
+  String get deletePortConfirmation =>
+      'Möchtest du diesen Hafen wirklich löschen?';
 }

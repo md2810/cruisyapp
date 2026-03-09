@@ -481,5 +481,7 @@
   "daysAtSeaCount": "{count} Tage auf See",
   "seaDays": "See",
   "journeyProgress": "Reisefortschritt",
-  "ok": "OK"
+  "ok": "OK",
+  "deletePort": "Hafen löschen",
+  "deletePortConfirmation": "Möchtest du diesen Hafen wirklich löschen?"
 }

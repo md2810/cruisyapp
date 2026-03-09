@@ -933,5 +933,7 @@
   },
   "seaDays": "sea",
   "journeyProgress": "Journey Progress",
-  "ok": "OK"
+  "ok": "OK",
+  "deletePort": "Delete Port",
+  "deletePortConfirmation": "Are you sure you want to delete this port?"
 }

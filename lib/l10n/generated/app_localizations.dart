@@ -2281,6 +2281,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
+
+  /// No description provided for @deletePort.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Port'**
+  String get deletePort;
+
+  /// No description provided for @deletePortConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this port?'**
+  String get deletePortConfirmation;
 }
 
 class _AppLocalizationsDelegate

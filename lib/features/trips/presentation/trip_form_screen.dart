@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cruisyapp/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -94,6 +95,10 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
       return;
     }
 
+    // Determine if this will be the first or last port
+    final ports = _stops.where((s) => !s.isSeaDay).toList();
+    final isFirstPort = ports.isEmpty;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -105,6 +110,8 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
         startDate: _startDate!,
         endDate: _endDate!,
         suggestedDate: suggestedDate,
+        isFirstPort: isFirstPort,
+        isLastPort: true, // When adding, it becomes the last port
         onAdd: (stop) {
           setState(() {
             _stops.add(stop);
@@ -118,6 +125,12 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
   void _editStop(int index) {
     if (_startDate == null || _endDate == null) return;
 
+    // Determine if this is the first or last port
+    final nonSeaDayStops = _stops.where((s) => !s.isSeaDay).toList();
+    final currentStop = _stops[index];
+    final isFirstPort = nonSeaDayStops.isNotEmpty && nonSeaDayStops.first == currentStop;
+    final isLastPort = nonSeaDayStops.isNotEmpty && nonSeaDayStops.last == currentStop;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -128,7 +141,9 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
       builder: (context) => _AddPortSheet(
         startDate: _startDate!,
         endDate: _endDate!,
-        existingStop: _stops[index],
+        existingStop: currentStop,
+        isFirstPort: isFirstPort,
+        isLastPort: isLastPort,
         onAdd: (stop) {
           setState(() {
             _stops[index] = stop;
@@ -152,6 +167,35 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     setState(() {
       _stops.removeAt(index);
     });
+  }
+
+  Future<void> _confirmDeleteStop(BuildContext context, PortStop stop) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.deletePort),
+        content: Text('${stop.name}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: Text(l10n.delete),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      final stopIndex = _stops.indexOf(stop);
+      if (stopIndex != -1) _removeStop(stopIndex);
+    }
   }
 
   String? _validateStops() {
@@ -393,11 +437,30 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
               ),
               const SizedBox(height: 32),
 
+              // Trip Name (first, for the narrative flow)
+              TextFormField(
+                controller: _tripNameController,
+                textCapitalization: TextCapitalization.words,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  labelText: 'Trip Name (Optional)',
+                  hintText: 'e.g., Mediterranean Adventure',
+                  prefixIcon: const Icon(Icons.confirmation_number_rounded),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  filled: true,
+                  fillColor: colorScheme.surfaceContainerHighest,
+                ),
+              ),
+              const SizedBox(height: 20),
+
               // Ship Name
               TextFormField(
                 controller: _shipNameController,
                 textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
+                textInputAction: TextInputAction.done,
+                onEditingComplete: () => FocusScope.of(context).unfocus(),
                 decoration: InputDecoration(
                   labelText: 'Ship Name',
                   hintText: 'e.g., Symphony of the Seas',
@@ -414,25 +477,6 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                   }
                   return null;
                 },
-              ),
-              const SizedBox(height: 20),
-
-              // Trip Name
-              TextFormField(
-                controller: _tripNameController,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.done,
-                onEditingComplete: () => FocusScope.of(context).unfocus(),
-                decoration: InputDecoration(
-                  labelText: 'Trip Name (Optional)',
-                  hintText: 'e.g., Mediterranean Adventure',
-                  prefixIcon: const Icon(Icons.confirmation_number_rounded),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  filled: true,
-                  fillColor: colorScheme.surfaceContainerHighest,
-                ),
               ),
               const SizedBox(height: 20),
 
@@ -741,10 +785,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                               color: colorScheme.error,
                               size: 20,
                             ),
-                            onPressed: () {
-                              final stopIndex = _stops.indexOf(stop);
-                              if (stopIndex != -1) _removeStop(stopIndex);
-                            },
+                            onPressed: () => _confirmDeleteStop(context, stop),
                           ),
                         Icon(
                           Icons.edit_rounded,
@@ -784,6 +825,8 @@ class _AddPortSheet extends ConsumerStatefulWidget {
   final DateTime? suggestedDate;
   final PortStop? existingStop;
   final Function(PortStop) onAdd;
+  final bool isFirstPort;
+  final bool isLastPort;
 
   const _AddPortSheet({
     required this.startDate,
@@ -791,6 +834,8 @@ class _AddPortSheet extends ConsumerStatefulWidget {
     this.suggestedDate,
     this.existingStop,
     required this.onAdd,
+    this.isFirstPort = false,
+    this.isLastPort = false,
   });
 
   @override
@@ -886,6 +931,11 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
           _departureDate = picked;
         }
       });
+      // Auto-open departure date picker if not set and multi-day is enabled
+      if (_isMultiDay && _departureDate == null) {
+        await Future.delayed(const Duration(milliseconds: 200));
+        if (mounted) await _selectDepartureDate();
+      }
     }
   }
 
@@ -944,8 +994,9 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
     }
 
     // Require arrival and departure times for port stops (not sea days)
+    // Except: first port doesn't need arrival time, last port doesn't need departure time
     if (!_isSeaDay) {
-      if (_arrivalTime == null) {
+      if (_arrivalTime == null && !widget.isFirstPort) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Please select an arrival time'),
@@ -955,7 +1006,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
         return;
       }
 
-      if (_departureTime == null) {
+      if (_departureTime == null && !widget.isLastPort) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Please select a departure time'),
@@ -966,8 +1017,8 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
       }
     }
 
-    DateTime arrivalDateTime;
-    DateTime departureDateTime;
+    DateTime? arrivalDateTime;
+    DateTime? departureDateTime;
 
     if (_isSeaDay) {
       // Sea days: use date only with midnight times
@@ -987,39 +1038,75 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
       );
     } else if (_isMultiDay) {
       // Multi-day: use separate dates with times
-      arrivalDateTime = DateTime(
-        _arrivalDate!.year,
-        _arrivalDate!.month,
-        _arrivalDate!.day,
-        _arrivalTime!.hour,
-        _arrivalTime!.minute,
-      );
+      // First port: arrival time optional (defaults to 00:00)
+      arrivalDateTime = _arrivalTime != null
+          ? DateTime(
+              _arrivalDate!.year,
+              _arrivalDate!.month,
+              _arrivalDate!.day,
+              _arrivalTime!.hour,
+              _arrivalTime!.minute,
+            )
+          : DateTime(
+              _arrivalDate!.year,
+              _arrivalDate!.month,
+              _arrivalDate!.day,
+              0,
+              0,
+            );
 
       final depDate = _departureDate ?? _arrivalDate!;
-      departureDateTime = DateTime(
-        depDate.year,
-        depDate.month,
-        depDate.day,
-        _departureTime!.hour,
-        _departureTime!.minute,
-      );
+      // Last port: departure time optional (defaults to 23:59)
+      departureDateTime = _departureTime != null
+          ? DateTime(
+              depDate.year,
+              depDate.month,
+              depDate.day,
+              _departureTime!.hour,
+              _departureTime!.minute,
+            )
+          : DateTime(
+              depDate.year,
+              depDate.month,
+              depDate.day,
+              23,
+              59,
+            );
     } else {
       // Single day: same date for both
-      arrivalDateTime = DateTime(
-        _arrivalDate!.year,
-        _arrivalDate!.month,
-        _arrivalDate!.day,
-        _arrivalTime!.hour,
-        _arrivalTime!.minute,
-      );
+      // First port: arrival time optional (defaults to 00:00)
+      arrivalDateTime = _arrivalTime != null
+          ? DateTime(
+              _arrivalDate!.year,
+              _arrivalDate!.month,
+              _arrivalDate!.day,
+              _arrivalTime!.hour,
+              _arrivalTime!.minute,
+            )
+          : DateTime(
+              _arrivalDate!.year,
+              _arrivalDate!.month,
+              _arrivalDate!.day,
+              0,
+              0,
+            );
 
-      departureDateTime = DateTime(
-        _arrivalDate!.year,
-        _arrivalDate!.month,
-        _arrivalDate!.day,
-        _departureTime!.hour,
-        _departureTime!.minute,
-      );
+      // Last port: departure time optional (defaults to 23:59)
+      departureDateTime = _departureTime != null
+          ? DateTime(
+              _arrivalDate!.year,
+              _arrivalDate!.month,
+              _arrivalDate!.day,
+              _departureTime!.hour,
+              _departureTime!.minute,
+            )
+          : DateTime(
+              _arrivalDate!.year,
+              _arrivalDate!.month,
+              _arrivalDate!.day,
+              23,
+              59,
+            );
     }
 
     final stop = PortStop(
@@ -1086,6 +1173,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
               TextField(
                 controller: _searchController,
                 textCapitalization: TextCapitalization.words,
+                autofocus: widget.existingStop == null, // Auto-focus on new stops
                 decoration: InputDecoration(
                   labelText: 'Port Name',
                   hintText: 'Search for a port...',
@@ -1279,7 +1367,13 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
             if (!_isSeaDay) ...[
               const SizedBox(height: 16),
               Text(
-                'Arrival & Departure Times *',
+                widget.isFirstPort && widget.isLastPort
+                    ? 'Times (optional for single port)'
+                    : widget.isFirstPort
+                        ? 'Departure Time *${widget.isLastPort ? '' : ' / Arrival (optional)'}'
+                        : widget.isLastPort
+                            ? 'Arrival Time *${widget.isFirstPort ? '' : ' / Departure (optional)'}'
+                            : 'Arrival & Departure Times *',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurfaceVariant,
@@ -1309,7 +1403,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                             Text(
                               _arrivalTime != null
                                   ? _arrivalTime!.format(context)
-                                  : 'Arrival',
+                                  : widget.isFirstPort ? 'Arrival (opt.)' : 'Arrival *',
                               style: TextStyle(
                                 color: _arrivalTime != null
                                     ? colorScheme.onSurface
@@ -1343,7 +1437,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                             Text(
                               _departureTime != null
                                   ? _departureTime!.format(context)
-                                  : 'Departure',
+                                  : widget.isLastPort ? 'Departure (opt.)' : 'Departure *',
                               style: TextStyle(
                                 color: _departureTime != null
                                     ? colorScheme.onSurface
