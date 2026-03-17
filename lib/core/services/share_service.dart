@@ -194,10 +194,22 @@ class ShareService {
     return codec.encode(bytes);
   }
 
+  /// Maximum allowed size for compressed share data (512 KB)
+  static const _maxCompressedSize = 512 * 1024;
+
+  /// Maximum allowed size for decompressed share data (5 MB)
+  static const _maxDecompressedSize = 5 * 1024 * 1024;
+
   String _decompress(List<int> compressed) {
+    if (compressed.length > _maxCompressedSize) {
+      throw ShareServiceException('Share data too large');
+    }
     // Use ZLibCodec with raw mode for deflate-raw decompression
     final codec = ZLibCodec(raw: true);
     final decompressed = codec.decode(compressed);
+    if (decompressed.length > _maxDecompressedSize) {
+      throw ShareServiceException('Decompressed data exceeds size limit');
+    }
     return utf8.decode(decompressed);
   }
 }
