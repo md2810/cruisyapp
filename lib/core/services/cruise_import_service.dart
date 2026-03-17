@@ -1,3 +1,4 @@
+import 'api_keys.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import '../../shared/models/cruise_trip.dart';
 import '../../shared/models/port_stop.dart';
+import 'port_search_service.dart';
 
 /// Service for parsing cruise booking confirmations using AI
 class CruiseImportService {
@@ -14,7 +16,7 @@ class CruiseImportService {
   CruiseImportService({this.apiKey}) {
     if (apiKey != null && apiKey!.isNotEmpty) {
       _model = GenerativeModel(
-        model: 'gemini-3.1-flash-lite',
+        model: 'gemini-3.1-flash-lite-preview',
         apiKey: apiKey!,
       );
     }
@@ -237,6 +239,20 @@ $portsJsonStr
           stopMap['departureTime'] = cleanTime(stopMap['departureTime']?.toString());
         }
 
+        // Add coordinates if not sea day
+        final isSeaDay = stopMap['isSeaDay'] == true;
+        if (!isSeaDay) {
+          final name = stopMap['name'] as String?;
+          if (name != null && name.isNotEmpty) {
+            final portService = PortSearchService();
+            final portInfo = portService.findByName(name);
+            if (portInfo != null) {
+              stopMap['latitude'] = portInfo.latitude;
+              stopMap['longitude'] = portInfo.longitude;
+            }
+          }
+        }
+
         return PortStop.fromMap(stopMap);
       }).toList();
 
@@ -277,8 +293,6 @@ $portsJsonStr
     }
   }
 }
-
-import 'api_keys.dart';
 
 /// Provider for CruiseImportService (singleton)
 final cruiseImportServiceProvider = Provider<CruiseImportService?>((ref) {
