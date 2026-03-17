@@ -94,22 +94,24 @@ class PortStop {
   PortStop copyWith({
     String? id,
     String? name,
-    DateTime? arrivalTime,
-    DateTime? departureTime,
+    Object? arrivalTime = _sentinel,
+    Object? departureTime = _sentinel,
     bool? isSeaDay,
-    String? countryCode,
-    double? latitude,
-    double? longitude,
+    Object? countryCode = _sentinel,
+    Object? latitude = _sentinel,
+    Object? longitude = _sentinel,
   }) {
     return PortStop(
       id: id ?? this.id,
       name: name ?? this.name,
-      arrivalTime: arrivalTime ?? this.arrivalTime,
-      departureTime: departureTime ?? this.departureTime,
+      arrivalTime: arrivalTime == _sentinel ? this.arrivalTime : arrivalTime as DateTime?,
+      departureTime: departureTime == _sentinel ? this.departureTime : departureTime as DateTime?,
       isSeaDay: isSeaDay ?? this.isSeaDay,
-      countryCode: countryCode ?? this.countryCode,
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
+      countryCode: countryCode == _sentinel ? this.countryCode : countryCode as String?,
+      latitude: latitude == _sentinel ? this.latitude : latitude as double?,
+      longitude: longitude == _sentinel ? this.longitude : longitude as double?,
     );
   }
+
+  static const _sentinel = Object();
 }

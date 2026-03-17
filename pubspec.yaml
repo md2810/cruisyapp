@@ -57,6 +57,10 @@ dependencies:
 
   # Maps
   mapbox_maps_flutter: ^2.4.0
+  apple_maps_flutter: ^1.4.0
+
+  # AI
+  google_generative_ai: ^0.4.0
 
   # Sharing & Deep Links
   share_plus: ^10.0.0

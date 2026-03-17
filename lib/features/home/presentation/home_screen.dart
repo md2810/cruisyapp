@@ -5,9 +5,11 @@ import 'package:cruisyapp/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import '../../../shared/ui/map_widget_conditional.dart';
 
 import '../../../core/providers/trip_provider.dart';
+import '../../../core/utils/map_utils.dart';
 import '../../../shared/models/cruise_trip.dart';
 
 // Filter options for cruise list
@@ -69,22 +71,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   void _onMapCreated(dynamic mapboxMap) async {
     // Configure Mapbox ornaments for compact display
-    mapboxMap.scaleBar.updateSettings(ScaleBarSettings(enabled: false));
-    mapboxMap.logo.updateSettings(LogoSettings(
+    mapboxMap.scaleBar.updateSettings(mapbox.ScaleBarSettings(enabled: false));
+    mapboxMap.logo.updateSettings(mapbox.LogoSettings(
       enabled: true,
-      position: OrnamentPosition.TOP_LEFT,
+      position: mapbox.OrnamentPosition.TOP_LEFT,
       marginLeft: 16,
       marginTop: 48,
     ));
-    mapboxMap.attribution.updateSettings(AttributionSettings(
+    mapboxMap.attribution.updateSettings(mapbox.AttributionSettings(
       enabled: true,
-      position: OrnamentPosition.TOP_LEFT,
+      position: mapbox.OrnamentPosition.TOP_LEFT,
       marginLeft: 100,
       marginTop: 52,
     ));
 
     // Set globe projection
-    mapboxMap.style.setProjection(StyleProjection(name: StyleProjectionName.globe));
+    mapboxMap.style.setProjection(mapbox.StyleProjection(name: mapbox.StyleProjectionName.globe));
 
     // Set initial camera
     mapboxMap.setCamera(
@@ -167,57 +169,78 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         }
       }
 
-      // Past route (bright)
+      // Past route (bright) - using curved great circle routes
       if (currentSegmentEnd > 0) {
-        final pastCoords = portsWithCoords
-            .take(currentSegmentEnd + 1)
-            .map((s) => Position(s.longitude!, s.latitude!))
-            .toList();
-
-        if (pastCoords.length >= 2) {
-          _routeAnnotationManager!.create(
-            PolylineAnnotationOptions(
-              geometry: LineString(coordinates: pastCoords),
-              lineColor: 0xFF4FC3F7, // Bright cyan
-              lineWidth: 3.0,
-              lineOpacity: 1.0,
-            ),
-          );
-        }
+        final pastPorts = portsWithCoords.take(currentSegmentEnd + 1).toList();
+        _drawCurvedRoute(
+          pastPorts,
+          lineColor: 0xFF4FC3F7, // Bright cyan
+          lineWidth: 3.0,
+          lineOpacity: 1.0,
+        );
       }
 
-      // Future route (transparent)
+      // Future route (transparent) - using curved great circle routes
       if (currentSegmentEnd < portsWithCoords.length - 1) {
-        final futureCoords = portsWithCoords
+        final futurePorts = portsWithCoords
             .skip(currentSegmentEnd > 0 ? currentSegmentEnd : 0)
-            .map((s) => Position(s.longitude!, s.latitude!))
             .toList();
-
-        if (futureCoords.length >= 2) {
-          _routeAnnotationManager!.create(
-            PolylineAnnotationOptions(
-              geometry: LineString(coordinates: futureCoords),
-              lineColor: 0xFF4FC3F7, // Same cyan but transparent
-              lineWidth: 2.5,
-              lineOpacity: 0.4,
-            ),
-          );
-        }
+        _drawCurvedRoute(
+          futurePorts,
+          lineColor: 0xFF4FC3F7, // Same cyan but transparent
+          lineWidth: 2.5,
+          lineOpacity: 0.4,
+        );
       }
     } else {
-      // Full route (single color based on past/future)
-      final coords = portsWithCoords
-          .map((s) => Position(s.longitude!, s.latitude!))
+      // Full route - using curved great circle routes
+      final isPast = trip.isCompleted;
+      _drawCurvedRoute(
+        portsWithCoords,
+        lineColor: isPast ? 0xFF81C784 : 0xFF4FC3F7, // Green for past, cyan for future
+        lineWidth: 2.5,
+        lineOpacity: isPast ? 0.8 : 0.6,
+      );
+    }
+  }
+
+  /// Draw curved great circle routes between consecutive ports
+  void _drawCurvedRoute(
+    List<dynamic> ports, {
+    required int lineColor,
+    required double lineWidth,
+    required double lineOpacity,
+  }) {
+    if (_routeAnnotationManager == null || ports.length < 2) return;
+
+    // For each segment between ports, create a curved polyline
+    for (int i = 0; i < ports.length - 1; i++) {
+      final startPort = ports[i];
+      final endPort = ports[i + 1];
+
+      // Create LatLng coordinates for the segment
+      final start = LatLng(startPort.latitude!, startPort.longitude!);
+      final end = LatLng(endPort.latitude!, endPort.longitude!);
+
+      // Calculate curved coordinates using great circle formula
+      final curvedCoords = MapUtils.calculateGreatCirclePolyline(
+        start,
+        end,
+        numPoints: 100,
+      );
+
+      // Convert to Position objects for Mapbox
+      final positions = curvedCoords
+          .map((coord) => Position(coord.longitude, coord.latitude))
           .toList();
 
-      final isPast = trip.isCompleted;
-
+      // Create the polyline annotation
       _routeAnnotationManager!.create(
         PolylineAnnotationOptions(
-          geometry: LineString(coordinates: coords),
-          lineColor: isPast ? 0xFF81C784 : 0xFF4FC3F7, // Green for past, cyan for future
-          lineWidth: 2.5,
-          lineOpacity: isPast ? 0.8 : 0.6,
+          geometry: LineString(coordinates: positions),
+          lineColor: lineColor,
+          lineWidth: lineWidth,
+          lineOpacity: lineOpacity,
         ),
       );
     }
@@ -281,18 +304,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
       if (departureTime != null && arrivalTime != null) {
         if (now.isAfter(departureTime) && now.isBefore(arrivalTime)) {
-          // Ship is between these two ports - interpolate position
+          // Ship is between these two ports - interpolate along curved path
           final totalDuration = arrivalTime.difference(departureTime).inMinutes;
           final elapsed = now.difference(departureTime).inMinutes;
           final progress = (elapsed / totalDuration).clamp(0.0, 1.0);
 
-          // Linear interpolation (good enough for display purposes)
-          final lat = currentPort.latitude! +
-              (nextPort.latitude! - currentPort.latitude!) * progress;
-          final lon = currentPort.longitude! +
-              (nextPort.longitude! - currentPort.longitude!) * progress;
+          // Calculate position along the great circle route
+          final start = LatLng(currentPort.latitude!, currentPort.longitude!);
+          final end = LatLng(nextPort.latitude!, nextPort.longitude!);
 
-          return Position(lon, lat);
+          // Get curved path and interpolate along it
+          final curvedPath = MapUtils.calculateGreatCirclePolyline(
+            start,
+            end,
+            numPoints: 100,
+          );
+
+          // Find position along the curved path based on progress
+          final pathIndex = (progress * (curvedPath.length - 1)).toInt().clamp(
+            0,
+            curvedPath.length - 1,
+          );
+          final position = curvedPath[pathIndex];
+
+          return Position(position.longitude, position.latitude);
         }
       }
     }

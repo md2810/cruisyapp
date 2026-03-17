@@ -178,7 +178,7 @@ class CruiseTrip {
     String? startPort,
     String? endPort,
     List<PortStop>? stops,
-    String? imageUrl,
+    Object? imageUrl = _sentinel,
   }) {
     return CruiseTrip(
       id: id ?? this.id,
@@ -189,7 +189,9 @@ class CruiseTrip {
       startPort: startPort ?? this.startPort,
       endPort: endPort ?? this.endPort,
       stops: stops ?? this.stops,
-      imageUrl: imageUrl ?? this.imageUrl,
+      imageUrl: imageUrl == _sentinel ? this.imageUrl : imageUrl as String?,
     );
   }
+
+  static const _sentinel = Object();
 }

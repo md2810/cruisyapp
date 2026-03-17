@@ -26,18 +26,20 @@ final currentUserProvider = Provider<User?>((ref) {
   return ref.watch(authStateProvider).valueOrNull;
 });
 
-// Initialize locale when auth state changes
+// Initialize locale when auth state changes - using listen to avoid modifying providers during build
 final authStateListenerProvider = Provider<void>((ref) {
-  final user = ref.watch(currentUserProvider);
-  final userId = user?.uid;
-  
-  // Update the currentUserIdProvider
-  ref.read(currentUserIdProvider.notifier).state = userId;
-  
-  // Initialize locale from Firebase
-  if (userId != null) {
-    ref.read(localeProvider.notifier).initialize(userId);
-  }
+  // Use listen instead of watch to handle side effects
+  ref.listen(currentUserProvider, (previous, current) {
+    final userId = current?.uid;
+    
+    // Update the currentUserIdProvider
+    ref.read(currentUserIdProvider.notifier).state = userId;
+    
+    // Initialize locale from Firebase
+    if (userId != null) {
+      ref.read(localeProvider.notifier).initialize(userId);
+    }
+  });
 });
 
 final userDisplayNameProvider = Provider<String>((ref) {

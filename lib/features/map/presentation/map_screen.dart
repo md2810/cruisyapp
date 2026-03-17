@@ -3,6 +3,7 @@ import 'package:cruisyapp/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
 import '../../../shared/ui/map_widget_conditional.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
@@ -13,7 +14,7 @@ class MapScreen extends ConsumerStatefulWidget {
 }
 
 class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserver {
-  MapboxMap? _mapboxMap;
+  mapbox.MapboxMap? _mapboxMap;
   double _currentZoom = 1.0;
   String? _mapError;
 
@@ -44,17 +45,17 @@ class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserv
     _mapboxMap = mapboxMap;
 
     // Hide Mapbox ornaments (scale bar, logo, attribution)
-    mapboxMap.scaleBar.updateSettings(ScaleBarSettings(enabled: false));
-    mapboxMap.logo.updateSettings(LogoSettings(enabled: false));
-    mapboxMap.attribution.updateSettings(AttributionSettings(enabled: false));
+    mapboxMap.scaleBar.updateSettings(mapbox.ScaleBarSettings(enabled: false));
+    mapboxMap.logo.updateSettings(mapbox.LogoSettings(enabled: false));
+    mapboxMap.attribution.updateSettings(mapbox.AttributionSettings(enabled: false));
 
     // Set globe projection for 3D globe view
-    mapboxMap.style.setProjection(StyleProjection(name: StyleProjectionName.globe));
+    mapboxMap.style.setProjection(mapbox.StyleProjection(name: mapbox.StyleProjectionName.globe));
 
     // Set initial camera to show full globe
     mapboxMap.setCamera(
-      CameraOptions(
-        center: Point(coordinates: Position(10.0, 35.0)), // Center on Mediterranean
+      mapbox.CameraOptions(
+        center: mapbox.Point(coordinates: mapbox.Position(10.0, 35.0)), // Center on Mediterranean
         zoom: 1.0, // Global view to see the whole globe
         pitch: 0.0,
       ),
@@ -62,11 +63,11 @@ class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserv
     _currentZoom = 1.0;
   }
 
-  void _onStyleLoaded(StyleLoadedEventData data) {
+  void _onStyleLoaded(mapbox.StyleLoadedEventData data) {
     debugPrint('Mapbox: Style loaded successfully');
   }
 
-  void _onMapLoadError(MapLoadingErrorEventData data) {
+  void _onMapLoadError(mapbox.MapLoadingErrorEventData data) {
     debugPrint('Mapbox: Error loading map - ${data.message}');
     if (mounted) {
       setState(() {
@@ -89,11 +90,11 @@ class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserv
               color: const Color(0xFF0a1929), // Dark fallback color
               child: MapWidget(
                 onMapCreated: _onMapCreated,
-                onStyleLoadedListener: _onStyleLoaded,
-                onMapLoadErrorListener: _onMapLoadError,
-                styleUri: MapboxStyles.DARK,
-                cameraOptions: CameraOptions(
-                  center: Point(coordinates: Position(10.0, 35.0)),
+                onStyleLoadedListener: (dynamic data) => _onStyleLoaded(data),
+                onMapLoadErrorListener: (dynamic data) => _onMapLoadError(data),
+                styleUri: mapbox.MapboxStyles.DARK,
+                cameraOptions: mapbox.CameraOptions(
+                  center: mapbox.Point(coordinates: mapbox.Position(10.0, 35.0)),
                   zoom: 1.0, // Global view to see the whole globe
                   pitch: 0.0,
                 ),
@@ -219,7 +220,7 @@ class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserv
                         zoom: 1.0,
                         pitch: 0.0,
                       ),
-                      MapAnimationOptions(duration: 500),
+                      mapbox.MapAnimationOptions(duration: 500),
                     );
                     setState(() {
                       _currentZoom = 1.0;
@@ -235,7 +236,7 @@ class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserv
                     });
                     _mapboxMap?.flyTo(
                       CameraOptions(zoom: _currentZoom),
-                      MapAnimationOptions(duration: 300),
+                      mapbox.MapAnimationOptions(duration: 300),
                     );
                   },
                 ),
@@ -248,7 +249,7 @@ class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserv
                     });
                     _mapboxMap?.flyTo(
                       CameraOptions(zoom: _currentZoom),
-                      MapAnimationOptions(duration: 300),
+                      mapbox.MapAnimationOptions(duration: 300),
                     );
                   },
                 ),

@@ -7,12 +7,16 @@ class MapWidget extends StatefulWidget {
   final Function(dynamic)? onMapCreated;
   final String? styleUri;
   final dynamic cameraOptions;
+  final Function(dynamic)? onStyleLoadedListener;
+  final Function(dynamic)? onMapLoadErrorListener;
 
   const MapWidget({
     super.key,
     this.onMapCreated,
     this.styleUri,
     this.cameraOptions,
+    this.onStyleLoadedListener,
+    this.onMapLoadErrorListener,
   });
 
   @override
@@ -69,6 +73,7 @@ class _MapWidgetState extends State<MapWidget> {
 // Stub classes for web
 class MapboxMap {
   void setCamera(dynamic options) {}
+  void flyTo(dynamic cameraOptions, [dynamic animationOptions]) {}
   dynamic get style => _StyleStub();
   dynamic get scaleBar => _ScaleBarStub();
   dynamic get logo => _LogoStub();
@@ -103,14 +108,18 @@ class _AnnotationsStub {
 
 class MapboxStyles {
   static const String DARK = 'mapbox://styles/mapbox/dark-v11';
+  static const String LIGHT = 'mapbox://styles/mapbox/light-v11';
+  static const String SATELLITE = 'mapbox://styles/mapbox/satellite-v9';
+  static const String STREETS = 'mapbox://styles/mapbox/streets-v12';
 }
 
 class CameraOptions {
   final dynamic center;
   final double? zoom;
   final double? pitch;
+  final double? bearing;
 
-  const CameraOptions({this.center, this.zoom, this.pitch});
+  const CameraOptions({this.center, this.zoom, this.pitch, this.bearing});
 }
 
 class Point {
@@ -122,11 +131,15 @@ class Position {
   final double lat;
   final double lng;
   Position(this.lng, this.lat);
+
+  @override
+  String toString() => 'Position($lng, $lat)';
 }
 
 class ScaleBarSettings {
   final bool enabled;
-  ScaleBarSettings({this.enabled = true});
+  final dynamic position;
+  ScaleBarSettings({this.enabled = true, this.position});
 }
 
 class LogoSettings {
@@ -152,6 +165,7 @@ class StyleProjection {
 
 class StyleProjectionName {
   static const globe = 'globe';
+  static const mercator = 'mercator';
 }
 
 class MapAnimationOptions {
@@ -184,7 +198,14 @@ class CircleAnnotationOptions {
   final int? circleStrokeColor;
   final double? circleStrokeWidth;
   final double? circleOpacity;
-  CircleAnnotationOptions({this.geometry, this.circleColor, this.circleRadius, this.circleStrokeColor, this.circleStrokeWidth, this.circleOpacity});
+  CircleAnnotationOptions({
+    this.geometry,
+    this.circleColor,
+    this.circleRadius,
+    this.circleStrokeColor,
+    this.circleStrokeWidth,
+    this.circleOpacity,
+  });
 }
 
 class LineString {
@@ -194,4 +215,14 @@ class LineString {
 
 class OrnamentPosition {
   static const TOP_LEFT = 'top-left';
+  static const TOP_RIGHT = 'top-right';
+  static const BOTTOM_LEFT = 'bottom-left';
+  static const BOTTOM_RIGHT = 'bottom-right';
+}
+
+// Stub event classes
+class StyleLoadedEventData {}
+class MapLoadingErrorEventData {
+  final String message;
+  MapLoadingErrorEventData({this.message = ''});
 }

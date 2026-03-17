@@ -85,10 +85,11 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
   }
 
   void _addStop({DateTime? suggestedDate}) {
+    final l10n = AppLocalizations.of(context)!;
     if (_startDate == null || _endDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select trip dates first'),
+        SnackBar(
+          content: Text(l10n.pleaseSelectTripDatesFirst),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -199,33 +200,35 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
   }
 
   String? _validateStops() {
+    final l10n = AppLocalizations.of(context)!;
     // Count non-sea-day ports
     final ports = _stops.where((s) => !s.isSeaDay).toList();
 
     if (ports.length < 2) {
-      return 'Please add at least 2 ports (departure and arrival)';
+      return l10n.pleaseAddAtLeastTwoPorts;
     }
 
     // Check first entry is not a sea day
     if (_stops.isNotEmpty && _stops.first.isSeaDay) {
-      return 'First entry cannot be a sea day';
+      return l10n.firstEntryCannotBeSeaDay;
     }
 
     // Check last entry is not a sea day
     if (_stops.isNotEmpty && _stops.last.isSeaDay) {
-      return 'Last entry cannot be a sea day';
+      return l10n.lastEntryCannotBeSeaDay;
     }
 
     return null;
   }
 
   Future<void> _saveTrip() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
     if (_shipNameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a ship name'),
+        SnackBar(
+          content: Text(l10n.shipNameRequired),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -234,8 +237,8 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
 
     if (_startDate == null || _endDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select travel dates'),
+        SnackBar(
+          content: Text(l10n.selectTravelDates),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -271,7 +274,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
         shipName: _shipNameController.text.trim(),
         tripName: _tripNameController.text.trim().isNotEmpty
             ? _tripNameController.text.trim()
-            : 'Cruise Adventure',
+            : l10n.cruiseAdventureDefault,
         departureDate: _startDate!,
         arrivalDate: _endDate!,
         startPort: startPort,
@@ -293,8 +296,8 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
           SnackBar(
             content: Text(
               widget.isEditing
-                  ? '${trip.shipName} updated!'
-                  : '${trip.shipName} trip added!',
+                  ? l10n.tripUpdated(trip.shipName)
+                  : l10n.tripAdded(trip.shipName),
             ),
             behavior: SnackBarBehavior.floating,
           ),
@@ -304,7 +307,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to save trip: $e'),
+            content: Text(l10n.failedToSaveTrip(e.toString())),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
@@ -360,6 +363,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final dateFormat = DateFormat('MMM d, yyyy');
@@ -384,7 +388,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
           },
           icon: const Icon(Icons.close_rounded),
         ),
-        title: Text(widget.isEditing ? 'Edit Trip' : 'Add Trip'),
+        title: Text(widget.isEditing ? l10n.editTrip : l10n.addTrip),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
@@ -399,7 +403,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                         color: colorScheme.onPrimary,
                       ),
                     )
-                  : const Text('Save'),
+                  : Text(l10n.save),
             ),
           ),
         ],
@@ -420,7 +424,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                widget.isEditing ? 'Edit Voyage' : 'New Voyage',
+                widget.isEditing ? l10n.editVoyage : l10n.newVoyage,
                 style: GoogleFonts.outfit(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
@@ -429,8 +433,8 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
               const SizedBox(height: 8),
               Text(
                 widget.isEditing
-                    ? 'Update your cruise details'
-                    : 'Add your upcoming cruise to start tracking',
+                    ? l10n.updateCruiseDetails
+                    : l10n.addCruiseTracking,
                 style: textTheme.bodyLarge?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),
@@ -443,8 +447,8 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
-                  labelText: 'Trip Name (Optional)',
-                  hintText: 'e.g., Mediterranean Adventure',
+                  labelText: l10n.tripNameOptional,
+                  hintText: l10n.tripNameOptionalHint,
                   prefixIcon: const Icon(Icons.confirmation_number_rounded),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -462,8 +466,8 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                 textInputAction: TextInputAction.done,
                 onEditingComplete: () => FocusScope.of(context).unfocus(),
                 decoration: InputDecoration(
-                  labelText: 'Ship Name',
-                  hintText: 'e.g., Symphony of the Seas',
+                  labelText: l10n.shipName,
+                  hintText: l10n.shipNameHint,
                   prefixIcon: const Icon(Icons.directions_boat_rounded),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -473,7 +477,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter a ship name';
+                    return l10n.shipNameRequired;
                   }
                   return null;
                 },
@@ -482,7 +486,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
 
               // Travel Dates
               Text(
-                'Travel Dates',
+                l10n.travelDates,
                 style: textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -520,7 +524,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    '${_endDate!.difference(_startDate!).inDays + 1} days',
+                                    l10n.daysCount(_endDate!.difference(_startDate!).inDays + 1),
                                     style: textTheme.bodySmall?.copyWith(
                                       color: colorScheme.primary,
                                     ),
@@ -528,7 +532,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                                 ],
                               )
                             : Text(
-                                'Select departure and return dates',
+                                l10n.selectDepartureDates,
                                 style: textTheme.bodyLarge?.copyWith(
                                   color: colorScheme.onSurfaceVariant,
                                 ),
@@ -549,7 +553,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Itinerary',
+                    l10n.itinerary,
                     style: textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -557,7 +561,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                   FilledButton.icon(
                     onPressed: () => _addStop(),
                     icon: const Icon(Icons.add_rounded, size: 18),
-                    label: const Text('Add'),
+                    label: Text(l10n.add),
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -595,8 +599,8 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                           : Icons.add_rounded),
                   label: Text(
                     _isLoading
-                        ? 'Saving...'
-                        : (widget.isEditing ? 'Update Trip' : 'Save Trip'),
+                        ? l10n.savingTrip
+                        : (widget.isEditing ? l10n.updateTripButton : l10n.saveTripButton),
                     style: GoogleFonts.outfit(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -606,13 +610,14 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
               ),
             ],
           ),
+          ),
         ),
       ),
-    ),
     );
   }
 
   Widget _buildEmptyItinerary(ColorScheme colorScheme, TextTheme textTheme) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -631,14 +636,14 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Select travel dates first',
+            l10n.selectTravelDatesFirst,
             style: textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            'Then add your ports and sea days',
+            l10n.addPortsSeaDays,
             style: textTheme.bodySmall?.copyWith(
               color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
             ),
@@ -653,6 +658,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     ColorScheme colorScheme,
     TextTheme textTheme,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('EEE, MMM d');
     final timeFormat = DateFormat('HH:mm');
 
@@ -741,7 +747,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                         if (stop != null) ...[
                           Text(
                             isContinuation
-                                ? '${stop.name} (continued)'
+                                ? l10n.continued(stop.name)
                                 : stop.name,
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
@@ -754,7 +760,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                             Text(
                               stop.departureTime != null
                                   ? '${timeFormat.format(stop.arrivalTime!)} - ${timeFormat.format(stop.departureTime!)}'
-                                  : 'Arrives ${timeFormat.format(stop.arrivalTime!)}',
+                                  : l10n.arrivesTime(timeFormat.format(stop.arrivalTime!)),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: colorScheme.onSurfaceVariant,
@@ -763,7 +769,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                           ],
                         ] else ...[
                           Text(
-                            'No activity planned',
+                            l10n.noActivityPlanned,
                             style: TextStyle(
                               color: colorScheme.onSurfaceVariant,
                               fontStyle: FontStyle.italic,
@@ -972,11 +978,12 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
   }
 
   void _save() {
+    final l10n = AppLocalizations.of(context)!;
     final name = _searchController.text.trim();
     if (name.isEmpty && !_isSeaDay) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter or select a port'),
+        SnackBar(
+          content: Text(l10n.pleaseEnterOrSelectPort),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -985,8 +992,8 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
 
     if (_arrivalDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a date'),
+        SnackBar(
+          content: Text(l10n.pleaseSelectADate),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -998,8 +1005,8 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
     if (!_isSeaDay) {
       if (_arrivalTime == null && !widget.isFirstPort) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select an arrival time'),
+          SnackBar(
+            content: Text(l10n.pleaseSelectArrivalTime),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -1008,8 +1015,8 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
 
       if (_departureTime == null && !widget.isLastPort) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select a departure time'),
+          SnackBar(
+            content: Text(l10n.pleaseSelectDepartureTime),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -1112,7 +1119,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
     final stop = PortStop(
       id: widget.existingStop?.id ??
           DateTime.now().millisecondsSinceEpoch.toString(),
-      name: _isSeaDay ? 'Sea Day' : name,
+      name: _isSeaDay ? l10n.seaDay : name,
       arrivalTime: arrivalDateTime,
       departureTime: departureDateTime,
       isSeaDay: _isSeaDay,
@@ -1127,6 +1134,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final dateFormat = DateFormat('MMM d, yyyy');
 
@@ -1143,7 +1151,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.existingStop != null ? 'Edit Stop' : 'Add Stop',
+              widget.existingStop != null ? l10n.editStopTitle : l10n.addStopTitle,
               style: GoogleFonts.outfit(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
@@ -1155,8 +1163,8 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
             Card(
               color: colorScheme.surfaceContainerHigh,
               child: SwitchListTile(
-                title: const Text('Sea Day'),
-                subtitle: const Text('Day at sea with no port'),
+                title: Text(l10n.isSeaDay),
+                subtitle: Text(l10n.dayAtSeaNoPort),
                 secondary: Icon(
                   Icons.waves_rounded,
                   color:
@@ -1175,8 +1183,8 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                 textCapitalization: TextCapitalization.words,
                 autofocus: widget.existingStop == null, // Auto-focus on new stops
                 decoration: InputDecoration(
-                  labelText: 'Port Name',
-                  hintText: 'Search for a port...',
+                  labelText: l10n.portNameLabel,
+                  hintText: l10n.searchPort,
                   prefixIcon: const Icon(Icons.search_rounded),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
@@ -1240,7 +1248,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                           color: colorScheme.primary, size: 16),
                       const SizedBox(width: 8),
                       Text(
-                        'Coordinates saved for map',
+                        l10n.coordinatesSavedForMap,
                         style: TextStyle(
                           fontSize: 12,
                           color: colorScheme.primary,
@@ -1254,7 +1262,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
 
             // Date Selection
             Text(
-              _isMultiDay ? 'Arrival Date' : 'Date',
+              _isMultiDay ? l10n.arrivalDateLabel : l10n.date,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: colorScheme.onSurfaceVariant,
@@ -1280,7 +1288,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                     Text(
                       _arrivalDate != null
                           ? dateFormat.format(_arrivalDate!)
-                          : 'Select date',
+                          : l10n.selectDate,
                       style: TextStyle(
                         color: _arrivalDate != null
                             ? colorScheme.onSurface
@@ -1298,8 +1306,8 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
               Card(
                 color: colorScheme.surfaceContainerHigh,
                 child: SwitchListTile(
-                  title: const Text('Multi-day stay'),
-                  subtitle: const Text('Port visit spanning multiple days'),
+                  title: Text(l10n.multiDayStayLabel),
+                  subtitle: Text(l10n.portVisitSpanningMultipleDays),
                   secondary: Icon(
                     Icons.date_range_rounded,
                     color: _isMultiDay
@@ -1323,7 +1331,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
             if (_isMultiDay && !_isSeaDay) ...[
               const SizedBox(height: 16),
               Text(
-                'Departure Date',
+                l10n.departureDateLabel,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurfaceVariant,
@@ -1350,7 +1358,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                       Text(
                         _departureDate != null
                             ? dateFormat.format(_departureDate!)
-                            : 'Select date',
+                            : l10n.selectDate,
                         style: TextStyle(
                           color: _departureDate != null
                               ? colorScheme.onSurface
@@ -1368,12 +1376,12 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
               const SizedBox(height: 16),
               Text(
                 widget.isFirstPort && widget.isLastPort
-                    ? 'Times (optional for single port)'
+                    ? l10n.timesOptionalForSinglePort
                     : widget.isFirstPort
-                        ? 'Departure Time *${widget.isLastPort ? '' : ' / Arrival (optional)'}'
+                        ? '${l10n.departureTimeLabel} *'
                         : widget.isLastPort
-                            ? 'Arrival Time *${widget.isFirstPort ? '' : ' / Departure (optional)'}'
-                            : 'Arrival & Departure Times *',
+                            ? '${l10n.arrivalTimeLabel} *'
+                            : l10n.arrivalAndDepartureTimes,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurfaceVariant,
@@ -1403,7 +1411,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                             Text(
                               _arrivalTime != null
                                   ? _arrivalTime!.format(context)
-                                  : widget.isFirstPort ? 'Arrival (opt.)' : 'Arrival *',
+                                  : widget.isFirstPort ? l10n.arrivalOptional : l10n.arrivalRequired,
                               style: TextStyle(
                                 color: _arrivalTime != null
                                     ? colorScheme.onSurface
@@ -1437,7 +1445,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                             Text(
                               _departureTime != null
                                   ? _departureTime!.format(context)
-                                  : widget.isLastPort ? 'Departure (opt.)' : 'Departure *',
+                                  : widget.isLastPort ? l10n.departureOptional : l10n.departureRequired,
                               style: TextStyle(
                                 color: _departureTime != null
                                     ? colorScheme.onSurface
@@ -1460,7 +1468,7 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
               child: FilledButton(
                 onPressed: _save,
                 child:
-                    Text(widget.existingStop != null ? 'Update Stop' : 'Add Stop'),
+                    Text(widget.existingStop != null ? l10n.updateStop : l10n.addStopTitle),
               ),
             ),
           ],
