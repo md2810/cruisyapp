@@ -273,16 +273,19 @@ $portsJsonStr
         imageUrl: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=1000&auto=format&fit=crop',
       );
     } catch (e) {
-      throw Exception('Failed to parse AI response: $e');
+      throw Exception('Failed to parse AI response. Error: $e\nRaw Response: $responseText');
     }
   }
 }
 
+import 'api_keys.dart';
+
 /// Provider for CruiseImportService (singleton)
 final cruiseImportServiceProvider = Provider<CruiseImportService?>((ref) {
-  // API key should be configured via environment or secure storage
-  // For now, return null if not configured
-  const apiKey = String.fromEnvironment('GEMINI_API_KEY');
+  // Try environment first, fallback to ApiKeys.gemini
+  const envKey = String.fromEnvironment('GEMINI_API_KEY');
+  final apiKey = envKey.isNotEmpty ? envKey : ApiKeys.gemini;
+
   if (apiKey.isEmpty) return null;
   return CruiseImportService(apiKey: apiKey);
 });
