@@ -156,21 +156,21 @@ class MapUtils {
   }
 
   /// Calculate a great circle route with intermediate points
-  /// 
+  ///
   /// This is the recommended method for drawing cruise routes as it
   /// follows the actual shortest path on Earth's surface.
-  /// 
+  ///
   /// [start] - Starting coordinate
-  /// [end] - Ending coordinate  
+  /// [end] - Ending coordinate
   /// [numPoints] - Number of intermediate points (default: 100)
-  /// 
+  ///
   /// Returns a list of LatLng suitable for drawing polylines
   static List<LatLng> calculateGreatCirclePolyline(
     LatLng start,
     LatLng end, {
     int numPoints = 100,
   }) {
-    return calculateCurvedPolyline(start, end, numPoints: numPoints);
+    return calculateBezierCurvedPolyline(start, end, numPoints: numPoints, curvature: 0.15);
   }
 
   /// Calculate multiple curved segments for a route with multiple stops

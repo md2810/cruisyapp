@@ -243,9 +243,10 @@ $portsJsonStr
         final isSeaDay = stopMap['isSeaDay'] == true;
         if (!isSeaDay) {
           final name = stopMap['name'] as String?;
+          final countryCode = stopMap['countryCode'] as String?;
           if (name != null && name.isNotEmpty) {
             final portService = PortSearchService();
-            final portInfo = portService.findByName(name);
+            final portInfo = portService.findByName(name, countryCode: countryCode);
             if (portInfo != null) {
               stopMap['latitude'] = portInfo.latitude;
               stopMap['longitude'] = portInfo.longitude;

@@ -62,23 +62,53 @@ class PortSearchService {
     return results;
   }
 
-  PortSearchResult? findByName(String name) {
+  PortSearchResult? findByName(String name, {String? countryCode}) {
     final lowerName = name.toLowerCase();
-    try {
-      return _wpiPorts.firstWhere(
-        (port) => port.name.toLowerCase() == lowerName,
-      );
-    } catch (e) {
-      // Try partial match if exact match fails
-      try {
-        return _wpiPorts.firstWhere(
-          (port) => port.name.toLowerCase().contains(lowerName) ||
-              lowerName.contains(port.name.toLowerCase()),
-        );
-      } catch (e) {
-        return null;
+
+    // Find all ports with this exact name
+    final exactMatches = _wpiPorts.where(
+      (port) => port.name.toLowerCase() == lowerName,
+    ).toList();
+
+    if (exactMatches.isNotEmpty) {
+      if (countryCode != null && countryCode.isNotEmpty) {
+        // Try to match the country code
+        final lowerCountry = countryCode.toLowerCase();
+        try {
+          return exactMatches.firstWhere(
+            (port) => port.countryCode?.toLowerCase() == lowerCountry,
+          );
+        } catch (_) {
+          // If no exact country match, just return the first name match
+          return exactMatches.first;
+        }
       }
+      return exactMatches.first;
     }
+
+    // Try partial match if exact match fails
+    final partialMatches = _wpiPorts.where(
+      (port) => port.name.toLowerCase().contains(lowerName) ||
+          lowerName.contains(port.name.toLowerCase()),
+    ).toList();
+
+    if (partialMatches.isNotEmpty) {
+      if (countryCode != null && countryCode.isNotEmpty) {
+        // Try to match the country code
+        final lowerCountry = countryCode.toLowerCase();
+        try {
+          return partialMatches.firstWhere(
+            (port) => port.countryCode?.toLowerCase() == lowerCountry,
+          );
+        } catch (_) {
+          // If no exact country match, just return the first partial match
+          return partialMatches.first;
+        }
+      }
+      return partialMatches.first;
+    }
+
+    return null;
   }
 
   /// Returns a curated list of popular cruise ports for empty search
