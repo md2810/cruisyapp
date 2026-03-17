@@ -1,11 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cruisyapp/l10n/generated/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../core/providers/trip_provider.dart';
+import '../../../core/services/cruise_import_service.dart';
 import '../../../core/services/port_search_service.dart';
 import '../../../shared/models/cruise_trip.dart';
 import '../../../shared/models/port_stop.dart';
@@ -50,6 +54,89 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     _stops = List.from(trip.stops);
   }
 
+  Future<void> _handleAiImport(BuildContext context, WidgetRef ref, {required bool isImage}) async {
+    final l10n = AppLocalizations.of(context)!;
+    final importService = ref.read(cruiseImportServiceProvider);
+
+    if (importService == null || !importService.isAvailable) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.aiImportError),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return;
+    }
+
+    try {
+      File? fileToImport;
+
+      if (isImage) {
+        final ImagePicker picker = ImagePicker();
+        final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+        if (image == null) return;
+        fileToImport = File(image.path);
+      } else {
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
+        if (result == null || result.files.single.path == null) return;
+        fileToImport = File(result.files.single.path!);
+      }
+
+      setState(() => _isLoading = true);
+
+      final trip = await importService.parseTripFromFile(fileToImport);
+
+      if (trip != null) {
+        setState(() {
+          _shipNameController.text = trip.shipName;
+          if (trip.tripName.isNotEmpty) {
+            _tripNameController.text = trip.tripName;
+          }
+          _startDate = trip.departureDate;
+          _endDate = trip.arrivalDate;
+          _stops = List.from(trip.stops);
+        });
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.aiImportSuccess),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.aiImportError),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${l10n.aiImportError}\n\n$e'),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   Future<void> _selectDateRange() async {
     final now = DateTime.now();
     final picked = await showDateRangePicker(
@@ -82,6 +169,141 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
         _endDate = picked.end;
       });
     }
+  }
+
+  void _showAiImportSheet(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final textController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.aiImportTitle,
+                    style: textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => context.pop(),
+                    icon: const Icon(Icons.close_rounded),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l10n.pasteBookingConfirmation,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 24),
+              TextField(
+                controller: textController,
+                maxLines: 10,
+                minLines: 5,
+                decoration: InputDecoration(
+                  hintText: l10n.bookingConfirmationHint,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  filled: true,
+                  fillColor: colorScheme.surfaceContainerHighest,
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: FilledButton.icon(
+                  onPressed: () async {
+                    if (textController.text.trim().isEmpty) return;
+
+                    final text = textController.text;
+                    context.pop(); // Close sheet
+
+                    setState(() => _isLoading = true);
+
+                    try {
+                      final importService = ref.read(cruiseImportServiceProvider);
+                      if (importService == null || !importService.isAvailable) {
+                        throw Exception(l10n.aiImportError);
+                      }
+
+                      final trip = await importService.parseTripFromText(text);
+
+                      if (trip != null) {
+                        setState(() {
+                          _shipNameController.text = trip.shipName;
+                          if (trip.tripName.isNotEmpty) {
+                            _tripNameController.text = trip.tripName;
+                          }
+                          _startDate = trip.departureDate;
+                          _endDate = trip.arrivalDate;
+                          _stops = List.from(trip.stops);
+                        });
+
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(l10n.aiImportSuccess),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        }
+                      } else {
+                        throw Exception('Failed to parse trip data');
+                      }
+                    } catch (e) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(l10n.aiImportError),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Theme.of(context).colorScheme.error,
+                          ),
+                        );
+                      }
+                    } finally {
+                      if (mounted) {
+                        setState(() => _isLoading = false);
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.auto_awesome_rounded),
+                  label: Text(
+                    l10n.importTripButton,
+                    style: GoogleFonts.outfit(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _addStop({DateTime? suggestedDate}) {
@@ -439,7 +661,56 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
+
+              if (!widget.isEditing) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _handleAiImport(context, ref, isImage: true),
+                        icon: const Icon(Icons.image_rounded),
+                        label: const Text('Image'),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _handleAiImport(context, ref, isImage: false),
+                        icon: const Icon(Icons.picture_as_pdf_rounded),
+                        label: const Text('PDF'),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _showAiImportSheet(context, ref),
+                        icon: const Icon(Icons.text_snippet_rounded),
+                        label: const Text('Text'),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+              ],
 
               // Trip Name (first, for the narrative flow)
               TextFormField(
