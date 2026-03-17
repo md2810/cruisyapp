@@ -204,7 +204,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           if (value == null || value.isEmpty) {
                             return l10n.pleaseEnterEmail;
                           }
-                          if (!value.contains('@') || !value.contains('.')) {
+                          final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+                          if (!emailRegex.hasMatch(value)) {
                             return l10n.pleaseEnterValidEmail;
                           }
                           return null;
@@ -348,16 +349,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               color: colorScheme.primary,
                             ),
                           )
-                        : Image.network(
-                            'https://www.google.com/favicon.ico',
-                            width: 24,
-                            height: 24,
-                            errorBuilder: (context, error, stackTrace) => Icon(
+                        : Icon(
                               Icons.g_mobiledata_rounded,
                               size: 24,
                               color: colorScheme.onSurface,
                             ),
-                          ),
                     label: Text(
                       l10n.continueWithGoogle,
                       style: GoogleFonts.outfit(
