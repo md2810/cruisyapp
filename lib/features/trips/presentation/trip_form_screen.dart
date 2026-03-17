@@ -277,7 +277,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(l10n.aiImportError),
+                            content: Text('${l10n.aiImportError}\n\n$e'),
                             behavior: SnackBarBehavior.floating,
                             backgroundColor: Theme.of(context).colorScheme.error,
                           ),
@@ -666,6 +666,31 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
               if (!widget.isEditing) ...[
                 Row(
                   children: [
+                    Icon(
+                      Icons.auto_awesome_rounded,
+                      color: colorScheme.primary,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'AI Import',
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Instantly import your itinerary by uploading your booking confirmation.',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: () => _handleAiImport(context, ref, isImage: true),
@@ -710,6 +735,8 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                   ],
                 ),
                 const SizedBox(height: 32),
+                const Divider(),
+                const SizedBox(height: 24),
               ],
 
               // Trip Name (first, for the narrative flow)
