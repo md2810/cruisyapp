@@ -44,13 +44,13 @@ class FriendsScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Failed to load shared trips',
+                  l10n.failedToLoadSharedTrips,
                   style: textTheme.titleMedium,
                 ),
                 const SizedBox(height: 8),
                 FilledButton.tonal(
                   onPressed: () => ref.refresh(sharedTripsStreamProvider),
-                  child: const Text('Retry'),
+                  child: Text(l10n.retry),
                 ),
               ],
             ),
@@ -515,7 +515,7 @@ class _SharedTripCard extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to duplicate: $e'),
+            content: Text(l10n.failedToDuplicate(e.toString())),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
@@ -560,7 +560,7 @@ class _SharedTripCard extends ConsumerWidget {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Failed to remove: $e'),
+              content: Text(l10n.failedToRemove(e.toString())),
               behavior: SnackBarBehavior.floating,
               backgroundColor: Theme.of(context).colorScheme.error,
             ),

@@ -1179,4 +1179,130 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get deletePortConfirmation =>
       'Are you sure you want to delete this port?';
+
+  @override
+  String get tripNameOptionalHint => 'e.g., Mediterranean Adventure';
+
+  @override
+  String get shipNameRequired => 'Please enter a ship name';
+
+  @override
+  String get selectTravelDates => 'Please select travel dates';
+
+  @override
+  String get pleaseAddAtLeastTwoPorts =>
+      'Please add at least 2 ports (departure and arrival)';
+
+  @override
+  String get firstEntryCannotBeSeaDay => 'First entry cannot be a sea day';
+
+  @override
+  String get lastEntryCannotBeSeaDay => 'Last entry cannot be a sea day';
+
+  @override
+  String get cruiseAdventureDefault => 'Cruise Adventure';
+
+  @override
+  String get timesOptionalForSinglePort => 'Times (optional for single port)';
+
+  @override
+  String get arrivalOptional => 'Arrival (opt.)';
+
+  @override
+  String get arrivalRequired => 'Arrival *';
+
+  @override
+  String get departureOptional => 'Departure (opt.)';
+
+  @override
+  String get departureRequired => 'Departure *';
+
+  @override
+  String get arrivalAndDepartureTimes => 'Arrival & Departure Times *';
+
+  @override
+  String get pleaseSelectADate => 'Please select a date';
+
+  @override
+  String get pleaseSelectArrivalTime => 'Please select an arrival time';
+
+  @override
+  String get pleaseSelectDepartureTime => 'Please select a departure time';
+
+  @override
+  String get multiDayStayLabel => 'Multi-day stay';
+
+  @override
+  String get portVisitSpanningMultipleDays =>
+      'Port visit spanning multiple days';
+
+  @override
+  String get arrivalDateLabel => 'Arrival Date';
+
+  @override
+  String get departureDateLabel => 'Departure Date';
+
+  @override
+  String get arrivalTimeLabel => 'Arrival Time';
+
+  @override
+  String get departureTimeLabel => 'Departure Time';
+
+  @override
+  String get arrivalOptionalFirstPort => 'Arrival (optional)';
+
+  @override
+  String get departureOptionalLastPort => 'Departure (optional)';
+
+  @override
+  String get coordinatesSavedForMap => 'Coordinates saved for map';
+
+  @override
+  String get aiImportTitle => 'AI Import';
+
+  @override
+  String get pasteBookingConfirmation => 'Paste your booking confirmation text';
+
+  @override
+  String get bookingConfirmationHint =>
+      'Paste the text from your cruise booking confirmation email...';
+
+  @override
+  String get analyzing => 'Analyzing...';
+
+  @override
+  String get importTripButton => 'Import Trip';
+
+  @override
+  String get aiImportError =>
+      'Failed to parse trip. Please check your text and try again.';
+
+  @override
+  String get aiImportSuccess => 'Trip imported successfully!';
+
+  @override
+  String get failedToLoadSharedTrips => 'Failed to load shared trips';
+
+  @override
+  String failedToDuplicate(String error) {
+    return 'Failed to duplicate: $error';
+  }
+
+  @override
+  String failedToRemove(String error) {
+    return 'Failed to remove: $error';
+  }
+
+  @override
+  String portsAndDays(int portCount, int dayCount) {
+    return '$portCount ports • $dayCount days';
+  }
+
+  @override
+  String sharedOnDate(String date) {
+    return 'Shared $date';
+  }
+
+  @override
+  String get importing => 'Importing...';
 }

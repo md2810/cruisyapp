@@ -2293,6 +2293,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete this port?'**
   String get deletePortConfirmation;
+
+  /// Trip name field hint (optional)
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Mediterranean Adventure'**
+  String get tripNameOptionalHint;
+
+  /// Ship name validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a ship name'**
+  String get shipNameRequired;
+
+  /// Travel dates validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please select travel dates'**
+  String get selectTravelDates;
+
+  /// Validation error for minimum ports
+  ///
+  /// In en, this message translates to:
+  /// **'Please add at least 2 ports (departure and arrival)'**
+  String get pleaseAddAtLeastTwoPorts;
+
+  /// Validation error for first stop
+  ///
+  /// In en, this message translates to:
+  /// **'First entry cannot be a sea day'**
+  String get firstEntryCannotBeSeaDay;
+
+  /// Validation error for last stop
+  ///
+  /// In en, this message translates to:
+  /// **'Last entry cannot be a sea day'**
+  String get lastEntryCannotBeSeaDay;
+
+  /// Default trip name
+  ///
+  /// In en, this message translates to:
+  /// **'Cruise Adventure'**
+  String get cruiseAdventureDefault;
+
+  /// Times label for single port
+  ///
+  /// In en, this message translates to:
+  /// **'Times (optional for single port)'**
+  String get timesOptionalForSinglePort;
+
+  /// Arrival time optional label
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival (opt.)'**
+  String get arrivalOptional;
+
+  /// Arrival time required label
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival *'**
+  String get arrivalRequired;
+
+  /// Departure time optional label
+  ///
+  /// In en, this message translates to:
+  /// **'Departure (opt.)'**
+  String get departureOptional;
+
+  /// Departure time required label
+  ///
+  /// In en, this message translates to:
+  /// **'Departure *'**
+  String get departureRequired;
+
+  /// Times section required label
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival & Departure Times *'**
+  String get arrivalAndDepartureTimes;
+
+  /// Date validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a date'**
+  String get pleaseSelectADate;
+
+  /// Arrival time validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an arrival time'**
+  String get pleaseSelectArrivalTime;
+
+  /// Departure time validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a departure time'**
+  String get pleaseSelectDepartureTime;
+
+  /// Multi-day stay toggle label
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-day stay'**
+  String get multiDayStayLabel;
+
+  /// Multi-day stay toggle subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Port visit spanning multiple days'**
+  String get portVisitSpanningMultipleDays;
+
+  /// Arrival date label
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival Date'**
+  String get arrivalDateLabel;
+
+  /// Departure date label
+  ///
+  /// In en, this message translates to:
+  /// **'Departure Date'**
+  String get departureDateLabel;
+
+  /// Arrival time label
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival Time'**
+  String get arrivalTimeLabel;
+
+  /// Departure time label
+  ///
+  /// In en, this message translates to:
+  /// **'Departure Time'**
+  String get departureTimeLabel;
+
+  /// Arrival optional for first port
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival (optional)'**
+  String get arrivalOptionalFirstPort;
+
+  /// Departure optional for last port
+  ///
+  /// In en, this message translates to:
+  /// **'Departure (optional)'**
+  String get departureOptionalLastPort;
+
+  /// Coordinates saved confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Coordinates saved for map'**
+  String get coordinatesSavedForMap;
+
+  /// AI import screen title
+  ///
+  /// In en, this message translates to:
+  /// **'AI Import'**
+  String get aiImportTitle;
+
+  /// AI import input hint
+  ///
+  /// In en, this message translates to:
+  /// **'Paste your booking confirmation text'**
+  String get pasteBookingConfirmation;
+
+  /// AI import text field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the text from your cruise booking confirmation email...'**
+  String get bookingConfirmationHint;
+
+  /// Analyzing state label
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing...'**
+  String get analyzing;
+
+  /// Import trip button
+  ///
+  /// In en, this message translates to:
+  /// **'Import Trip'**
+  String get importTripButton;
+
+  /// AI import error message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to parse trip. Please check your text and try again.'**
+  String get aiImportError;
+
+  /// AI import success message
+  ///
+  /// In en, this message translates to:
+  /// **'Trip imported successfully!'**
+  String get aiImportSuccess;
+
+  /// Error message when shared trips fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load shared trips'**
+  String get failedToLoadSharedTrips;
+
+  /// Error message when trip duplication fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to duplicate: {error}'**
+  String failedToDuplicate(String error);
+
+  /// Error message when shared trip removal fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to remove: {error}'**
+  String failedToRemove(String error);
+
+  /// Port count and day count summary
+  ///
+  /// In en, this message translates to:
+  /// **'{portCount} ports • {dayCount} days'**
+  String portsAndDays(int portCount, int dayCount);
+
+  /// Shows when a trip was shared
+  ///
+  /// In en, this message translates to:
+  /// **'Shared {date}'**
+  String sharedOnDate(String date);
+
+  /// Importing state label
+  ///
+  /// In en, this message translates to:
+  /// **'Importing...'**
+  String get importing;
 }
 
 class _AppLocalizationsDelegate

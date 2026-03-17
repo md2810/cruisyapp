@@ -319,7 +319,7 @@ class _ImportTripScreenState extends ConsumerState<ImportTripScreen> {
                         ),
                         const SizedBox(width: 12),
                         Text(
-                          '${trip.stops.where((s) => !s.isSeaDay).length} ports • ${trip.totalDays} days',
+                          l10n.portsAndDays(trip.stops.where((s) => !s.isSeaDay).length, trip.totalDays),
                           style: textTheme.bodyMedium,
                         ),
                       ],
@@ -351,7 +351,7 @@ class _ImportTripScreenState extends ConsumerState<ImportTripScreen> {
                             style: textTheme.titleSmall,
                           ),
                           Text(
-                            'Shared ${dateFormat.format(_decodedTrip!.sharedAt)}',
+                            l10n.sharedOnDate(dateFormat.format(_decodedTrip!.sharedAt)),
                             style: textTheme.bodySmall?.copyWith(
                               color: colorScheme.onSurfaceVariant,
                             ),
@@ -382,7 +382,7 @@ class _ImportTripScreenState extends ConsumerState<ImportTripScreen> {
                       )
                     : const Icon(Icons.download_rounded),
                 label: Text(
-                  _isImporting ? 'Importing...' : l10n.import,
+                  _isImporting ? l10n.importing : l10n.import,
                   style: GoogleFonts.outfit(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

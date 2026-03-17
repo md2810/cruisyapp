@@ -737,7 +737,6 @@
   },
   "halfAroundWorld": "Half way around the world",
 
-  "noItineraryYet": "No itinerary added yet",
   "editToAddPorts": "Edit this trip to add port stops",
   "addStopsButton": "Add Stops",
   "todayBadge": "TODAY",
@@ -746,13 +745,6 @@
   "@arrivesAt": {
     "placeholders": {
       "time": {"type": "String"}
-    }
-  },
-  "noActivityPlanned": "No activity planned",
-  "daysCount": "{count} days",
-  "@daysCount": {
-    "placeholders": {
-      "count": {"type": "int"}
     }
   },
 
@@ -935,5 +927,218 @@
   "journeyProgress": "Journey Progress",
   "ok": "OK",
   "deletePort": "Delete Port",
-  "deletePortConfirmation": "Are you sure you want to delete this port?"
+  "deletePortConfirmation": "Are you sure you want to delete this port?",
+
+  "tripNameOptionalHint": "e.g., Mediterranean Adventure",
+  "@tripNameOptionalHint": {
+    "description": "Trip name field hint (optional)"
+  },
+
+  "shipNameRequired": "Please enter a ship name",
+  "@shipNameRequired": {
+    "description": "Ship name validation error"
+  },
+
+  "selectTravelDates": "Please select travel dates",
+  "@selectTravelDates": {
+    "description": "Travel dates validation error"
+  },
+
+  "pleaseAddAtLeastTwoPorts": "Please add at least 2 ports (departure and arrival)",
+  "@pleaseAddAtLeastTwoPorts": {
+    "description": "Validation error for minimum ports"
+  },
+
+  "firstEntryCannotBeSeaDay": "First entry cannot be a sea day",
+  "@firstEntryCannotBeSeaDay": {
+    "description": "Validation error for first stop"
+  },
+
+  "lastEntryCannotBeSeaDay": "Last entry cannot be a sea day",
+  "@lastEntryCannotBeSeaDay": {
+    "description": "Validation error for last stop"
+  },
+
+  "cruiseAdventureDefault": "Cruise Adventure",
+  "@cruiseAdventureDefault": {
+    "description": "Default trip name"
+  },
+
+  "timesOptionalForSinglePort": "Times (optional for single port)",
+  "@timesOptionalForSinglePort": {
+    "description": "Times label for single port"
+  },
+
+  "arrivalOptional": "Arrival (opt.)",
+  "@arrivalOptional": {
+    "description": "Arrival time optional label"
+  },
+
+  "arrivalRequired": "Arrival *",
+  "@arrivalRequired": {
+    "description": "Arrival time required label"
+  },
+
+  "departureOptional": "Departure (opt.)",
+  "@departureOptional": {
+    "description": "Departure time optional label"
+  },
+
+  "departureRequired": "Departure *",
+  "@departureRequired": {
+    "description": "Departure time required label"
+  },
+
+  "arrivalAndDepartureTimes": "Arrival & Departure Times *",
+  "@arrivalAndDepartureTimes": {
+    "description": "Times section required label"
+  },
+
+  "pleaseSelectADate": "Please select a date",
+  "@pleaseSelectADate": {
+    "description": "Date validation error"
+  },
+
+  "pleaseSelectArrivalTime": "Please select an arrival time",
+  "@pleaseSelectArrivalTime": {
+    "description": "Arrival time validation error"
+  },
+
+  "pleaseSelectDepartureTime": "Please select a departure time",
+  "@pleaseSelectDepartureTime": {
+    "description": "Departure time validation error"
+  },
+
+  "multiDayStayLabel": "Multi-day stay",
+  "@multiDayStayLabel": {
+    "description": "Multi-day stay toggle label"
+  },
+
+  "portVisitSpanningMultipleDays": "Port visit spanning multiple days",
+  "@portVisitSpanningMultipleDays": {
+    "description": "Multi-day stay toggle subtitle"
+  },
+
+  "arrivalDateLabel": "Arrival Date",
+  "@arrivalDateLabel": {
+    "description": "Arrival date label"
+  },
+
+  "departureDateLabel": "Departure Date",
+  "@departureDateLabel": {
+    "description": "Departure date label"
+  },
+
+  "arrivalTimeLabel": "Arrival Time",
+  "@arrivalTimeLabel": {
+    "description": "Arrival time label"
+  },
+
+  "departureTimeLabel": "Departure Time",
+  "@departureTimeLabel": {
+    "description": "Departure time label"
+  },
+
+  "arrivalOptionalFirstPort": "Arrival (optional)",
+  "@arrivalOptionalFirstPort": {
+    "description": "Arrival optional for first port"
+  },
+
+  "departureOptionalLastPort": "Departure (optional)",
+  "@departureOptionalLastPort": {
+    "description": "Departure optional for last port"
+  },
+
+  "coordinatesSavedForMap": "Coordinates saved for map",
+  "@coordinatesSavedForMap": {
+    "description": "Coordinates saved confirmation"
+  },
+
+  "aiImportTitle": "AI Import",
+  "@aiImportTitle": {
+    "description": "AI import screen title"
+  },
+
+  "pasteBookingConfirmation": "Paste your booking confirmation text",
+  "@pasteBookingConfirmation": {
+    "description": "AI import input hint"
+  },
+
+  "bookingConfirmationHint": "Paste the text from your cruise booking confirmation email...",
+  "@bookingConfirmationHint": {
+    "description": "AI import text field hint"
+  },
+
+  "analyzing": "Analyzing...",
+  "@analyzing": {
+    "description": "Analyzing state label"
+  },
+
+  "importTripButton": "Import Trip",
+  "@importTripButton": {
+    "description": "Import trip button"
+  },
+
+  "aiImportError": "Failed to parse trip. Please check your text and try again.",
+  "@aiImportError": {
+    "description": "AI import error message"
+  },
+
+  "aiImportSuccess": "Trip imported successfully!",
+  "@aiImportSuccess": {
+    "description": "AI import success message"
+  },
+
+  "failedToLoadSharedTrips": "Failed to load shared trips",
+  "@failedToLoadSharedTrips": {
+    "description": "Error message when shared trips fail to load"
+  },
+
+  "failedToDuplicate": "Failed to duplicate: {error}",
+  "@failedToDuplicate": {
+    "description": "Error message when trip duplication fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "failedToRemove": "Failed to remove: {error}",
+  "@failedToRemove": {
+    "description": "Error message when shared trip removal fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "portsAndDays": "{portCount} ports \u2022 {dayCount} days",
+  "@portsAndDays": {
+    "description": "Port count and day count summary",
+    "placeholders": {
+      "portCount": {
+        "type": "int"
+      },
+      "dayCount": {
+        "type": "int"
+      }
+    }
+  },
+
+  "sharedOnDate": "Shared {date}",
+  "@sharedOnDate": {
+    "description": "Shows when a trip was shared",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+
+  "importing": "Importing...",
+  "@importing": {
+    "description": "Importing state label"
+  }
 }

@@ -1187,4 +1187,133 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get deletePortConfirmation =>
       'Möchtest du diesen Hafen wirklich löschen?';
+
+  @override
+  String get tripNameOptionalHint => 'z.B. Mittelmeer-Reise';
+
+  @override
+  String get shipNameRequired => 'Bitte gib einen Schiffsnamen ein';
+
+  @override
+  String get selectTravelDates => 'Bitte wähle die Reisedaten';
+
+  @override
+  String get pleaseAddAtLeastTwoPorts =>
+      'Bitte füge mindestens 2 Häfen hinzu (Abfahrt und Ankunft)';
+
+  @override
+  String get firstEntryCannotBeSeaDay =>
+      'Der erste Eintrag kann kein Seetag sein';
+
+  @override
+  String get lastEntryCannotBeSeaDay =>
+      'Der letzte Eintrag kann kein Seetag sein';
+
+  @override
+  String get cruiseAdventureDefault => 'Kreuzfahrt-Abenteuer';
+
+  @override
+  String get timesOptionalForSinglePort =>
+      'Zeiten (optional für einzelnen Hafen)';
+
+  @override
+  String get arrivalOptional => 'Ankunft (opt.)';
+
+  @override
+  String get arrivalRequired => 'Ankunft *';
+
+  @override
+  String get departureOptional => 'Abfahrt (opt.)';
+
+  @override
+  String get departureRequired => 'Abfahrt *';
+
+  @override
+  String get arrivalAndDepartureTimes => 'Ankunfts- & Abfahrtszeiten *';
+
+  @override
+  String get pleaseSelectADate => 'Bitte wähle ein Datum';
+
+  @override
+  String get pleaseSelectArrivalTime => 'Bitte wähle eine Ankunftszeit';
+
+  @override
+  String get pleaseSelectDepartureTime => 'Bitte wähle eine Abfahrtszeit';
+
+  @override
+  String get multiDayStayLabel => 'Mehrtägiger Aufenthalt';
+
+  @override
+  String get portVisitSpanningMultipleDays => 'Hafenbesuch über mehrere Tage';
+
+  @override
+  String get arrivalDateLabel => 'Ankunftsdatum';
+
+  @override
+  String get departureDateLabel => 'Abfahrtsdatum';
+
+  @override
+  String get arrivalTimeLabel => 'Ankunftszeit';
+
+  @override
+  String get departureTimeLabel => 'Abfahrtszeit';
+
+  @override
+  String get arrivalOptionalFirstPort => 'Ankunft (optional)';
+
+  @override
+  String get departureOptionalLastPort => 'Abfahrt (optional)';
+
+  @override
+  String get coordinatesSavedForMap => 'Koordinaten für Karte gespeichert';
+
+  @override
+  String get aiImportTitle => 'KI-Import';
+
+  @override
+  String get pasteBookingConfirmation => 'Buchungsbestätigung einfügen';
+
+  @override
+  String get bookingConfirmationHint =>
+      'Füge den Text deiner Kreuzfahrt-Buchungsbestätigung hier ein...';
+
+  @override
+  String get analyzing => 'Analysiere...';
+
+  @override
+  String get importTripButton => 'Reise importieren';
+
+  @override
+  String get aiImportError =>
+      'Fehler beim Parsen der Reise. Bitte überprüfe den Text und versuche es erneut.';
+
+  @override
+  String get aiImportSuccess => 'Reise erfolgreich importiert!';
+
+  @override
+  String get failedToLoadSharedTrips =>
+      'Geteilte Reisen konnten nicht geladen werden';
+
+  @override
+  String failedToDuplicate(String error) {
+    return 'Duplizierung fehlgeschlagen: $error';
+  }
+
+  @override
+  String failedToRemove(String error) {
+    return 'Entfernen fehlgeschlagen: $error';
+  }
+
+  @override
+  String portsAndDays(int portCount, int dayCount) {
+    return '$portCount Häfen • $dayCount Tage';
+  }
+
+  @override
+  String sharedOnDate(String date) {
+    return 'Geteilt am $date';
+  }
+
+  @override
+  String get importing => 'Importiere...';
 }
