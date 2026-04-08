@@ -46,7 +46,8 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final DraggableScrollableController _sheetController = DraggableScrollableController();
+  final DraggableScrollableController _sheetController =
+      DraggableScrollableController();
 
   // Snap points: 20%, 40%, 90%
   static const double _minExtent = 0.20;
@@ -56,8 +57,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _isMapInteracting = false;
 
   // Map and annotation managers
-  PolylineAnnotationManager? _routeAnnotationManager;
-  CircleAnnotationManager? _shipAnnotationManager;
+  dynamic _routeAnnotationManager;
+  dynamic _shipAnnotationManager;
 
   // Timer for updating ship position
   Timer? _shipPositionTimer;
@@ -72,21 +73,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void _onMapCreated(dynamic mapboxMap) async {
     // Configure Mapbox ornaments for compact display
     mapboxMap.scaleBar.updateSettings(mapbox.ScaleBarSettings(enabled: false));
-    mapboxMap.logo.updateSettings(mapbox.LogoSettings(
-      enabled: true,
-      position: mapbox.OrnamentPosition.TOP_LEFT,
-      marginLeft: 16,
-      marginTop: 48,
-    ));
-    mapboxMap.attribution.updateSettings(mapbox.AttributionSettings(
-      enabled: true,
-      position: mapbox.OrnamentPosition.TOP_LEFT,
-      marginLeft: 100,
-      marginTop: 52,
-    ));
+    mapboxMap.logo.updateSettings(
+      mapbox.LogoSettings(
+        enabled: true,
+        position: mapbox.OrnamentPosition.TOP_LEFT,
+        marginLeft: 16,
+        marginTop: 48,
+      ),
+    );
+    mapboxMap.attribution.updateSettings(
+      mapbox.AttributionSettings(
+        enabled: true,
+        position: mapbox.OrnamentPosition.TOP_LEFT,
+        marginLeft: 100,
+        marginTop: 52,
+      ),
+    );
 
     // Set globe projection
-    mapboxMap.style.setProjection(mapbox.StyleProjection(name: mapbox.StyleProjectionName.globe));
+    mapboxMap.style.setProjection(
+      mapbox.StyleProjection(name: mapbox.StyleProjectionName.globe),
+    );
 
     // Set initial camera
     mapboxMap.setCamera(
@@ -98,8 +105,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
 
     // Create annotation managers
-    _routeAnnotationManager = await mapboxMap.annotations.createPolylineAnnotationManager();
-    _shipAnnotationManager = await mapboxMap.annotations.createCircleAnnotationManager();
+    _routeAnnotationManager =
+        await mapboxMap.annotations.createPolylineAnnotationManager();
+    _shipAnnotationManager =
+        await mapboxMap.annotations.createCircleAnnotationManager();
 
     // Initial route update
     _updateMapAnnotations();
@@ -148,9 +157,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     if (_routeAnnotationManager == null) return;
 
     // Get port stops with coordinates (excluding sea days)
-    final portsWithCoords = trip.stops
-        .where((s) => !s.isSeaDay && s.latitude != null && s.longitude != null)
-        .toList();
+    final portsWithCoords =
+        trip.stops
+            .where(
+              (s) => !s.isSeaDay && s.latitude != null && s.longitude != null,
+            )
+            .toList();
 
     if (portsWithCoords.length < 2) return;
 
@@ -182,9 +194,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
       // Future route (transparent) - using curved great circle routes
       if (currentSegmentEnd < portsWithCoords.length - 1) {
-        final futurePorts = portsWithCoords
-            .skip(currentSegmentEnd > 0 ? currentSegmentEnd : 0)
-            .toList();
+        final futurePorts =
+            portsWithCoords
+                .skip(currentSegmentEnd > 0 ? currentSegmentEnd : 0)
+                .toList();
         _drawCurvedRoute(
           futurePorts,
           lineColor: 0xFF4FC3F7, // Same cyan but transparent
@@ -197,7 +210,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       final isPast = trip.isCompleted;
       _drawCurvedRoute(
         portsWithCoords,
-        lineColor: isPast ? 0xFF81C784 : 0xFF4FC3F7, // Green for past, cyan for future
+        lineColor:
+            isPast ? 0xFF81C784 : 0xFF4FC3F7, // Green for past, cyan for future
         lineWidth: 2.5,
         lineOpacity: isPast ? 0.8 : 0.6,
       );
@@ -230,9 +244,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
 
       // Convert to Position objects for Mapbox
-      final positions = curvedCoords
-          .map((coord) => Position(coord.longitude, coord.latitude))
-          .toList();
+      final positions =
+          curvedCoords
+              .map((coord) => Position(coord.longitude, coord.latitude))
+              .toList();
 
       // Create the polyline annotation
       _routeAnnotationManager!.create(
@@ -278,16 +293,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final now = DateTime.now();
 
     // Get port stops with coordinates (excluding sea days)
-    final portsWithCoords = cruise.stops
-        .where((s) => !s.isSeaDay && s.latitude != null && s.longitude != null)
-        .toList();
+    final portsWithCoords =
+        cruise.stops
+            .where(
+              (s) => !s.isSeaDay && s.latitude != null && s.longitude != null,
+            )
+            .toList();
 
     if (portsWithCoords.isEmpty) return null;
 
     // Check if we're at a port
     for (final stop in portsWithCoords) {
       if (stop.arrivalTime != null && stop.departureTime != null) {
-        if (now.isAfter(stop.arrivalTime!) && now.isBefore(stop.departureTime!)) {
+        if (now.isAfter(stop.arrivalTime!) &&
+            now.isBefore(stop.departureTime!)) {
           // Ship is docked at this port
           return Position(stop.longitude!, stop.latitude!);
         }
@@ -335,10 +354,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // Default: return first port if before cruise, last port if after
     if (portsWithCoords.first.arrivalTime != null &&
         now.isBefore(portsWithCoords.first.arrivalTime!)) {
-      return Position(portsWithCoords.first.longitude!, portsWithCoords.first.latitude!);
+      return Position(
+        portsWithCoords.first.longitude!,
+        portsWithCoords.first.latitude!,
+      );
     }
 
-    return Position(portsWithCoords.last.longitude!, portsWithCoords.last.latitude!);
+    return Position(
+      portsWithCoords.last.longitude!,
+      portsWithCoords.last.latitude!,
+    );
   }
 
   void _collapseSheet() {
@@ -447,12 +472,14 @@ class _CruiseSheet extends ConsumerWidget {
     List<CruiseTrip> trips;
     switch (filter) {
       case CruiseFilter.past:
-        trips = allTrips.where((t) => t.isCompleted).toList()
-          ..sort((a, b) => b.departureDate.compareTo(a.departureDate));
+        trips =
+            allTrips.where((t) => t.isCompleted).toList()
+              ..sort((a, b) => b.departureDate.compareTo(a.departureDate));
         break;
       case CruiseFilter.future:
-        trips = allTrips.where((t) => t.isUpcoming).toList()
-          ..sort((a, b) => a.departureDate.compareTo(b.departureDate));
+        trips =
+            allTrips.where((t) => t.isUpcoming).toList()
+              ..sort((a, b) => a.departureDate.compareTo(b.departureDate));
         break;
       case CruiseFilter.today:
         trips = allTrips.where((t) => t.isOngoing).toList();
@@ -477,15 +504,19 @@ class _CruiseSheet extends ConsumerWidget {
           GestureDetector(
             onVerticalDragUpdate: (details) {
               // Calculate new size based on drag delta
-              final delta = -details.delta.dy / MediaQuery.of(context).size.height;
-              final newSize = (sheetController.size + delta).clamp(minExtent, maxExtent);
+              final delta =
+                  -details.delta.dy / MediaQuery.of(context).size.height;
+              final newSize = (sheetController.size + delta).clamp(
+                minExtent,
+                maxExtent,
+              );
               sheetController.jumpTo(newSize);
             },
             onVerticalDragEnd: (details) {
               // Snap to nearest position
               final currentSize = sheetController.size;
               double targetSize;
-              
+
               if (currentSize < (minExtent + midExtent) / 2) {
                 targetSize = minExtent;
               } else if (currentSize < (midExtent + maxExtent) / 2) {
@@ -493,7 +524,7 @@ class _CruiseSheet extends ConsumerWidget {
               } else {
                 targetSize = maxExtent;
               }
-              
+
               sheetController.animateTo(
                 targetSize,
                 duration: const Duration(milliseconds: 200),
@@ -561,19 +592,20 @@ class _CruiseSheet extends ConsumerWidget {
           ),
           // Cruise list
           Expanded(
-            child: trips.isEmpty
-                ? _EmptyState(filter: filter)
-                : ListView.builder(
-                    controller: scrollController,
-                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-                    itemCount: trips.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: _CruiseCard(trip: trips[index]),
-                      );
-                    },
-                  ),
+            child:
+                trips.isEmpty
+                    ? _EmptyState(filter: filter)
+                    : ListView.builder(
+                      controller: scrollController,
+                      padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+                      itemCount: trips.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: _CruiseCard(trip: trips[index]),
+                        );
+                      },
+                    ),
           ),
         ],
       ),
@@ -700,7 +732,8 @@ class _FilterMenuItem extends StatelessWidget {
       children: [
         Icon(
           icon,
-          color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant,
+          color:
+              isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant,
           size: 20,
         ),
         const SizedBox(width: 12),
@@ -967,10 +1000,7 @@ class _PortInfo extends StatelessWidget {
         Expanded(
           child: Text(
             '${trip.startPort} \u2192 ${trip.endPort}',
-            style: TextStyle(
-              color: colorScheme.onSurfaceVariant,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 14),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

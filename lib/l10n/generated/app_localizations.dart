@@ -63,7 +63,7 @@ import 'app_localizations_en.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -86,16 +86,16 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('de'),
-    Locale('en')
+    Locale('en'),
   ];
 
   /// The title of the application
@@ -2486,6 +2486,138 @@ abstract class AppLocalizations {
   /// **'Trip imported successfully!'**
   String get aiImportSuccess;
 
+  /// AI import settings sheet title
+  ///
+  /// In en, this message translates to:
+  /// **'AI Import Settings'**
+  String get aiImportSettings;
+
+  /// AI import settings description
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a provider, save your own API key, and pick a model for itinerary import.'**
+  String get configureAiImport;
+
+  /// Google recommendation message in AI settings
+  ///
+  /// In en, this message translates to:
+  /// **'Google is the recommended default because the free quota is especially generous for personal use.'**
+  String get googleRecommendedDescription;
+
+  /// Recommended badge label
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get googleRecommended;
+
+  /// AI provider field label
+  ///
+  /// In en, this message translates to:
+  /// **'AI Provider'**
+  String get aiProvider;
+
+  /// AI model selector label
+  ///
+  /// In en, this message translates to:
+  /// **'Model'**
+  String get aiModel;
+
+  /// API key field label
+  ///
+  /// In en, this message translates to:
+  /// **'API Key'**
+  String get apiKey;
+
+  /// API key field hint
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your API key'**
+  String get enterApiKey;
+
+  /// Save API key button label
+  ///
+  /// In en, this message translates to:
+  /// **'Save key'**
+  String get saveKey;
+
+  /// Clear API key button label
+  ///
+  /// In en, this message translates to:
+  /// **'Clear key'**
+  String get clearKey;
+
+  /// Refresh models button label
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh models'**
+  String get refreshModels;
+
+  /// API key storage note
+  ///
+  /// In en, this message translates to:
+  /// **'Saved locally on this device'**
+  String get savedOnThisDevice;
+
+  /// Hint shown before a key is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Models are fetched after you save a valid API key.'**
+  String get modelsLoadAfterKey;
+
+  /// Message shown while fetching models
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching models…'**
+  String get fetchingModels;
+
+  /// Message shown when no models are returned
+  ///
+  /// In en, this message translates to:
+  /// **'No models are available for this key yet.'**
+  String get noModelsAvailable;
+
+  /// Error shown when AI import is not configured
+  ///
+  /// In en, this message translates to:
+  /// **'Set up AI Import in Settings before using this feature.'**
+  String get aiImportNotConfigured;
+
+  /// Button label to open AI settings
+  ///
+  /// In en, this message translates to:
+  /// **'Open AI settings'**
+  String get openAiSettings;
+
+  /// Summary shown when AI import is not configured
+  ///
+  /// In en, this message translates to:
+  /// **'AI import is not configured yet.'**
+  String get aiNotConfigured;
+
+  /// Shows the active AI provider and model
+  ///
+  /// In en, this message translates to:
+  /// **'Using {provider} · {model}'**
+  String usingAiProviderModel(String provider, String model);
+
+  /// Confirmation after saving an API key
+  ///
+  /// In en, this message translates to:
+  /// **'API key saved'**
+  String get aiKeySaved;
+
+  /// Confirmation after clearing an API key
+  ///
+  /// In en, this message translates to:
+  /// **'API key removed'**
+  String get aiKeyRemoved;
+
+  /// Confirmation after refreshing models
+  ///
+  /// In en, this message translates to:
+  /// **'Models updated'**
+  String get aiModelsUpdated;
+
   /// Error message when shared trips fail to load
   ///
   /// In en, this message translates to:
@@ -2550,8 +2682,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

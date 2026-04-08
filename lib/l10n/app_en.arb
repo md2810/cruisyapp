@@ -1089,6 +1089,124 @@
     "description": "AI import success message"
   },
 
+  "aiImportSettings": "AI Import Settings",
+  "@aiImportSettings": {
+    "description": "AI import settings sheet title"
+  },
+
+  "configureAiImport": "Choose a provider, save your own API key, and pick a model for itinerary import.",
+  "@configureAiImport": {
+    "description": "AI import settings description"
+  },
+
+  "googleRecommendedDescription": "Google is the recommended default because the free quota is especially generous for personal use.",
+  "@googleRecommendedDescription": {
+    "description": "Google recommendation message in AI settings"
+  },
+
+  "googleRecommended": "Recommended",
+  "@googleRecommended": {
+    "description": "Recommended badge label"
+  },
+
+  "aiProvider": "AI Provider",
+  "@aiProvider": {
+    "description": "AI provider field label"
+  },
+
+  "aiModel": "Model",
+  "@aiModel": {
+    "description": "AI model selector label"
+  },
+
+  "apiKey": "API Key",
+  "@apiKey": {
+    "description": "API key field label"
+  },
+
+  "enterApiKey": "Enter your API key",
+  "@enterApiKey": {
+    "description": "API key field hint"
+  },
+
+  "saveKey": "Save key",
+  "@saveKey": {
+    "description": "Save API key button label"
+  },
+
+  "clearKey": "Clear key",
+  "@clearKey": {
+    "description": "Clear API key button label"
+  },
+
+  "refreshModels": "Refresh models",
+  "@refreshModels": {
+    "description": "Refresh models button label"
+  },
+
+  "savedOnThisDevice": "Saved locally on this device",
+  "@savedOnThisDevice": {
+    "description": "API key storage note"
+  },
+
+  "modelsLoadAfterKey": "Models are fetched after you save a valid API key.",
+  "@modelsLoadAfterKey": {
+    "description": "Hint shown before a key is saved"
+  },
+
+  "fetchingModels": "Fetching models…",
+  "@fetchingModels": {
+    "description": "Message shown while fetching models"
+  },
+
+  "noModelsAvailable": "No models are available for this key yet.",
+  "@noModelsAvailable": {
+    "description": "Message shown when no models are returned"
+  },
+
+  "aiImportNotConfigured": "Set up AI Import in Settings before using this feature.",
+  "@aiImportNotConfigured": {
+    "description": "Error shown when AI import is not configured"
+  },
+
+  "openAiSettings": "Open AI settings",
+  "@openAiSettings": {
+    "description": "Button label to open AI settings"
+  },
+
+  "aiNotConfigured": "AI import is not configured yet.",
+  "@aiNotConfigured": {
+    "description": "Summary shown when AI import is not configured"
+  },
+
+  "usingAiProviderModel": "Using {provider} · {model}",
+  "@usingAiProviderModel": {
+    "description": "Shows the active AI provider and model",
+    "placeholders": {
+      "provider": {
+        "type": "String"
+      },
+      "model": {
+        "type": "String"
+      }
+    }
+  },
+
+  "aiKeySaved": "API key saved",
+  "@aiKeySaved": {
+    "description": "Confirmation after saving an API key"
+  },
+
+  "aiKeyRemoved": "API key removed",
+  "@aiKeyRemoved": {
+    "description": "Confirmation after clearing an API key"
+  },
+
+  "aiModelsUpdated": "Models updated",
+  "@aiModelsUpdated": {
+    "description": "Confirmation after refreshing models"
+  },
+
   "failedToLoadSharedTrips": "Failed to load shared trips",
   "@failedToLoadSharedTrips": {
     "description": "Error message when shared trips fail to load"

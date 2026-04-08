@@ -1291,6 +1291,79 @@ class AppLocalizationsDe extends AppLocalizations {
   String get aiImportSuccess => 'Reise erfolgreich importiert!';
 
   @override
+  String get aiImportSettings => 'KI-Import-Einstellungen';
+
+  @override
+  String get configureAiImport =>
+      'WÃ¤hle einen Anbieter, speichere deinen eigenen API-Key und lege ein Modell fÃ¼r den Reiseimport fest.';
+
+  @override
+  String get googleRecommendedDescription =>
+      'Google ist die empfohlene Standardwahl, weil das kostenlose Kontingent fÃ¼r die private Nutzung besonders groÃŸzÃ¼gig ist.';
+
+  @override
+  String get googleRecommended => 'Empfohlen';
+
+  @override
+  String get aiProvider => 'KI-Anbieter';
+
+  @override
+  String get aiModel => 'Modell';
+
+  @override
+  String get apiKey => 'API-Key';
+
+  @override
+  String get enterApiKey => 'API-Key eingeben';
+
+  @override
+  String get saveKey => 'Key speichern';
+
+  @override
+  String get clearKey => 'Key entfernen';
+
+  @override
+  String get refreshModels => 'Modelle aktualisieren';
+
+  @override
+  String get savedOnThisDevice => 'Lokal auf diesem GerÃ¤t gespeichert';
+
+  @override
+  String get modelsLoadAfterKey =>
+      'Die Modelle werden geladen, sobald du einen gÃ¼ltigen API-Key speicherst.';
+
+  @override
+  String get fetchingModels => 'Modelle werden geladen…';
+
+  @override
+  String get noModelsAvailable =>
+      'FÃ¼r diesen Key sind aktuell keine Modelle verfÃ¼gbar.';
+
+  @override
+  String get aiImportNotConfigured =>
+      'Richte den KI-Import zuerst in den Einstellungen ein.';
+
+  @override
+  String get openAiSettings => 'KI-Einstellungen Ã¶ffnen';
+
+  @override
+  String get aiNotConfigured => 'Der KI-Import ist noch nicht eingerichtet.';
+
+  @override
+  String usingAiProviderModel(String provider, String model) {
+    return '$provider · $model aktiv';
+  }
+
+  @override
+  String get aiKeySaved => 'API-Key gespeichert';
+
+  @override
+  String get aiKeyRemoved => 'API-Key entfernt';
+
+  @override
+  String get aiModelsUpdated => 'Modelle aktualisiert';
+
+  @override
   String get failedToLoadSharedTrips =>
       'Geteilte Reisen konnten nicht geladen werden';
 

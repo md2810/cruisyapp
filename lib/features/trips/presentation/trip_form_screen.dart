@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../core/providers/ai_provider.dart';
 import '../../../core/providers/trip_provider.dart';
 import '../../../core/services/cruise_import_service.dart';
 import '../../../core/services/port_search_service.dart';
@@ -54,16 +55,22 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     _stops = List.from(trip.stops);
   }
 
-  Future<void> _handleAiImport(BuildContext context, WidgetRef ref, {required bool isImage}) async {
+  Future<void> _handleAiImport(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool isImage,
+  }) async {
     final l10n = AppLocalizations.of(context)!;
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final errorColor = Theme.of(context).colorScheme.error;
     final importService = ref.read(cruiseImportServiceProvider);
 
     if (importService == null || !importService.isAvailable) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text(l10n.aiImportError),
+          content: Text(l10n.aiImportNotConfigured),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: Theme.of(context).colorScheme.error,
+          backgroundColor: errorColor,
         ),
       );
       return;
@@ -74,7 +81,9 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
 
       if (isImage) {
         final ImagePicker picker = ImagePicker();
-        final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+        final XFile? image = await picker.pickImage(
+          source: ImageSource.gallery,
+        );
         if (image == null) return;
         fileToImport = File(image.path);
       } else {
@@ -102,7 +111,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
         });
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          scaffoldMessenger.showSnackBar(
             SnackBar(
               content: Text(l10n.aiImportSuccess),
               behavior: SnackBarBehavior.floating,
@@ -111,22 +120,22 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
         }
       } else {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          scaffoldMessenger.showSnackBar(
             SnackBar(
               content: Text(l10n.aiImportError),
               behavior: SnackBarBehavior.floating,
-              backgroundColor: Theme.of(context).colorScheme.error,
+              backgroundColor: errorColor,
             ),
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text('${l10n.aiImportError}\n\n$e'),
             behavior: SnackBarBehavior.floating,
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: errorColor,
           ),
         );
       }
@@ -143,12 +152,13 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
       context: context,
       firstDate: DateTime(1950), // Allow cruises from 1950 onwards
       lastDate: now.add(const Duration(days: 365 * 5)), // 5 years in the future
-      initialDateRange: _startDate != null && _endDate != null
-          ? DateTimeRange(start: _startDate!, end: _endDate!)
-          : DateTimeRange(
-              start: now.add(const Duration(days: 7)),
-              end: now.add(const Duration(days: 14)),
-            ),
+      initialDateRange:
+          _startDate != null && _endDate != null
+              ? DateTimeRange(start: _startDate!, end: _endDate!)
+              : DateTimeRange(
+                start: now.add(const Duration(days: 7)),
+                end: now.add(const Duration(days: 14)),
+              ),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -184,125 +194,133 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (context) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      builder:
+          (context) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        l10n.aiImportTitle,
+                        style: textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => context.pop(),
+                        icon: const Icon(Icons.close_rounded),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
                   Text(
-                    l10n.aiImportTitle,
-                    style: textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
+                    l10n.pasteBookingConfirmation,
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () => context.pop(),
-                    icon: const Icon(Icons.close_rounded),
+                  const SizedBox(height: 24),
+                  TextField(
+                    controller: textController,
+                    maxLines: 10,
+                    minLines: 5,
+                    decoration: InputDecoration(
+                      hintText: l10n.bookingConfirmationHint,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      filled: true,
+                      fillColor: colorScheme.surfaceContainerHighest,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: FilledButton.icon(
+                      onPressed: () async {
+                        final scaffoldMessenger = ScaffoldMessenger.of(context);
+                        final errorColor = Theme.of(context).colorScheme.error;
+                        if (textController.text.trim().isEmpty) return;
+
+                        final text = textController.text;
+                        context.pop(); // Close sheet
+
+                        setState(() => _isLoading = true);
+
+                        try {
+                          final importService = ref.read(
+                            cruiseImportServiceProvider,
+                          );
+                          if (importService == null ||
+                              !importService.isAvailable) {
+                            throw Exception(l10n.aiImportNotConfigured);
+                          }
+
+                          final trip = await importService.parseTripFromText(
+                            text,
+                          );
+
+                          if (trip != null) {
+                            setState(() {
+                              _shipNameController.text = trip.shipName;
+                              if (trip.tripName.isNotEmpty) {
+                                _tripNameController.text = trip.tripName;
+                              }
+                              _startDate = trip.departureDate;
+                              _endDate = trip.arrivalDate;
+                              _stops = List.from(trip.stops);
+                            });
+
+                            if (mounted) {
+                              scaffoldMessenger.showSnackBar(
+                                SnackBar(
+                                  content: Text(l10n.aiImportSuccess),
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          } else {
+                            throw Exception('Failed to parse trip data');
+                          }
+                        } catch (e) {
+                          if (mounted) {
+                            scaffoldMessenger.showSnackBar(
+                              SnackBar(
+                                content: Text('${l10n.aiImportError}\n\n$e'),
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: errorColor,
+                              ),
+                            );
+                          }
+                        } finally {
+                          if (mounted) {
+                            setState(() => _isLoading = false);
+                          }
+                        }
+                      },
+                      icon: const Icon(Icons.auto_awesome_rounded),
+                      label: Text(
+                        l10n.importTripButton,
+                        style: GoogleFonts.outfit(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.pasteBookingConfirmation,
-                style: textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 24),
-              TextField(
-                controller: textController,
-                maxLines: 10,
-                minLines: 5,
-                decoration: InputDecoration(
-                  hintText: l10n.bookingConfirmationHint,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  filled: true,
-                  fillColor: colorScheme.surfaceContainerHighest,
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: FilledButton.icon(
-                  onPressed: () async {
-                    if (textController.text.trim().isEmpty) return;
-
-                    final text = textController.text;
-                    context.pop(); // Close sheet
-
-                    setState(() => _isLoading = true);
-
-                    try {
-                      final importService = ref.read(cruiseImportServiceProvider);
-                      if (importService == null || !importService.isAvailable) {
-                        throw Exception(l10n.aiImportError);
-                      }
-
-                      final trip = await importService.parseTripFromText(text);
-
-                      if (trip != null) {
-                        setState(() {
-                          _shipNameController.text = trip.shipName;
-                          if (trip.tripName.isNotEmpty) {
-                            _tripNameController.text = trip.tripName;
-                          }
-                          _startDate = trip.departureDate;
-                          _endDate = trip.arrivalDate;
-                          _stops = List.from(trip.stops);
-                        });
-
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(l10n.aiImportSuccess),
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        }
-                      } else {
-                        throw Exception('Failed to parse trip data');
-                      }
-                    } catch (e) {
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${l10n.aiImportError}\n\n$e'),
-                            behavior: SnackBarBehavior.floating,
-                            backgroundColor: Theme.of(context).colorScheme.error,
-                          ),
-                        );
-                      }
-                    } finally {
-                      if (mounted) {
-                        setState(() => _isLoading = false);
-                      }
-                    }
-                  },
-                  icon: const Icon(Icons.auto_awesome_rounded),
-                  label: Text(
-                    l10n.importTripButton,
-                    style: GoogleFonts.outfit(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 
@@ -329,19 +347,20 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (context) => _AddPortSheet(
-        startDate: _startDate!,
-        endDate: _endDate!,
-        suggestedDate: suggestedDate,
-        isFirstPort: isFirstPort,
-        isLastPort: true, // When adding, it becomes the last port
-        onAdd: (stop) {
-          setState(() {
-            _stops.add(stop);
-            _sortStops();
-          });
-        },
-      ),
+      builder:
+          (context) => _AddPortSheet(
+            startDate: _startDate!,
+            endDate: _endDate!,
+            suggestedDate: suggestedDate,
+            isFirstPort: isFirstPort,
+            isLastPort: true, // When adding, it becomes the last port
+            onAdd: (stop) {
+              setState(() {
+                _stops.add(stop);
+                _sortStops();
+              });
+            },
+          ),
     );
   }
 
@@ -351,8 +370,10 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     // Determine if this is the first or last port
     final nonSeaDayStops = _stops.where((s) => !s.isSeaDay).toList();
     final currentStop = _stops[index];
-    final isFirstPort = nonSeaDayStops.isNotEmpty && nonSeaDayStops.first == currentStop;
-    final isLastPort = nonSeaDayStops.isNotEmpty && nonSeaDayStops.last == currentStop;
+    final isFirstPort =
+        nonSeaDayStops.isNotEmpty && nonSeaDayStops.first == currentStop;
+    final isLastPort =
+        nonSeaDayStops.isNotEmpty && nonSeaDayStops.last == currentStop;
 
     showModalBottomSheet(
       context: context,
@@ -361,19 +382,20 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (context) => _AddPortSheet(
-        startDate: _startDate!,
-        endDate: _endDate!,
-        existingStop: currentStop,
-        isFirstPort: isFirstPort,
-        isLastPort: isLastPort,
-        onAdd: (stop) {
-          setState(() {
-            _stops[index] = stop;
-            _sortStops();
-          });
-        },
-      ),
+      builder:
+          (context) => _AddPortSheet(
+            startDate: _startDate!,
+            endDate: _endDate!,
+            existingStop: currentStop,
+            isFirstPort: isFirstPort,
+            isLastPort: isLastPort,
+            onAdd: (stop) {
+              setState(() {
+                _stops[index] = stop;
+                _sortStops();
+              });
+            },
+          ),
     );
   }
 
@@ -396,23 +418,24 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.deletePort),
-        content: Text('${stop.name}?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.cancel),
+      builder:
+          (context) => AlertDialog(
+            title: Text(l10n.deletePort),
+            content: Text('${stop.name}?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(l10n.cancel),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
+                child: Text(l10n.delete),
+              ),
+            ],
           ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-            child: Text(l10n.delete),
-          ),
-        ],
-      ),
     );
 
     if (confirmed == true) {
@@ -494,9 +517,10 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
       final trip = CruiseTrip(
         id: widget.tripId ?? '',
         shipName: _shipNameController.text.trim(),
-        tripName: _tripNameController.text.trim().isNotEmpty
-            ? _tripNameController.text.trim()
-            : l10n.cruiseAdventureDefault,
+        tripName:
+            _tripNameController.text.trim().isNotEmpty
+                ? _tripNameController.text.trim()
+                : l10n.cruiseAdventureDefault,
         departureDate: _startDate!,
         arrivalDate: _endDate!,
         startPort: startPort,
@@ -547,7 +571,11 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     if (_startDate == null || _endDate == null) return [];
 
     final days = <DateTime>[];
-    var current = DateTime(_startDate!.year, _startDate!.month, _startDate!.day);
+    var current = DateTime(
+      _startDate!.year,
+      _startDate!.month,
+      _startDate!.day,
+    );
     final end = DateTime(_endDate!.year, _endDate!.month, _endDate!.day);
 
     while (!current.isAfter(end)) {
@@ -568,13 +596,14 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
         stop.arrivalTime!.day,
       );
 
-      final departureDay = stop.departureTime != null
-          ? DateTime(
-              stop.departureTime!.year,
-              stop.departureTime!.month,
-              stop.departureTime!.day,
-            )
-          : arrivalDay;
+      final departureDay =
+          stop.departureTime != null
+              ? DateTime(
+                stop.departureTime!.year,
+                stop.departureTime!.month,
+                stop.departureTime!.day,
+              )
+              : arrivalDay;
 
       if (!day.isBefore(arrivalDay) && !day.isAfter(departureDay)) {
         return stop;
@@ -589,6 +618,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final dateFormat = DateFormat('MMM d, yyyy');
+    final activeAiConfiguration = ref.watch(activeAiConfigurationProvider);
 
     // If editing, load existing trip data
     if (widget.isEditing) {
@@ -616,16 +646,17 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
             padding: const EdgeInsets.only(right: 8),
             child: FilledButton(
               onPressed: _isLoading ? null : _saveTrip,
-              child: _isLoading
-                  ? SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: colorScheme.onPrimary,
-                      ),
-                    )
-                  : Text(l10n.save),
+              child:
+                  _isLoading
+                      ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: colorScheme.onPrimary,
+                        ),
+                      )
+                      : Text(l10n.save),
             ),
           ),
         ],
@@ -635,279 +666,317 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.sailing_rounded,
-                size: 64,
-                color: colorScheme.primary,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                widget.isEditing ? l10n.editVoyage : l10n.newVoyage,
-                style: GoogleFonts.outfit(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.sailing_rounded,
+                  size: 64,
+                  color: colorScheme.primary,
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                widget.isEditing
-                    ? l10n.updateCruiseDetails
-                    : l10n.addCruiseTracking,
-                style: textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              if (!widget.isEditing) ...[
-                Row(
-                  children: [
-                    Icon(
-                      Icons.auto_awesome_rounded,
-                      color: colorScheme.primary,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'AI Import',
-                      style: textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 16),
+                Text(
+                  widget.isEditing ? l10n.editVoyage : l10n.newVoyage,
+                  style: GoogleFonts.outfit(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Instantly import your itinerary by uploading your booking confirmation.',
-                  style: textTheme.bodySmall?.copyWith(
+                  widget.isEditing
+                      ? l10n.updateCruiseDetails
+                      : l10n.addCruiseTracking,
+                  style: textTheme.bodyLarge?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
+
+                if (!widget.isEditing) ...[
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.auto_awesome_rounded,
+                        color: colorScheme.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        l10n.aiImportTitle,
+                        style: textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                      const Spacer(),
+                      TextButton.icon(
+                        onPressed: () => context.push('/settings'),
+                        icon: const Icon(Icons.tune_rounded, size: 18),
+                        label: Text(l10n.openAiSettings),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Instantly import your itinerary by uploading your booking confirmation.',
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    activeAiConfiguration == null
+                        ? l10n.aiNotConfigured
+                        : l10n.usingAiProviderModel(
+                          activeAiConfiguration.provider.displayName,
+                          activeAiConfiguration.modelLabel,
+                        ),
+                    style: textTheme.bodySmall?.copyWith(
+                      color:
+                          activeAiConfiguration == null
+                              ? colorScheme.error
+                              : colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed:
+                              () =>
+                                  _handleAiImport(context, ref, isImage: true),
+                          icon: const Icon(Icons.image_rounded),
+                          label: const Text('Image'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed:
+                              () =>
+                                  _handleAiImport(context, ref, isImage: false),
+                          icon: const Icon(Icons.picture_as_pdf_rounded),
+                          label: const Text('PDF'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _showAiImportSheet(context, ref),
+                          icon: const Icon(Icons.text_snippet_rounded),
+                          label: const Text('Text'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                  const Divider(),
+                  const SizedBox(height: 24),
+                ],
+
+                // Trip Name (first, for the narrative flow)
+                TextFormField(
+                  controller: _tripNameController,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    labelText: l10n.tripNameOptional,
+                    hintText: l10n.tripNameOptionalHint,
+                    prefixIcon: const Icon(Icons.confirmation_number_rounded),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    filled: true,
+                    fillColor: colorScheme.surfaceContainerHighest,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Ship Name
+                TextFormField(
+                  controller: _shipNameController,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.done,
+                  onEditingComplete: () => FocusScope.of(context).unfocus(),
+                  decoration: InputDecoration(
+                    labelText: l10n.shipName,
+                    hintText: l10n.shipNameHint,
+                    prefixIcon: const Icon(Icons.directions_boat_rounded),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    filled: true,
+                    fillColor: colorScheme.surfaceContainerHighest,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return l10n.shipNameRequired;
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+
+                // Travel Dates
+                Text(
+                  l10n.travelDates,
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                InkWell(
+                  onTap: _selectDateRange,
+                  borderRadius: BorderRadius.circular(16),
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: colorScheme.outline.withValues(alpha: 0.5),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_month_rounded,
+                          color: colorScheme.primary,
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child:
+                              _startDate != null && _endDate != null
+                                  ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${dateFormat.format(_startDate!)} - ${dateFormat.format(_endDate!)}',
+                                        style: textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        l10n.daysCount(
+                                          _endDate!
+                                                  .difference(_startDate!)
+                                                  .inDays +
+                                              1,
+                                        ),
+                                        style: textTheme.bodySmall?.copyWith(
+                                          color: colorScheme.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                  : Text(
+                                    l10n.selectDepartureDates,
+                                    style: textTheme.bodyLarge?.copyWith(
+                                      color: colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                        ),
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                // Itinerary Section
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => _handleAiImport(context, ref, isImage: true),
-                        icon: const Icon(Icons.image_rounded),
-                        label: const Text('Image'),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
+                    Text(
+                      l10n.itinerary,
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => _handleAiImport(context, ref, isImage: false),
-                        icon: const Icon(Icons.picture_as_pdf_rounded),
-                        label: const Text('PDF'),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => _showAiImportSheet(context, ref),
-                        icon: const Icon(Icons.text_snippet_rounded),
-                        label: const Text('Text'),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                    FilledButton.icon(
+                      onPressed: () => _addStop(),
+                      icon: const Icon(Icons.add_rounded, size: 18),
+                      label: Text(l10n.add),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 32),
-                const Divider(),
-                const SizedBox(height: 24),
-              ],
+                const SizedBox(height: 12),
 
-              // Trip Name (first, for the narrative flow)
-              TextFormField(
-                controller: _tripNameController,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                  labelText: l10n.tripNameOptional,
-                  hintText: l10n.tripNameOptionalHint,
-                  prefixIcon: const Icon(Icons.confirmation_number_rounded),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  filled: true,
-                  fillColor: colorScheme.surfaceContainerHighest,
-                ),
-              ),
-              const SizedBox(height: 20),
+                // Day-by-day itinerary
+                if (tripDays.isEmpty)
+                  _buildEmptyItinerary(colorScheme, textTheme)
+                else
+                  _buildDayByDayItinerary(tripDays, colorScheme, textTheme),
 
-              // Ship Name
-              TextFormField(
-                controller: _shipNameController,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.done,
-                onEditingComplete: () => FocusScope.of(context).unfocus(),
-                decoration: InputDecoration(
-                  labelText: l10n.shipName,
-                  hintText: l10n.shipNameHint,
-                  prefixIcon: const Icon(Icons.directions_boat_rounded),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  filled: true,
-                  fillColor: colorScheme.surfaceContainerHighest,
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return l10n.shipNameRequired;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
-              // Travel Dates
-              Text(
-                l10n.travelDates,
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 12),
-              InkWell(
-                onTap: _selectDateRange,
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: colorScheme.outline.withValues(alpha: 0.5),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.calendar_month_rounded,
-                        color: colorScheme.primary,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: _startDate != null && _endDate != null
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${dateFormat.format(_startDate!)} - ${dateFormat.format(_endDate!)}',
-                                    style: textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    l10n.daysCount(_endDate!.difference(_startDate!).inDays + 1),
-                                    style: textTheme.bodySmall?.copyWith(
-                                      color: colorScheme.primary,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Text(
-                                l10n.selectDepartureDates,
-                                style: textTheme.bodyLarge?.copyWith(
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
+                const SizedBox(height: 40),
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: FilledButton.icon(
+                    onPressed: _isLoading ? null : _saveTrip,
+                    icon:
+                        _isLoading
+                            ? SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: colorScheme.onPrimary,
                               ),
+                            )
+                            : Icon(
+                              widget.isEditing
+                                  ? Icons.save_rounded
+                                  : Icons.add_rounded,
+                            ),
+                    label: Text(
+                      _isLoading
+                          ? l10n.savingTrip
+                          : (widget.isEditing
+                              ? l10n.updateTripButton
+                              : l10n.saveTripButton),
+                      style: GoogleFonts.outfit(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
-                      Icon(
-                        Icons.chevron_right_rounded,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
-
-              // Itinerary Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    l10n.itinerary,
-                    style: textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  FilledButton.icon(
-                    onPressed: () => _addStop(),
-                    icon: const Icon(Icons.add_rounded, size: 18),
-                    label: Text(l10n.add),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-
-              // Day-by-day itinerary
-              if (tripDays.isEmpty)
-                _buildEmptyItinerary(colorScheme, textTheme)
-              else
-                _buildDayByDayItinerary(tripDays, colorScheme, textTheme),
-
-              const SizedBox(height: 40),
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: FilledButton.icon(
-                  onPressed: _isLoading ? null : _saveTrip,
-                  icon: _isLoading
-                      ? SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: colorScheme.onPrimary,
-                          ),
-                        )
-                      : Icon(widget.isEditing
-                          ? Icons.save_rounded
-                          : Icons.add_rounded),
-                  label: Text(
-                    _isLoading
-                        ? l10n.savingTrip
-                        : (widget.isEditing ? l10n.updateTripButton : l10n.saveTripButton),
-                    style: GoogleFonts.outfit(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
           ),
         ),
       ),
@@ -921,9 +990,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -981,18 +1048,20 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
 
         return Card(
           margin: const EdgeInsets.only(bottom: 8),
-          color: stop != null
-              ? (stop.isSeaDay
-                  ? colorScheme.secondaryContainer.withValues(alpha: 0.5)
-                  : colorScheme.surfaceContainerHigh)
-              : colorScheme.surfaceContainerHighest,
+          color:
+              stop != null
+                  ? (stop.isSeaDay
+                      ? colorScheme.secondaryContainer.withValues(alpha: 0.5)
+                      : colorScheme.surfaceContainerHigh)
+                  : colorScheme.surfaceContainerHighest,
           child: InkWell(
-            onTap: stop != null
-                ? () {
-                    final stopIndex = _stops.indexOf(stop);
-                    if (stopIndex != -1) _editStop(stopIndex);
-                  }
-                : () => _addStop(suggestedDate: day),
+            onTap:
+                stop != null
+                    ? () {
+                      final stopIndex = _stops.indexOf(stop);
+                      if (stopIndex != -1) _editStop(stopIndex);
+                    }
+                    : () => _addStop(suggestedDate: day),
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.all(12),
@@ -1003,11 +1072,12 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: stop != null
-                          ? (stop.isSeaDay
-                              ? colorScheme.secondary
-                              : colorScheme.primaryContainer)
-                          : colorScheme.surfaceContainerHigh,
+                      color:
+                          stop != null
+                              ? (stop.isSeaDay
+                                  ? colorScheme.secondary
+                                  : colorScheme.primaryContainer)
+                              : colorScheme.surfaceContainerHigh,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -1018,11 +1088,12 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                           style: GoogleFonts.outfit(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
-                            color: stop != null
-                                ? (stop.isSeaDay
-                                    ? colorScheme.onSecondary
-                                    : colorScheme.onPrimaryContainer)
-                                : colorScheme.onSurfaceVariant,
+                            color:
+                                stop != null
+                                    ? (stop.isSeaDay
+                                        ? colorScheme.onSecondary
+                                        : colorScheme.onPrimaryContainer)
+                                    : colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -1047,9 +1118,7 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                             isContinuation
                                 ? l10n.continued(stop.name)
                                 : stop.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
                           if (!isContinuation &&
                               stop.arrivalTime != null &&
@@ -1058,7 +1127,9 @@ class _TripFormScreenState extends ConsumerState<TripFormScreen> {
                             Text(
                               stop.departureTime != null
                                   ? '${timeFormat.format(stop.arrivalTime!)} - ${timeFormat.format(stop.departureTime!)}'
-                                  : l10n.arrivesTime(timeFormat.format(stop.arrivalTime!)),
+                                  : l10n.arrivesTime(
+                                    timeFormat.format(stop.arrivalTime!),
+                                  ),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: colorScheme.onSurfaceVariant,
@@ -1170,7 +1241,9 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
           widget.existingStop!.arrivalTime!.month,
           widget.existingStop!.arrivalTime!.day,
         );
-        _arrivalTime = TimeOfDay.fromDateTime(widget.existingStop!.arrivalTime!);
+        _arrivalTime = TimeOfDay.fromDateTime(
+          widget.existingStop!.arrivalTime!,
+        );
       }
 
       if (widget.existingStop!.departureTime != null) {
@@ -1179,7 +1252,9 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
           widget.existingStop!.departureTime!.month,
           widget.existingStop!.departureTime!.day,
         );
-        _departureTime = TimeOfDay.fromDateTime(widget.existingStop!.departureTime!);
+        _departureTime = TimeOfDay.fromDateTime(
+          widget.existingStop!.departureTime!,
+        );
 
         // Check if multi-day
         if (_arrivalDate != null && _departureDate != null) {
@@ -1344,78 +1419,77 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
     } else if (_isMultiDay) {
       // Multi-day: use separate dates with times
       // First port: arrival time optional (defaults to 00:00)
-      arrivalDateTime = _arrivalTime != null
-          ? DateTime(
-              _arrivalDate!.year,
-              _arrivalDate!.month,
-              _arrivalDate!.day,
-              _arrivalTime!.hour,
-              _arrivalTime!.minute,
-            )
-          : DateTime(
-              _arrivalDate!.year,
-              _arrivalDate!.month,
-              _arrivalDate!.day,
-              0,
-              0,
-            );
+      arrivalDateTime =
+          _arrivalTime != null
+              ? DateTime(
+                _arrivalDate!.year,
+                _arrivalDate!.month,
+                _arrivalDate!.day,
+                _arrivalTime!.hour,
+                _arrivalTime!.minute,
+              )
+              : DateTime(
+                _arrivalDate!.year,
+                _arrivalDate!.month,
+                _arrivalDate!.day,
+                0,
+                0,
+              );
 
       final depDate = _departureDate ?? _arrivalDate!;
       // Last port: departure time optional (defaults to 23:59)
-      departureDateTime = _departureTime != null
-          ? DateTime(
-              depDate.year,
-              depDate.month,
-              depDate.day,
-              _departureTime!.hour,
-              _departureTime!.minute,
-            )
-          : DateTime(
-              depDate.year,
-              depDate.month,
-              depDate.day,
-              23,
-              59,
-            );
+      departureDateTime =
+          _departureTime != null
+              ? DateTime(
+                depDate.year,
+                depDate.month,
+                depDate.day,
+                _departureTime!.hour,
+                _departureTime!.minute,
+              )
+              : DateTime(depDate.year, depDate.month, depDate.day, 23, 59);
     } else {
       // Single day: same date for both
       // First port: arrival time optional (defaults to 00:00)
-      arrivalDateTime = _arrivalTime != null
-          ? DateTime(
-              _arrivalDate!.year,
-              _arrivalDate!.month,
-              _arrivalDate!.day,
-              _arrivalTime!.hour,
-              _arrivalTime!.minute,
-            )
-          : DateTime(
-              _arrivalDate!.year,
-              _arrivalDate!.month,
-              _arrivalDate!.day,
-              0,
-              0,
-            );
+      arrivalDateTime =
+          _arrivalTime != null
+              ? DateTime(
+                _arrivalDate!.year,
+                _arrivalDate!.month,
+                _arrivalDate!.day,
+                _arrivalTime!.hour,
+                _arrivalTime!.minute,
+              )
+              : DateTime(
+                _arrivalDate!.year,
+                _arrivalDate!.month,
+                _arrivalDate!.day,
+                0,
+                0,
+              );
 
       // Last port: departure time optional (defaults to 23:59)
-      departureDateTime = _departureTime != null
-          ? DateTime(
-              _arrivalDate!.year,
-              _arrivalDate!.month,
-              _arrivalDate!.day,
-              _departureTime!.hour,
-              _departureTime!.minute,
-            )
-          : DateTime(
-              _arrivalDate!.year,
-              _arrivalDate!.month,
-              _arrivalDate!.day,
-              23,
-              59,
-            );
+      departureDateTime =
+          _departureTime != null
+              ? DateTime(
+                _arrivalDate!.year,
+                _arrivalDate!.month,
+                _arrivalDate!.day,
+                _departureTime!.hour,
+                _departureTime!.minute,
+              )
+              : DateTime(
+                _arrivalDate!.year,
+                _arrivalDate!.month,
+                _arrivalDate!.day,
+                23,
+                59,
+              );
     }
 
     final stop = PortStop(
-      id: widget.existingStop?.id ??
+      id:
+          widget.existingStop?.id ??
           DateTime.now().millisecondsSinceEpoch.toString(),
       name: _isSeaDay ? l10n.seaDay : name,
       arrivalTime: arrivalDateTime,
@@ -1449,7 +1523,9 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.existingStop != null ? l10n.editStopTitle : l10n.addStopTitle,
+              widget.existingStop != null
+                  ? l10n.editStopTitle
+                  : l10n.addStopTitle,
               style: GoogleFonts.outfit(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
@@ -1466,7 +1542,9 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                 secondary: Icon(
                   Icons.waves_rounded,
                   color:
-                      _isSeaDay ? colorScheme.primary : colorScheme.onSurfaceVariant,
+                      _isSeaDay
+                          ? colorScheme.primary
+                          : colorScheme.onSurfaceVariant,
                 ),
                 value: _isSeaDay,
                 onChanged: (value) => setState(() => _isSeaDay = value),
@@ -1479,21 +1557,23 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
               TextField(
                 controller: _searchController,
                 textCapitalization: TextCapitalization.words,
-                autofocus: widget.existingStop == null, // Auto-focus on new stops
+                autofocus:
+                    widget.existingStop == null, // Auto-focus on new stops
                 decoration: InputDecoration(
                   labelText: l10n.portNameLabel,
                   hintText: l10n.searchPort,
                   prefixIcon: const Icon(Icons.search_rounded),
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear_rounded),
-                          onPressed: () {
-                            _searchController.clear();
-                            _performSearch('');
-                            setState(() => _selectedPort = null);
-                          },
-                        )
-                      : null,
+                  suffixIcon:
+                      _searchController.text.isNotEmpty
+                          ? IconButton(
+                            icon: const Icon(Icons.clear_rounded),
+                            onPressed: () {
+                              _searchController.clear();
+                              _performSearch('');
+                              setState(() => _selectedPort = null);
+                            },
+                          )
+                          : null,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -1530,7 +1610,9 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                         ),
                         title: Text(port.name),
                         subtitle:
-                            port.countryCode != null ? Text(port.countryCode!) : null,
+                            port.countryCode != null
+                                ? Text(port.countryCode!)
+                                : null,
                         onTap: () => _selectPort(port),
                       );
                     },
@@ -1542,8 +1624,11 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                   padding: const EdgeInsets.only(top: 8),
                   child: Row(
                     children: [
-                      Icon(Icons.check_circle_rounded,
-                          color: colorScheme.primary, size: 16),
+                      Icon(
+                        Icons.check_circle_rounded,
+                        color: colorScheme.primary,
+                        size: 16,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         l10n.coordinatesSavedForMap,
@@ -1581,16 +1666,20 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.calendar_today_rounded, color: colorScheme.primary),
+                    Icon(
+                      Icons.calendar_today_rounded,
+                      color: colorScheme.primary,
+                    ),
                     const SizedBox(width: 16),
                     Text(
                       _arrivalDate != null
                           ? dateFormat.format(_arrivalDate!)
                           : l10n.selectDate,
                       style: TextStyle(
-                        color: _arrivalDate != null
-                            ? colorScheme.onSurface
-                            : colorScheme.onSurfaceVariant,
+                        color:
+                            _arrivalDate != null
+                                ? colorScheme.onSurface
+                                : colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -1608,9 +1697,10 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                   subtitle: Text(l10n.portVisitSpanningMultipleDays),
                   secondary: Icon(
                     Icons.date_range_rounded,
-                    color: _isMultiDay
-                        ? colorScheme.primary
-                        : colorScheme.onSurfaceVariant,
+                    color:
+                        _isMultiDay
+                            ? colorScheme.primary
+                            : colorScheme.onSurfaceVariant,
                   ),
                   value: _isMultiDay,
                   onChanged: (value) {
@@ -1650,17 +1740,20 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.calendar_today_rounded,
-                          color: colorScheme.primary),
+                      Icon(
+                        Icons.calendar_today_rounded,
+                        color: colorScheme.primary,
+                      ),
                       const SizedBox(width: 16),
                       Text(
                         _departureDate != null
                             ? dateFormat.format(_departureDate!)
                             : l10n.selectDate,
                         style: TextStyle(
-                          color: _departureDate != null
-                              ? colorScheme.onSurface
-                              : colorScheme.onSurfaceVariant,
+                          color:
+                              _departureDate != null
+                                  ? colorScheme.onSurface
+                                  : colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -1676,10 +1769,10 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                 widget.isFirstPort && widget.isLastPort
                     ? l10n.timesOptionalForSinglePort
                     : widget.isFirstPort
-                        ? '${l10n.departureTimeLabel} *'
-                        : widget.isLastPort
-                            ? '${l10n.arrivalTimeLabel} *'
-                            : l10n.arrivalAndDepartureTimes,
+                    ? '${l10n.departureTimeLabel} *'
+                    : widget.isLastPort
+                    ? '${l10n.arrivalTimeLabel} *'
+                    : l10n.arrivalAndDepartureTimes,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurfaceVariant,
@@ -1703,17 +1796,23 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.login_rounded,
-                                color: colorScheme.primary, size: 20),
+                            Icon(
+                              Icons.login_rounded,
+                              color: colorScheme.primary,
+                              size: 20,
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               _arrivalTime != null
                                   ? _arrivalTime!.format(context)
-                                  : widget.isFirstPort ? l10n.arrivalOptional : l10n.arrivalRequired,
+                                  : widget.isFirstPort
+                                  ? l10n.arrivalOptional
+                                  : l10n.arrivalRequired,
                               style: TextStyle(
-                                color: _arrivalTime != null
-                                    ? colorScheme.onSurface
-                                    : colorScheme.onSurfaceVariant,
+                                color:
+                                    _arrivalTime != null
+                                        ? colorScheme.onSurface
+                                        : colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ],
@@ -1737,17 +1836,23 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.logout_rounded,
-                                color: colorScheme.primary, size: 20),
+                            Icon(
+                              Icons.logout_rounded,
+                              color: colorScheme.primary,
+                              size: 20,
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               _departureTime != null
                                   ? _departureTime!.format(context)
-                                  : widget.isLastPort ? l10n.departureOptional : l10n.departureRequired,
+                                  : widget.isLastPort
+                                  ? l10n.departureOptional
+                                  : l10n.departureRequired,
                               style: TextStyle(
-                                color: _departureTime != null
-                                    ? colorScheme.onSurface
-                                    : colorScheme.onSurfaceVariant,
+                                color:
+                                    _departureTime != null
+                                        ? colorScheme.onSurface
+                                        : colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ],
@@ -1765,8 +1870,11 @@ class _AddPortSheetState extends ConsumerState<_AddPortSheet> {
               height: 56,
               child: FilledButton(
                 onPressed: _save,
-                child:
-                    Text(widget.existingStop != null ? l10n.updateStop : l10n.addStopTitle),
+                child: Text(
+                  widget.existingStop != null
+                      ? l10n.updateStop
+                      : l10n.addStopTitle,
+                ),
               ),
             ),
           ],

@@ -7,15 +7,19 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../../core/providers/ai_provider.dart';
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/providers/trip_provider.dart';
+import 'ai_settings_sheet.dart';
 
 import '../../../main.dart';
 import '../../../shared/models/cruise_trip.dart';
 import '../../../shared/models/port_stop.dart';
 
 // Year filter provider
-final selectedYearProvider = StateProvider<int?>((ref) => null); // null = ALL-TIME
+final selectedYearProvider = StateProvider<int?>(
+  (ref) => null,
+); // null = ALL-TIME
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -40,9 +44,7 @@ class SettingsScreen extends ConsumerWidget {
               child: _ProfileHeader(userName: userName, ref: ref),
             ),
             // Year Filter Tabs
-            SliverToBoxAdapter(
-              child: _YearFilterTabs(years: years, ref: ref),
-            ),
+            SliverToBoxAdapter(child: _YearFilterTabs(years: years, ref: ref)),
             // Content
             SliverPadding(
               padding: const EdgeInsets.all(16),
@@ -159,9 +161,10 @@ class SettingsScreen extends ConsumerWidget {
 
     // Calculate percentage for favorite ship
     final totalShipTrips = shipCounts.values.fold<int>(0, (a, b) => a + b);
-    final favoriteShipPercent = totalShipTrips > 0
-        ? ((favoriteShipCount / totalShipTrips) * 100).round()
-        : 0;
+    final favoriteShipPercent =
+        totalShipTrips > 0
+            ? ((favoriteShipCount / totalShipTrips) * 100).round()
+            : 0;
 
     return _CruiseStats(
       totalCruises: totalCruises,
@@ -186,12 +189,10 @@ class SettingsScreen extends ConsumerWidget {
     final yearStart = DateTime(year, 1, 1);
     final yearEnd = DateTime(year, 12, 31, 23, 59, 59);
 
-    final effectiveStart = trip.departureDate.isAfter(yearStart)
-        ? trip.departureDate
-        : yearStart;
-    final effectiveEnd = trip.arrivalDate.isBefore(yearEnd)
-        ? trip.arrivalDate
-        : yearEnd;
+    final effectiveStart =
+        trip.departureDate.isAfter(yearStart) ? trip.departureDate : yearStart;
+    final effectiveEnd =
+        trip.arrivalDate.isBefore(yearEnd) ? trip.arrivalDate : yearEnd;
 
     if (effectiveStart.isAfter(effectiveEnd)) {
       return 0;
@@ -207,9 +208,12 @@ class SettingsScreen extends ConsumerWidget {
 
   double _calculateTripDistance(CruiseTrip trip, int? year) {
     double distance = 0;
-    final portsWithCoords = trip.stops
-        .where((s) => !s.isSeaDay && s.latitude != null && s.longitude != null)
-        .toList();
+    final portsWithCoords =
+        trip.stops
+            .where(
+              (s) => !s.isSeaDay && s.latitude != null && s.longitude != null,
+            )
+            .toList();
 
     for (int i = 0; i < portsWithCoords.length - 1; i++) {
       final from = portsWithCoords[i];
@@ -217,30 +221,41 @@ class SettingsScreen extends ConsumerWidget {
 
       // If year filter, check if this segment falls within the year
       if (year != null) {
-        final segmentDate = from.departureTime ?? from.arrivalTime ?? trip.departureDate;
+        final segmentDate =
+            from.departureTime ?? from.arrivalTime ?? trip.departureDate;
         if (segmentDate.year != year) {
           continue;
         }
       }
 
       distance += _haversineDistanceNm(
-        from.latitude!, from.longitude!,
-        to.latitude!, to.longitude!,
+        from.latitude!,
+        from.longitude!,
+        to.latitude!,
+        to.longitude!,
       );
     }
 
     return distance;
   }
 
-  double _haversineDistanceNm(double lat1, double lon1, double lat2, double lon2) {
+  double _haversineDistanceNm(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) {
     const earthRadiusNm = 3440.065; // Earth radius in nautical miles
 
     final dLat = _toRadians(lat2 - lat1);
     final dLon = _toRadians(lon2 - lon1);
 
-    final a = math.sin(dLat / 2) * math.sin(dLat / 2) +
-        math.cos(_toRadians(lat1)) * math.cos(_toRadians(lat2)) *
-        math.sin(dLon / 2) * math.sin(dLon / 2);
+    final a =
+        math.sin(dLat / 2) * math.sin(dLat / 2) +
+        math.cos(_toRadians(lat1)) *
+            math.cos(_toRadians(lat2)) *
+            math.sin(dLon / 2) *
+            math.sin(dLon / 2);
 
     final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
 
@@ -304,9 +319,15 @@ class _ProfileHeader extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     // Get initials from name
-    final initials = userName.isNotEmpty
-        ? userName.split(' ').map((e) => e.isNotEmpty ? e[0] : '').take(2).join().toUpperCase()
-        : 'U';
+    final initials =
+        userName.isNotEmpty
+            ? userName
+                .split(' ')
+                .map((e) => e.isNotEmpty ? e[0] : '')
+                .take(2)
+                .join()
+                .toUpperCase()
+            : 'U';
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -409,104 +430,122 @@ class _ProfileHeader extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.6,
-        minChildSize: 0.4,
-        maxChildSize: 0.9,
-        expand: false,
-        builder: (context, scrollController) => SingleChildScrollView(
-          controller: scrollController,
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(2),
+      builder:
+          (context) => DraggableScrollableSheet(
+            initialChildSize: 0.6,
+            minChildSize: 0.4,
+            maxChildSize: 0.9,
+            expand: false,
+            builder:
+                (context, scrollController) => SingleChildScrollView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: colorScheme.onSurfaceVariant.withValues(
+                              alpha: 0.3,
+                            ),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        l10n.settings,
+                        style: GoogleFonts.outfit(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      // Account section
+                      _SettingsSectionTitle(title: l10n.account),
+                      _SettingsItem(
+                        icon: Icons.person_outline_rounded,
+                        title: l10n.accountSettings,
+                        subtitle: l10n.manageProfilePreferences,
+                        onTap: () => _showAccountSettings(context, ref),
+                      ),
+                      _LanguageSettingsItem(ref: ref),
+                      const SizedBox(height: 16),
+                      _SettingsSectionTitle(title: l10n.aiImportTitle),
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final activeConfiguration = ref.watch(
+                            activeAiConfigurationProvider,
+                          );
+                          final subtitle =
+                              activeConfiguration == null
+                                  ? l10n.configureAiImport
+                                  : l10n.usingAiProviderModel(
+                                    activeConfiguration.provider.displayName,
+                                    activeConfiguration.modelLabel,
+                                  );
+
+                          return _SettingsItem(
+                            icon: Icons.auto_awesome_rounded,
+                            title: l10n.aiImportSettings,
+                            subtitle: subtitle,
+                            onTap: () => _showAiSettings(context),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      // Support section
+                      _SettingsSectionTitle(title: l10n.support),
+                      _SettingsItem(
+                        icon: Icons.help_outline_rounded,
+                        title: l10n.helpSupport,
+                        subtitle: l10n.getHelp,
+                        onTap: () => _showHelpDialog(context),
+                      ),
+                      _SettingsItem(
+                        icon: Icons.info_outline_rounded,
+                        title: l10n.about,
+                        subtitle: l10n.appVersionLegal,
+                        onTap: () => _showAboutDialog(context),
+                      ),
+                      const SizedBox(height: 24),
+                      // Sign out button (only show if Firebase is available)
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final authService = ref.watch(authServiceProvider);
+                          if (authService == null) {
+                            return const SizedBox.shrink();
+                          }
+                          return SizedBox(
+                            width: double.infinity,
+                            child: FilledButton.icon(
+                              onPressed: () => _confirmSignOut(context, ref),
+                              style: FilledButton.styleFrom(
+                                backgroundColor: colorScheme.errorContainer,
+                                foregroundColor: colorScheme.error,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                              ),
+                              icon: const Icon(Icons.logout_rounded),
+                              label: Text(l10n.signOut),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                l10n.settings,
-                style: GoogleFonts.outfit(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 24),
-              // Account section
-              _SettingsSectionTitle(title: l10n.account),
-              _SettingsItem(
-                icon: Icons.person_outline_rounded,
-                title: l10n.accountSettings,
-                subtitle: l10n.manageProfilePreferences,
-                onTap: () => _showAccountSettings(context, ref),
-              ),
-              _LanguageSettingsItem(ref: ref),
-              const SizedBox(height: 16),
-              // Support section
-              _SettingsSectionTitle(title: l10n.support),
-              _SettingsItem(
-                icon: Icons.help_outline_rounded,
-                title: l10n.helpSupport,
-                subtitle: l10n.getHelp,
-                onTap: () => _showHelpDialog(context),
-              ),
-              _SettingsItem(
-                icon: Icons.info_outline_rounded,
-                title: l10n.about,
-                subtitle: l10n.appVersionLegal,
-                onTap: () => _showAboutDialog(context),
-              ),
-              const SizedBox(height: 24),
-              // Sign out button (only show if Firebase is available)
-              Consumer(
-                builder: (context, ref, _) {
-                  final authService = ref.watch(authServiceProvider);
-                  if (authService == null) {
-                    return const SizedBox.shrink();
-                  }
-                  return SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: () => _confirmSignOut(context, ref),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: colorScheme.errorContainer,
-                        foregroundColor: colorScheme.error,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
-                      icon: const Icon(Icons.logout_rounded),
-                      label: Text(l10n.signOut),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-            ],
           ),
-        ),
-      ),
     );
   }
 
-  void _showAccountSettings(BuildContext context, WidgetRef ref) {
+  void _showAiSettings(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final l10n = AppLocalizations.of(context)!;
-    final authService = ref.read(authServiceProvider);
-    
-    if (authService == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Nicht angemeldet')),
-      );
-      return;
-    }
-
-    final nameController = TextEditingController(text: authService.currentUserDisplayName);
 
     showModalBottomSheet(
       context: context,
@@ -515,105 +554,145 @@ class _ProfileHeader extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (context) => Padding(
-        padding: EdgeInsets.fromLTRB(24, 24, 24, MediaQuery.of(context).viewInsets.bottom + 24),
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            Text(
-              l10n.accountSettings,
-              style: GoogleFonts.outfit(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              l10n.changeDisplayName,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(
-                labelText: l10n.name,
-                prefixIcon: const Icon(Icons.person_rounded),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                filled: true,
-                fillColor: colorScheme.surfaceContainerHighest,
-              ),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: () async {
-                  final newName = nameController.text.trim();
-                  if (newName.isNotEmpty) {
-                    await authService.updateDisplayName(newName);
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Name aktualisiert')),
-                      );
-                    }
-                  }
-                },
-                child: Text(l10n.save),
-              ),
-            ),
-          ],
-        ),
+      builder: (context) => const AiSettingsSheet(),
+    );
+  }
+
+  void _showAccountSettings(BuildContext context, WidgetRef ref) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+    final authService = ref.read(authServiceProvider);
+
+    if (authService == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Nicht angemeldet')));
+      return;
+    }
+
+    final nameController = TextEditingController(
+      text: authService.currentUserDisplayName,
+    );
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: colorScheme.surface,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-    ),
+      builder:
+          (context) => Padding(
+            padding: EdgeInsets.fromLTRB(
+              24,
+              24,
+              24,
+              MediaQuery.of(context).viewInsets.bottom + 24,
+            ),
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.accountSettings,
+                    style: GoogleFonts.outfit(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    l10n.changeDisplayName,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: l10n.name,
+                      prefixIcon: const Icon(Icons.person_rounded),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      filled: true,
+                      fillColor: colorScheme.surfaceContainerHighest,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () async {
+                        final newName = nameController.text.trim();
+                        if (newName.isNotEmpty) {
+                          await authService.updateDisplayName(newName);
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Name aktualisiert')),
+                            );
+                          }
+                        }
+                      },
+                      child: Text(l10n.save),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
     );
   }
 
   void _showHelpDialog(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.helpSupport),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Willkommen bei Cruisy!', style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 12),
-            Text('• Füge deine Kreuzfahrten hinzu und verwalte sie'),
-            Text('• Erstelle einen detaillierten Reiseverlauf mit Häfen'),
-            Text('• Teile deine Reisen mit Freunden'),
-            Text('• Verfolge deine Kreuzfahrt-Statistiken'),
-            SizedBox(height: 16),
-            Text('Bei Fragen oder Problemen:', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text('support@cruisy.app'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.ok),
+      builder:
+          (context) => AlertDialog(
+            title: Text(l10n.helpSupport),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Willkommen bei Cruisy!',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 12),
+                Text('• Füge deine Kreuzfahrten hinzu und verwalte sie'),
+                Text('• Erstelle einen detaillierten Reiseverlauf mit Häfen'),
+                Text('• Teile deine Reisen mit Freunden'),
+                Text('• Verfolge deine Kreuzfahrt-Statistiken'),
+                SizedBox(height: 16),
+                Text(
+                  'Bei Fragen oder Problemen:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text('support@cruisy.app'),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(l10n.ok),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
   void _showAboutDialog(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
     final packageInfo = await PackageInfo.fromPlatform();
-    
+
     if (context.mounted) {
       showAboutDialog(
         context: context,
@@ -654,20 +733,21 @@ class _ProfileHeader extends StatelessWidget {
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.signOut),
-        content: Text(l10n.signOutConfirmation),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.cancel),
+      builder:
+          (context) => AlertDialog(
+            title: Text(l10n.signOut),
+            content: Text(l10n.signOutConfirmation),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(l10n.cancel),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(l10n.signOut),
+              ),
+            ],
           ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l10n.signOut),
-          ),
-        ],
-      ),
     );
 
     if (confirmed == true && context.mounted) {
@@ -746,14 +826,17 @@ class _YearFilterTabs extends ConsumerWidget {
           ),
           const SizedBox(width: 8),
           // Year tabs
-          ...years.map((year) => Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: _YearTab(
-              label: '$year',
-              isSelected: selectedYear == year,
-              onTap: () => ref.read(selectedYearProvider.notifier).state = year,
+          ...years.map(
+            (year) => Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: _YearTab(
+                label: '$year',
+                isSelected: selectedYear == year,
+                onTap:
+                    () => ref.read(selectedYearProvider.notifier).state = year,
+              ),
             ),
-          )),
+          ),
         ],
       ),
     );
@@ -774,7 +857,10 @@ class _YearTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: isSelected ? Colors.white.withValues(alpha: 0.15) : Colors.transparent,
+      color:
+          isSelected
+              ? Colors.white.withValues(alpha: 0.15)
+              : Colors.transparent,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,
@@ -784,7 +870,10 @@ class _YearTab extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
+              color:
+                  isSelected
+                      ? Colors.white
+                      : Colors.white.withValues(alpha: 0.5),
               fontSize: 13,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             ),
@@ -803,10 +892,13 @@ class _CruisePassportCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final selectedYear = ProviderScope.containerOf(context).read(selectedYearProvider);
-    final title = selectedYear == null
-        ? l10n.allTimeCruisePassport
-        : l10n.yearCruisePassport(selectedYear);
+    final selectedYear = ProviderScope.containerOf(
+      context,
+    ).read(selectedYearProvider);
+    final title =
+        selectedYear == null
+            ? l10n.allTimeCruisePassport
+            : l10n.yearCruisePassport(selectedYear);
 
     return Container(
       decoration: BoxDecoration(
@@ -912,9 +1004,10 @@ class _CruisePassportCard extends StatelessWidget {
                   child: _StatColumn(
                     label: l10n.ships,
                     value: '${stats.uniqueShipsCount}',
-                    subtitle: stats.favoriteShip != null
-                        ? '${stats.favoriteShipPercent}% ${stats.favoriteShip}'
-                        : null,
+                    subtitle:
+                        stats.favoriteShip != null
+                            ? '${stats.favoriteShipPercent}% ${stats.favoriteShip}'
+                            : null,
                     smaller: true,
                   ),
                 ),
@@ -1184,8 +1277,8 @@ class _FavoriteShipCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     // Sort ships by count
-    final sortedShips = allShips.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+    final sortedShips =
+        allShips.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
 
     showModalBottomSheet(
       context: context,
@@ -1193,61 +1286,64 @@ class _FavoriteShipCard extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.allShips,
-              style: GoogleFonts.outfit(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-              ),
+      builder:
+          (context) => Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.allShips,
+                  style: GoogleFonts.outfit(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ...sortedShips.map(
+                  (entry) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.sailing_rounded,
+                            size: 18,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            entry.key,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          l10n.cruiseCount(entry.value),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
-            const SizedBox(height: 20),
-            ...sortedShips.map((entry) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      Icons.sailing_rounded,
-                      size: 18,
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      entry.key,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    l10n.cruiseCount(entry.value),
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            )),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
+          ),
     );
   }
 }
@@ -1316,9 +1412,8 @@ class _LanguageSettingsItem extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final currentLocale = ref.watch(localeProvider);
 
-    final currentLanguage = currentLocale?.languageCode == 'de'
-        ? l10n.german
-        : l10n.english;
+    final currentLanguage =
+        currentLocale?.languageCode == 'de' ? l10n.german : l10n.english;
 
     return ListTile(
       leading: Icon(Icons.language_rounded, color: colorScheme.primary),
@@ -1344,80 +1439,93 @@ class _LanguageSettingsItem extends ConsumerWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.language,
-              style: GoogleFonts.outfit(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 24),
-            ListTile(
-              leading: Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  'EN',
-                  style: TextStyle(
-                    fontSize: 12,
+      builder:
+          (context) => Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.language,
+                  style: GoogleFonts.outfit(
+                    fontSize: 24,
                     fontWeight: FontWeight.w700,
-                    color: colorScheme.onPrimaryContainer,
                   ),
                 ),
-              ),
-              title: Text(l10n.english),
-              trailing: currentLocale?.languageCode != 'de'
-                  ? Icon(Icons.check_rounded, color: colorScheme.primary)
-                  : null,
-              onTap: () {
-                final userId = ref.read(currentUserIdProvider);
-                ref.read(localeProvider.notifier).setLocale(const Locale('en'), userId);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  'DE',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: colorScheme.onPrimaryContainer,
+                const SizedBox(height: 24),
+                ListTile(
+                  leading: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      'EN',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: colorScheme.onPrimaryContainer,
+                      ),
+                    ),
                   ),
+                  title: Text(l10n.english),
+                  trailing:
+                      currentLocale?.languageCode != 'de'
+                          ? Icon(
+                            Icons.check_rounded,
+                            color: colorScheme.primary,
+                          )
+                          : null,
+                  onTap: () {
+                    final userId = ref.read(currentUserIdProvider);
+                    ref
+                        .read(localeProvider.notifier)
+                        .setLocale(const Locale('en'), userId);
+                    Navigator.pop(context);
+                  },
                 ),
-              ),
-              title: Text(l10n.german),
-              trailing: currentLocale?.languageCode == 'de'
-                  ? Icon(Icons.check_rounded, color: colorScheme.primary)
-                  : null,
-              onTap: () {
-                final userId = ref.read(currentUserIdProvider);
-                ref.read(localeProvider.notifier).setLocale(const Locale('de'), userId);
-                Navigator.pop(context);
-              },
+                ListTile(
+                  leading: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      'DE',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: colorScheme.onPrimaryContainer,
+                      ),
+                    ),
+                  ),
+                  title: Text(l10n.german),
+                  trailing:
+                      currentLocale?.languageCode == 'de'
+                          ? Icon(
+                            Icons.check_rounded,
+                            color: colorScheme.primary,
+                          )
+                          : null,
+                  onTap: () {
+                    final userId = ref.read(currentUserIdProvider);
+                    ref
+                        .read(localeProvider.notifier)
+                        .setLocale(const Locale('de'), userId);
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
+          ),
     );
   }
 }

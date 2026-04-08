@@ -13,8 +13,9 @@ class MapScreen extends ConsumerStatefulWidget {
   ConsumerState<MapScreen> createState() => _MapScreenState();
 }
 
-class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserver {
-  mapbox.MapboxMap? _mapboxMap;
+class _MapScreenState extends ConsumerState<MapScreen>
+    with WidgetsBindingObserver {
+  dynamic _mapboxMap;
   double _currentZoom = 1.0;
   String? _mapError;
 
@@ -47,15 +48,21 @@ class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserv
     // Hide Mapbox ornaments (scale bar, logo, attribution)
     mapboxMap.scaleBar.updateSettings(mapbox.ScaleBarSettings(enabled: false));
     mapboxMap.logo.updateSettings(mapbox.LogoSettings(enabled: false));
-    mapboxMap.attribution.updateSettings(mapbox.AttributionSettings(enabled: false));
+    mapboxMap.attribution.updateSettings(
+      mapbox.AttributionSettings(enabled: false),
+    );
 
     // Set globe projection for 3D globe view
-    mapboxMap.style.setProjection(mapbox.StyleProjection(name: mapbox.StyleProjectionName.globe));
+    mapboxMap.style.setProjection(
+      mapbox.StyleProjection(name: mapbox.StyleProjectionName.globe),
+    );
 
     // Set initial camera to show full globe
     mapboxMap.setCamera(
       mapbox.CameraOptions(
-        center: mapbox.Point(coordinates: mapbox.Position(10.0, 35.0)), // Center on Mediterranean
+        center: mapbox.Point(
+          coordinates: mapbox.Position(10.0, 35.0),
+        ), // Center on Mediterranean
         zoom: 1.0, // Global view to see the whole globe
         pitch: 0.0,
       ),
@@ -94,7 +101,9 @@ class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserv
                 onMapLoadErrorListener: (dynamic data) => _onMapLoadError(data),
                 styleUri: mapbox.MapboxStyles.DARK,
                 cameraOptions: mapbox.CameraOptions(
-                  center: mapbox.Point(coordinates: mapbox.Position(10.0, 35.0)),
+                  center: mapbox.Point(
+                    coordinates: mapbox.Position(10.0, 35.0),
+                  ),
                   zoom: 1.0, // Global view to see the whole globe
                   pitch: 0.0,
                 ),
@@ -128,9 +137,7 @@ class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserv
                         const SizedBox(height: 8),
                         Text(
                           l10n.checkMapboxConfig,
-                          style: TextStyle(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
+                          style: TextStyle(color: colorScheme.onSurfaceVariant),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 24),
@@ -263,10 +270,7 @@ class _MapScreenState extends ConsumerState<MapScreen> with WidgetsBindingObserv
 }
 
 class _MapControlButton extends StatelessWidget {
-  const _MapControlButton({
-    required this.icon,
-    required this.onPressed,
-  });
+  const _MapControlButton({required this.icon, required this.onPressed});
 
   final IconData icon;
   final VoidCallback onPressed;
@@ -283,11 +287,7 @@ class _MapControlButton extends StatelessWidget {
           width: 48,
           height: 48,
           alignment: Alignment.center,
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 24,
-          ),
+          child: Icon(icon, color: Colors.white, size: 24),
         ),
       ),
     );
@@ -295,10 +295,7 @@ class _MapControlButton extends StatelessWidget {
 }
 
 class _ProfileButton extends StatelessWidget {
-  const _ProfileButton({
-    required this.onTap,
-    this.isMapStyle = false,
-  });
+  const _ProfileButton({required this.onTap, this.isMapStyle = false});
 
   final VoidCallback onTap;
   final bool isMapStyle;
@@ -313,9 +310,10 @@ class _ProfileButton extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: isMapStyle
-              ? Colors.white.withValues(alpha: 0.2)
-              : colorScheme.primaryContainer,
+          color:
+              isMapStyle
+                  ? Colors.white.withValues(alpha: 0.2)
+                  : colorScheme.primaryContainer,
           shape: BoxShape.circle,
         ),
         child: Icon(

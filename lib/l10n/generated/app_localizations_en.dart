@@ -1281,6 +1281,78 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aiImportSuccess => 'Trip imported successfully!';
 
   @override
+  String get aiImportSettings => 'AI Import Settings';
+
+  @override
+  String get configureAiImport =>
+      'Choose a provider, save your own API key, and pick a model for itinerary import.';
+
+  @override
+  String get googleRecommendedDescription =>
+      'Google is the recommended default because the free quota is especially generous for personal use.';
+
+  @override
+  String get googleRecommended => 'Recommended';
+
+  @override
+  String get aiProvider => 'AI Provider';
+
+  @override
+  String get aiModel => 'Model';
+
+  @override
+  String get apiKey => 'API Key';
+
+  @override
+  String get enterApiKey => 'Enter your API key';
+
+  @override
+  String get saveKey => 'Save key';
+
+  @override
+  String get clearKey => 'Clear key';
+
+  @override
+  String get refreshModels => 'Refresh models';
+
+  @override
+  String get savedOnThisDevice => 'Saved locally on this device';
+
+  @override
+  String get modelsLoadAfterKey =>
+      'Models are fetched after you save a valid API key.';
+
+  @override
+  String get fetchingModels => 'Fetching models…';
+
+  @override
+  String get noModelsAvailable => 'No models are available for this key yet.';
+
+  @override
+  String get aiImportNotConfigured =>
+      'Set up AI Import in Settings before using this feature.';
+
+  @override
+  String get openAiSettings => 'Open AI settings';
+
+  @override
+  String get aiNotConfigured => 'AI import is not configured yet.';
+
+  @override
+  String usingAiProviderModel(String provider, String model) {
+    return 'Using $provider · $model';
+  }
+
+  @override
+  String get aiKeySaved => 'API key saved';
+
+  @override
+  String get aiKeyRemoved => 'API key removed';
+
+  @override
+  String get aiModelsUpdated => 'Models updated';
+
+  @override
   String get failedToLoadSharedTrips => 'Failed to load shared trips';
 
   @override
