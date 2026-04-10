@@ -327,7 +327,9 @@ class _AiSettingsSheetState extends ConsumerState<AiSettingsSheet> {
               _InfoCard(message: l10n.noModelsAvailable)
             else
               DropdownButtonFormField<String>(
-                initialValue: dropdownValue,
+                // Flutter 3.29 uses `value`; newer SDKs renamed this to `initialValue`.
+                // ignore: deprecated_member_use
+                value: dropdownValue,
                 items:
                     models
                         .map(
